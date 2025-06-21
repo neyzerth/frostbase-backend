@@ -1,0 +1,6 @@
+@FrostBase_HostAddress = http://localhost:5125
+
+GET {{FrostBase_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
