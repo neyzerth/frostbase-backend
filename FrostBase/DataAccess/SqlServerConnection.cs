@@ -6,7 +6,7 @@ public class SqlServerConnection
     #region variables
     
     private static string connectionString =
-        "Data Source = " + Config.Configuration.SqlServer.Server + "; " +
+        "Data Source = " + Config.Configuration.SqlServer.Server + "," + Config.Configuration.SqlServer.Port + "; " +
         "Initial Catalog = " + Config.Configuration.SqlServer.Database + "; " +
         "User Id = " + Config.Configuration.SqlServer.User + "; " +
         "Password = " + Config.Configuration.SqlServer.Password + ";"+
