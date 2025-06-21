@@ -1,4 +1,4 @@
-# Levantar las bd con Docker
+# Levantar servicios con docker (MSSQL-Server, MongoDB, Apache)
 
 ## Instalar docker
 
@@ -28,7 +28,7 @@
   - WSL2 backend
   - Soporte para Linux containers
 
-## Levantar las bases de datos
+## Levantar docker
 
 1. Desde la raíz del proyecto:
 
