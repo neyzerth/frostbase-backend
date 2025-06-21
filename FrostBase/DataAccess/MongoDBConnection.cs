@@ -19,9 +19,9 @@ public class MongoDbConnection
     {
         try
         {
-            // Crear cliente MongoDB
+            // Create mongo client
             MongoClient client = new MongoClient(connectionString);
-            // Obtener base de datos
+            // get the database
             return client.GetDatabase(databaseName);
         }
         catch (MongoConfigurationException e)
@@ -42,12 +42,15 @@ public class MongoDbConnection
 
     private static IMongoCollection<BsonDocument> GetCollection(string collection)
     {
+        // connection
         IMongoDatabase db = GetDatabase();
+        //return the colecction
         return db.GetCollection<BsonDocument>(collection);
     }
 
     private static List<BsonDocument> Find(string collection, BsonDocument filter)
     {
+        // use find() in a document with BsonDocument filter
         return GetCollection(collection).Find(filter).ToList();
     }
 
