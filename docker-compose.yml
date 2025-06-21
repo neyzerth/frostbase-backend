@@ -1,12 +1,10 @@
-version: '3.9'
-
 services:
   mongo:
     image: mongo:7.0
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
-      - ./mongo-data:/data/db
+      - ./.mongo-data:/data/db
     networks:
       - app-network
 
@@ -16,15 +14,25 @@ services:
       SA_PASSWORD: "Admin123?"
       ACCEPT_EULA: "Y"
     ports:
-      - "1433:1433"
+      - "1434:1433"
     volumes:
-      - ./mssql-data:/var/opt/mssql
+      - ./.mssql-data:/var/opt/mssql
+    networks:
+      - app-network
+  apache:
+    image: httpd:2.4
+    container_name: image-server
+    ports:
+      - "8081:80"
+    volumes:
+      - ./images:/usr/local/apache2/htdocs/images
     networks:
       - app-network
 
 volumes:
   mongo-data:
   mssql-data:
+  image:
 
 networks:
   app-network:

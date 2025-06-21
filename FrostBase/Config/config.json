@@ -1,0 +1,14 @@
+{
+    "SqlServer": {
+        "Server": "localhost,1434",
+        "Database": "test",
+        "User": "SA",
+        "Password": "Admin123?",
+        "TrustServerCertificate": true
+    },
+    "Paths": {
+        "Domain": "http://localhost:8081/",
+        "Server": "../images/",
+        "Photos": "photos/"
+    }
+}
