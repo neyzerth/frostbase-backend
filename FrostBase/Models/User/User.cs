@@ -1,3 +1,5 @@
+namespace FrostBase.Models.User;
+
 public class User
 {
     #region statement
@@ -133,6 +135,7 @@ public class User
         //Test
         User u = new User
         {
+            Id = id,
             FirtsName = "Andres",
             LastName = "Llamas",
             MiddleName = "Brito",
