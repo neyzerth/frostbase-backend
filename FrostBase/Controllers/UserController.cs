@@ -7,26 +7,26 @@ public class UserController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        return Ok("List of Users");
+        return Ok(MessageResponse.GetResponse(1, "Users list", MessageType.Success));
     }
     [HttpGet("{id}")]
     public ActionResult Get(int id)
     {
-        return Ok("Info of user " + id);
+        return Ok(MessageResponse.GetResponse(1, "Info of User "+ id, MessageType.Success));
     }
     [HttpPost]
     public ActionResult Post(/*[FromPost] PostUser p*/)
     {
-        return Ok("User inserted successfully");
+        return Ok(MessageResponse.GetResponse(1, "User inserted", MessageType.Success));
     }
     [HttpPut("{id}")]
     public ActionResult Put(int id /*, [FromPost] PostUser p (??)*/)
     {
-        return Ok("User " + id + " updated successfully");
+        return Ok(MessageResponse.GetResponse(1, "User "+ id +" updated", MessageType.Success));
     }
     [HttpDelete("{id}")]
     public ActionResult Delete(int id)
     {
-        return Ok("User " + id + " deleted successfully");
+        return Ok(MessageResponse.GetResponse(1, "User "+ id +" deleted", MessageType.Success));
     }
 }
