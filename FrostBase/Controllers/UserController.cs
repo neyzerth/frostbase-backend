@@ -9,7 +9,7 @@ public class UserController : ControllerBase
     public ActionResult Get()
     {
         List<User> users = FrostBase.Models.User.User.Get();
-        return Ok(MessageResponse.GetResponse(1, users, MessageType.Success));
+        return Ok(UserListView.GetResponse(users, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(int id)

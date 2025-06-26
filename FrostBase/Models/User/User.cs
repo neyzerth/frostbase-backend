@@ -1,3 +1,4 @@
+using MongoDB.Driver;
 namespace FrostBase.Models.User;
 
 public class User
@@ -5,6 +6,7 @@ public class User
     #region statement
     
     //Sql or mongo statements
+    private static IMongoCollection<User> _userColl = MongoDbConnection.GetCollection<User>("users");
     
     #endregion
     
@@ -18,7 +20,9 @@ public class User
     private string _phone;
     private DateTime _birthDate;
     private string _password;
-    private string _truckId;
+    //TODO - use truck model
+    //private Truck _truck
+    private int _truckId;
 
     #endregion
 
@@ -68,11 +72,11 @@ public class User
 
     public string Password
     {
-        get => _password;
         set => _password = value;
     }
 
-    public string TruckId
+    //public Truck Truck
+    public int TruckId
     {
         get => _truckId;
         set => _truckId = value;
@@ -103,23 +107,23 @@ public class User
                 FirtsName = "Andres",
                 LastName = "Llamas",
                 MiddleName = "Brito",
-                Email = "<EMAIL>",
+                Email = "andres.llamas@gmail.com",
                 Phone = "6643112313",
                 BirthDate = new DateTime(1999, 1, 1),
                 Password = "<PASSWORD>",
-                TruckId = "1"
+                TruckId = 1
             },
             new User
             {
                 Id = 1002,
                 FirtsName = "Neyzer",
-                LastName = "Pompomella",
+                LastName = "Popomella",
                 MiddleName = "Zapata",
-                Email = "<EMAIL>",
+                Email = "neyzer.pompella@gmail.com",
                 Phone = "6643123126",
                 BirthDate = new DateTime(2005, 5, 5),
                 Password = "<PASSWORD>",
-                TruckId = "2"
+                TruckId = 2
             },
         ];
         //End test
@@ -145,11 +149,148 @@ public class User
             Phone = "3123123123",
             BirthDate = new DateTime(1990, 1, 1),
             Password = "<PASSWORD>",
-            TruckId = "1"
+            TruckId = 1
         };
         //End test
         return u;
 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }
+
+    public static bool Insert(User u)
+    {
+        try
+        {
+            _userColl.InsertOne(u);
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
+        
     }
 
     #endregion
