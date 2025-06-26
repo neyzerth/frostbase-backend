@@ -1,12 +1,4 @@
 {
-    "SqlServer": {
-        "Server": "localhost",
-        "Port": "1434",
-        "Database": "frostbase",
-        "User": "SA",
-        "Password": "Admin123?",
-        "TrustServerCertificate": true
-    },
     "MongoDB": {
         "Server": "localhost",
         "Port": "27018",
