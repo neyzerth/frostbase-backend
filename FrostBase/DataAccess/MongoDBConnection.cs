@@ -1,5 +1,4 @@
 using MongoDB.Driver;
-using System;
 using MongoDB.Bson;
 
 public class MongoDbConnection
@@ -40,18 +39,24 @@ public class MongoDbConnection
     }
 
 
-    private static IMongoCollection<BsonDocument> GetCollection(string collection)
+    // <T> is type, we can use any type with this collection (user, truck, etc)
+    public static IMongoCollection<T> GetCollection<T>(string collection)
     {
         // connection
         IMongoDatabase db = GetDatabase();
         //return the colecction
-        return db.GetCollection<BsonDocument>(collection);
+        return db.GetCollection<T>(collection);
     }
 
-    private static List<BsonDocument> Find(string collection, BsonDocument filter)
+    private static List<T> Find<T>(string collection, BsonDocument? filter)
     {
         // use find() in a document with BsonDocument filter
-        return GetCollection(collection).Find(filter).ToList();
+        return GetCollection<T>(collection).Find(filter).ToList();
+    }
+    private static List<BsonDocument> Find(string collection, BsonDocument? filter)
+    {
+        // use find() in a document with BsonDocument filter
+        return GetCollection<BsonDocument>(collection).Find(filter).ToList();
     }
 
     #endregion
