@@ -99,6 +99,7 @@ public class User
         [
             new User
             {
+                Id = 1001,
                 FirtsName = "Andres",
                 LastName = "Llamas",
                 MiddleName = "Brito",
@@ -110,6 +111,7 @@ public class User
             },
             new User
             {
+                Id = 1002,
                 FirtsName = "Neyzer",
                 LastName = "Pompomella",
                 MiddleName = "Zapata",
