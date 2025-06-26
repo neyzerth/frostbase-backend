@@ -18,7 +18,7 @@ public class MongoDbConnection
     {
         try
         {
-            // Create mongo client
+            // Create a mongo client
             MongoClient client = new MongoClient(connectionString);
             // get the database
             return client.GetDatabase(databaseName);
