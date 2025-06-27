@@ -14,7 +14,7 @@ public class UserController : ControllerBase
     public ActionResult Get(int id)
     {
         UserApp userApp = UserApp.Get(id);
-        return Ok(MessageResponse.GetResponse(1, userApp, MessageType.Success));
+        return Ok(UserView.GetResponse(userApp, 1));
     }
     [HttpPost]
     public ActionResult Post(/*[FromPost] PostUser p*/)

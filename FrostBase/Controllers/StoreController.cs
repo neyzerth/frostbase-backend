@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -7,12 +8,14 @@ public class StoreController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        return Ok(MessageResponse.GetResponse(1, "Stores list", MessageType.Success));
+        List<Store> stores = Store.Get();
+        return Ok(StoreListView.GetResponse(stores, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(int id)
     {
-        return Ok(MessageResponse.GetResponse(1, "Info of Store "+ id, MessageType.Success));
+        Store store = Store.Get(id);
+        return Ok(StoreView.GetResponse(store, 1));
     }
     [HttpPost]
     public ActionResult Post(/*[FromPost] PostStore p*/)

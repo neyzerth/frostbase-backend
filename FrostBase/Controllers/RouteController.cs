@@ -7,12 +7,14 @@ public class RoadController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        return Ok(MessageResponse.GetResponse(1, "Roads list", MessageType.Success));
+        List<Route> routes = Route.Get();
+        return Ok(RouteListView.GetResponse(routes, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(int id)
     {
-        return Ok(MessageResponse.GetResponse(1, "Info of Road "+ id, MessageType.Success));
+        Route route = Route.Get(id);
+        return Ok(RouteView.GetResponse(route, 1));
     }
     [HttpPost]
     public ActionResult Post(/*[FromPost] PostRoad p*/)
