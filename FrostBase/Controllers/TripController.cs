@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -7,12 +8,14 @@ public class TripController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        return Ok(MessageResponse.GetResponse(1, "Trips list", MessageType.Success));
+        List<Trip> trips = Trip.Get();
+        return Ok(TripListView.GetResponse(trips, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(int id)
     {
-        return Ok(MessageResponse.GetResponse(1, "Info of Trip "+ id, MessageType.Success));
+        Trip trip = Trip.Get(id);
+        return Ok(TripView.GetResponse(trip, 1));
     }
     [HttpPost]
     public ActionResult Post(/*[FromPost] PostTrip p*/)

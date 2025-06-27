@@ -7,12 +7,14 @@ public class OrderController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        return Ok(MessageResponse.GetResponse(1, "Orders list", MessageType.Success));
+        List<Order> orders = Order.Get();
+        return Ok(OrderListView.GetResponse(orders, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(int id)
     {
-        return Ok(MessageResponse.GetResponse(1, "Info of Order "+ id, MessageType.Success));
+        Order order = Order.Get(id);
+        return Ok(OrderView.GetResponse(order, 1));
     }
     [HttpPost]
     public ActionResult Post(/*[FromPost] PostOrder p*/)

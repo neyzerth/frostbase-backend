@@ -1,10 +1,11 @@
-namespace FrostBase.Models.User;
+using MongoDB.Driver;
 
-public class User
+public class UserApp
 {
     #region statement
     
     //Sql or mongo statements
+    private static IMongoCollection<UserApp> _userColl = MongoDbConnection.GetCollection<UserApp>("users");
     
     #endregion
     
@@ -18,7 +19,7 @@ public class User
     private string _phone;
     private DateTime _birthDate;
     private string _password;
-    private string _truckId;
+    private Truck _truck;
 
     #endregion
 
@@ -68,14 +69,13 @@ public class User
 
     public string Password
     {
-        get => _password;
         set => _password = value;
     }
 
-    public string TruckId
+    public Truck Truck
     {
-        get => _truckId;
-        set => _truckId = value;
+        get => _truck;
+        set => _truck = value;
     }
 
     #endregion
@@ -92,34 +92,34 @@ public class User
     /// Returns a list of all users
     /// </summary>
     /// <returns></returns>
-    public static List<User> Get() 
+    public static List<UserApp> Get() 
     {
         //Test
-        List<User> users =
+        List<UserApp> users =
         [
-            new User
+            new UserApp
             {
                 Id = 1001,
                 FirtsName = "Andres",
                 LastName = "Llamas",
                 MiddleName = "Brito",
-                Email = "<EMAIL>",
+                Email = "andres.llamas@gmail.com",
                 Phone = "6643112313",
                 BirthDate = new DateTime(1999, 1, 1),
                 Password = "<PASSWORD>",
-                TruckId = "1"
+                Truck = Truck.Get(1003)
             },
-            new User
+            new UserApp
             {
                 Id = 1002,
                 FirtsName = "Neyzer",
-                LastName = "Pompomella",
+                LastName = "Popomella",
                 MiddleName = "Zapata",
-                Email = "<EMAIL>",
+                Email = "neyzer.pompella@gmail.com",
                 Phone = "6643123126",
                 BirthDate = new DateTime(2005, 5, 5),
                 Password = "<PASSWORD>",
-                TruckId = "2"
+                Truck = Truck.Get(1001)
             },
         ];
         //End test
@@ -132,10 +132,10 @@ public class User
     /// </summary>
     /// <param name="id">User id</param>
     /// <returns></returns>
-    public static User Get(int id)
+    public static UserApp Get(int id)
     {
         //Test
-        User u = new User
+        UserApp u = new UserApp
         {
             Id = id,
             FirtsName = "Andres",
@@ -145,11 +145,24 @@ public class User
             Phone = "3123123123",
             BirthDate = new DateTime(1990, 1, 1),
             Password = "<PASSWORD>",
-            TruckId = "1"
+            Truck = Truck.Get(1001)
         };
         //End test
         return u;
+    }
 
+    public static bool Insert(UserApp u)
+    {
+        try
+        {
+            _userColl.InsertOne(u);
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
     }
 
     #endregion

@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using FrostBase.Enumerators;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -7,12 +9,14 @@ public class AlertController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        return Ok(MessageResponse.GetResponse(1, "Alerts list", MessageType.Success));
+        List<Alert> alerts = Alert.Get();
+        return Ok(AlertListView.GetResponse(alerts, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(int id)
     {
-        return Ok(MessageResponse.GetResponse(1, "Info of Alert "+ id, MessageType.Success));
+        Alert alert = Alert.Get(id);
+        return Ok(AlertView.GetResponse(alert, 1));
     }
     [HttpPost]
     public ActionResult Post(/*[FromPost] PostAlert p*/)

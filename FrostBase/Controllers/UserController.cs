@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using FrostBase.Models.User;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -8,14 +7,14 @@ public class UserController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        List<User> users = FrostBase.Models.User.User.Get();
-        return Ok(MessageResponse.GetResponse(1, users, MessageType.Success));
+        List<UserApp> users = UserApp.Get();
+        return Ok(UserListView.GetResponse(users, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(int id)
     {
-        User user = FrostBase.Models.User.User.Get(id);
-        return Ok(MessageResponse.GetResponse(1, user, MessageType.Success));
+        UserApp userApp = UserApp.Get(id);
+        return Ok(UserView.GetResponse(userApp, 1));
     }
     [HttpPost]
     public ActionResult Post(/*[FromPost] PostUser p*/)
