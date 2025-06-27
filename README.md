@@ -1,4 +1,4 @@
-# Levantar servicios con docker (MSSQL-Server, MongoDB, Apache)
+# Levantar servicios con docker (MongoDB, Apache)
 
 ## Instalar docker
 
@@ -34,4 +34,4 @@
 
    ```bash
    docker compose up -d
-	```
+   ```
