@@ -107,7 +107,7 @@ public class UserApp
                 Phone = "6643112313",
                 BirthDate = new DateTime(1999, 1, 1),
                 Password = "<PASSWORD>",
-                Truck = new Truck()
+                Truck = Truck.Get(1003)
             },
             new UserApp
             {
@@ -119,7 +119,7 @@ public class UserApp
                 Phone = "6643123126",
                 BirthDate = new DateTime(2005, 5, 5),
                 Password = "<PASSWORD>",
-                Truck = new Truck()
+                Truck = Truck.Get(1001)
             },
         ];
         //End test
@@ -145,7 +145,7 @@ public class UserApp
             Phone = "3123123123",
             BirthDate = new DateTime(1990, 1, 1),
             Password = "<PASSWORD>",
-            Truck = new Truck()
+            Truck = Truck.Get(1001)
         };
         //End test
         return u;
