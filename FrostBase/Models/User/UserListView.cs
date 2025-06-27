@@ -1,10 +1,8 @@
-namespace FrostBase.Models.User;
-
 public class UserListView : JsonResponse
 {
-    public List<User> Users { get; set; }
+    public List<UserApp> Users { get; set; }
 
-    public static UserListView GetResponse(List<User> users, int status)
+    public static UserListView GetResponse(List<UserApp> users, int status)
     {
         return new UserListView
         {

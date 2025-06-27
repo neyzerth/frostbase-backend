@@ -1,12 +1,11 @@
 using MongoDB.Driver;
-namespace FrostBase.Models.User;
 
-public class User
+public class UserApp
 {
     #region statement
     
     //Sql or mongo statements
-    private static IMongoCollection<User> _userColl = MongoDbConnection.GetCollection<User>("users");
+    private static IMongoCollection<UserApp> _userColl = MongoDbConnection.GetCollection<UserApp>("users");
     
     #endregion
     
@@ -20,9 +19,7 @@ public class User
     private string _phone;
     private DateTime _birthDate;
     private string _password;
-    //TODO - use truck model
-    //private Truck _truck
-    private int _truckId;
+    private Truck _truck;
 
     #endregion
 
@@ -75,11 +72,10 @@ public class User
         set => _password = value;
     }
 
-    //public Truck Truck
-    public int TruckId
+    public Truck Truck
     {
-        get => _truckId;
-        set => _truckId = value;
+        get => _truck;
+        set => _truck = value;
     }
 
     #endregion
@@ -96,12 +92,12 @@ public class User
     /// Returns a list of all users
     /// </summary>
     /// <returns></returns>
-    public static List<User> Get() 
+    public static List<UserApp> Get() 
     {
         //Test
-        List<User> users =
+        List<UserApp> users =
         [
-            new User
+            new UserApp
             {
                 Id = 1001,
                 FirtsName = "Andres",
@@ -111,9 +107,9 @@ public class User
                 Phone = "6643112313",
                 BirthDate = new DateTime(1999, 1, 1),
                 Password = "<PASSWORD>",
-                TruckId = 1
+                Truck = new Truck()
             },
-            new User
+            new UserApp
             {
                 Id = 1002,
                 FirtsName = "Neyzer",
@@ -123,7 +119,7 @@ public class User
                 Phone = "6643123126",
                 BirthDate = new DateTime(2005, 5, 5),
                 Password = "<PASSWORD>",
-                TruckId = 2
+                Truck = new Truck()
             },
         ];
         //End test
@@ -136,10 +132,10 @@ public class User
     /// </summary>
     /// <param name="id">User id</param>
     /// <returns></returns>
-    public static User Get(int id)
+    public static UserApp Get(int id)
     {
         //Test
-        User u = new User
+        UserApp u = new UserApp
         {
             Id = id,
             FirtsName = "Andres",
@@ -149,136 +145,13 @@ public class User
             Phone = "3123123123",
             BirthDate = new DateTime(1990, 1, 1),
             Password = "<PASSWORD>",
-            TruckId = 1
+            Truck = new Truck()
         };
         //End test
         return u;
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     }
 
-    public static bool Insert(User u)
+    public static bool Insert(UserApp u)
     {
         try
         {
@@ -290,7 +163,6 @@ public class User
             Console.WriteLine(e);
             return false;
         }
-        
     }
 
     #endregion
