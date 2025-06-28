@@ -1,3 +1,4 @@
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
 public class Truck
@@ -23,36 +24,40 @@ public class Truck
 
     #region properties
 
+    [BsonId]
     public int Id
     {
         get => _id;
         set => _id = value;
     }
-
+    [BsonElement("brand")]
     public string Brand
     {
         get => _brand;
         set => _brand = value;
     }
-
+    [BsonElement("model")]
     public string Model
     {
         get => _model;
         set => _model = value;
     }
 
+    [BsonElement("licensePlate")]
     public string LicensePlate
     {
         get => _licensePlate;
         set => _licensePlate = value;
     }
 
+    [BsonElement("capacity")]
     public int Capacity
     {
         get => _capacity;
         set => _capacity = value;
     }
 
+    [BsonElement("state")]
     public bool State
     {
         get => _state;

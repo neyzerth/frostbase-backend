@@ -1,3 +1,4 @@
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
 public class UserApp
@@ -25,53 +26,65 @@ public class UserApp
 
     #region properties
 
+    [BsonId]
     public int Id
     {
         get => _id;
         set => _id = value;
     }
-
+    
+    [BsonElement("first_name")]
     public string FirtsName
     {
         get => _firtsName;
         set => _firtsName = value;
     }
 
+    [BsonElement("last_name")]   
     public string LastName
     {
         get => _lastName;
         set => _lastName = value;
     }
 
+    [BsonElement("middle_name")]
     public string MiddleName
     {
         get => _middleName;
         set => _middleName = value;
     }
 
+    [BsonElement("email")]
     public string Email
     {
         get => _email;
         set => _email = value;
     }
 
+    [BsonElement("phone")]
     public string Phone
     {
         get => _phone;
         set => _phone = value;
     }
 
+    [BsonElement("birth_date")]
     public DateTime BirthDate
     {
         get => _birthDate;
         set => _birthDate = value;
     }
 
+    [BsonElement("password")]
     public string Password
     {
         set => _password = value;
     }
 
+    [BsonElement("IDTruck")] 
+    public int IDTruck { get => _truck.Id; set => _truck.Id = value; }
+
+    [BsonIgnore]
     public Truck Truck
     {
         get => _truck;

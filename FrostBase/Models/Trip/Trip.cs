@@ -1,6 +1,7 @@
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using MongoDB.Bson.Serialization.Attributes;
 
 public class Trip
 {
@@ -19,55 +20,70 @@ public class Trip
     private TimeSpan _endHour;
     private bool _state;
     private TimeSpan _totalTime;
-    private int _idRoute;
+    private Route _route;
     private List<Order> _orders;
 
     #endregion
 
     #region properties
 
+    [BsonId]
     public int Id
     {
         get => _id;
         set => _id = value;
     }
 
+    [BsonElement("date")]
     public DateTime Date
     {
         get => _date;
         set => _date = value;
     }
 
+    [BsonElement("start_hour")]
     public TimeSpan StartHour
     {
         get => _startHour;
         set => _startHour = value;
     }
 
+    [BsonElement("end_hour")]   
     public TimeSpan EndHour
     {
         get => _endHour;
         set => _endHour = value;
     }
 
+    //TODO - is a object
+    [BsonElement("state")]  
     public bool State
     {
         get => _state;
         set => _state = value;
     }
 
+    [BsonElement("total_time")] 
     public TimeSpan TotalTime
     {
         get => _totalTime;
         set => _totalTime = value;
     }
 
+    [BsonElement("id_route")]
     public int IDRoute
     {
-        get => _idRoute;
-        set => _idRoute = value;
+        get => _route.Id;
+        set => _route.Id = value;
     }
 
+    [BsonIgnore]
+    public Route Route
+    {
+        get => _route;
+        set => _route = value;
+    }
+    [BsonElement("orders")]
     public List<Order> Orders
     {
         get => _orders;
