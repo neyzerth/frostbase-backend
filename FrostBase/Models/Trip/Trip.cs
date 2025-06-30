@@ -2,6 +2,7 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 public class Trip
 {
@@ -69,8 +70,9 @@ public class Trip
         get => _totalTime;
         set => _totalTime = value;
     }
-
+    
     [BsonElement("id_route")]
+    [JsonIgnore]
     public int IDRoute
     {
         get => _route.Id;
