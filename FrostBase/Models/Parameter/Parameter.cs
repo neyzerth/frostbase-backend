@@ -1,5 +1,6 @@
 using MongoDB.Driver;
 using System;
+using MongoDB.Bson.Serialization.Attributes;
 
 public class Parameter
 {
@@ -22,30 +23,34 @@ public class Parameter
 
     #region properties
 
+    [BsonId]
     public int Id
     {
         get => _id;
         set => _id = value;
     }
 
+    [BsonElement("max_temperature")]
     public decimal MaxTemperature
     {
         get => _maxTemperature;
         set => _maxTemperature = value;
     }
-
+    [BsonElement("max_humidity")]
     public int MaxHumidity
     {
         get => _maxHumidity;
         set => _maxHumidity = value;
     }
 
+    [BsonElement("min_temperature")]
     public decimal MinTemperature
     {
         get => _minTemperature;
         set => _minTemperature = value;
     }
 
+    [BsonElement("min_humidity")]
     public int MinHumidity
     {
         get => _minHumidity;
