@@ -1,6 +1,6 @@
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 public class Route
 {
@@ -22,24 +22,36 @@ public class Route
 
     #region properties
 
+    [BsonId]
     public int Id
     {
         get => _id;
         set => _id = value;
     }
 
+    [BsonElement("name")]
     public string Name
     {
         get => _name;
         set => _name = value;
     }
 
+    [JsonIgnore]
+    [BsonElement("IDUser")]
+    public int IDUser
+    {
+        get => _user.Id;
+        set => _user.Id = value;
+    }
+
+    [BsonIgnore]
     public UserApp User
     {
         get => _user;
         set => _user = value;
     }
 
+    [BsonElement("stores")]
     public List<Store> Stores
     {
         get => _stores;
