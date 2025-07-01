@@ -1,5 +1,7 @@
+using FrostBase.Models.Truck;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
+
 
 public class Truck
 {
@@ -17,7 +19,7 @@ public class Truck
     private string _model;
     private string _licensePlate;
     private int _capacity;
-    private bool _state;
+    private StateTruck _stateTruck;
 
 
     #endregion
@@ -58,11 +60,11 @@ public class Truck
     }
 
     [BsonElement("state")]
-    public bool State
+    public StateTruck State
     {
-        get => _state;
-        set => _state = value;
-    }
+        get => _stateTruck;
+        set => _stateTruck = value;
+    }   
 
     #endregion
     
@@ -84,7 +86,8 @@ public class Truck
                 Model = "Test",
                 LicensePlate = "836DAS92",
                 Capacity = 100,
-                State = true
+                State = StateTruck.GetById(1001)
+                
             },
             new Truck
             {
@@ -93,13 +96,15 @@ public class Truck
                 Model = "Test",
                 LicensePlate = "AS92JAK3",
                 Capacity = 100,
-                State = true
+                State = StateTruck.GetById(1002)
             },
         ];
         //End test
         
         return trucks;
     }
+    
+    
 
     /// <summary>
     /// Returns the user with the specified id
@@ -117,7 +122,7 @@ public class Truck
             Model = "Test",
             LicensePlate = "JAKAS3R3",
             Capacity = 100,
-            State = true
+            
         };
         //End test
         return u;

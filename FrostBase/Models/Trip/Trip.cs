@@ -1,6 +1,7 @@
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using FrostBase.Models.Trip;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 
@@ -19,7 +20,7 @@ public class Trip
     private DateTime _date;
     private TimeSpan _startHour;
     private TimeSpan _endHour;
-    private bool _state;
+    private StateTrip _stateTrip;
     private TimeSpan _totalTime;
     private Route _route;
     private List<Order> _orders;
@@ -57,11 +58,12 @@ public class Trip
     }
 
     //TODO - is a object
-    [BsonElement("state")]  
-    public bool State
+    [BsonElement("stateTrip")]  
+    public StateTrip StateTrip
     {
-        get => _state;
-        set => _state = value;
+        get => _stateTrip;
+        set => _stateTrip = value;
+        
     }
 
     [BsonElement("total_time")] 
@@ -111,10 +113,10 @@ public class Trip
                 Date = DateTime.Now,
                 StartHour = new TimeSpan(8, 0, 0),
                 EndHour = new TimeSpan(12, 0, 0),
-                State = true,
+                StateTrip = new StateTrip{ Id = 1, State = "En ruta"},
                 TotalTime = new TimeSpan(4, 0, 0),
                 IDRoute = 1,
-                Orders = new List<Order>()
+                Orders = Order.Get()
             },
             new Trip
             {
@@ -122,10 +124,10 @@ public class Trip
                 Date = DateTime.Now.AddDays(1),
                 StartHour = new TimeSpan(9, 0, 0),
                 EndHour = new TimeSpan(14, 0, 0),
-                State = true,
+                StateTrip = new StateTrip{ Id = 1, State = "Cancelado"},
                 TotalTime = new TimeSpan(5, 0, 0),
                 IDRoute = 2,
-                Orders = new List<Order>()
+                Orders = Order.Get()
             },
         ];
         //End test
@@ -147,7 +149,7 @@ public class Trip
             Date = DateTime.Now,
             StartHour = new TimeSpan(8, 0, 0),
             EndHour = new TimeSpan(12, 0, 0),
-            State = true,
+            
             TotalTime = new TimeSpan(4, 0, 0),
             IDRoute = 1,
             Orders = new List<Order>()
