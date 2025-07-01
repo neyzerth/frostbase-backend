@@ -18,9 +18,12 @@ public class StoreController : ControllerBase
         return Ok(StoreView.GetResponse(store, 1));
     }
     [HttpPost]
-    public ActionResult Post(/*[FromPost] PostStore p*/)
+    public ActionResult Post([FromForm] Store s)
     {
-        return Ok(MessageResponse.GetResponse(1, "Store inserted", MessageType.Success));
+        if(Store.Insert(s))
+            return Ok(MessageResponse.GetResponse(1, "Store inserted", MessageType.Success));
+        
+        return BadRequest(MessageResponse.GetResponse(1, "Store not inserted", MessageType.Error));
     }
     [HttpPut("{id}")]
     public ActionResult Put(int id /*, [FromPost] PostStore p (??)*/)
