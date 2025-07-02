@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc;
-using FrostBase.Enumerators;
 
 [Route("api/[controller]")]
 [ApiController]

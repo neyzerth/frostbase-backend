@@ -76,8 +76,7 @@ public class Truck
                 Id = 1001,
                 Brand = "Test",
                 Model = "Test",
-                LicensePlate = "836DAS92",
-                State = StateTruck.GetById(1001)
+                LicensePlate = "836DAS92"
                 
             },
             new Truck
@@ -85,8 +84,7 @@ public class Truck
                 Id = 1002,
                 Brand = "Test",
                 Model = "Test",
-                LicensePlate = "AS92JAK3",
-                State = StateTruck.GetById(1002)
+                LicensePlate = "AS92JAK3"
             },
         ];
         //End test
@@ -110,9 +108,7 @@ public class Truck
             Id = id,
             Brand = "Test",
             Model = "Test",
-            LicensePlate = "JAKAS3R3",
-            Capacity = 100,
-            State = true
+            LicensePlate = "JAKAS3R3"
         };
         //End test
         return u;
