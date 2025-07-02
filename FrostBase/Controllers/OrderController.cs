@@ -8,13 +8,13 @@ public class OrderController : ControllerBase
     public ActionResult Get()
     {
         List<Order> orders = Order.Get();
-        return Ok(ListResponse<Order>.GetResponse(orders, 1));
+        return Ok(OrderListView.GetResponse(orders, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(int id)
     {
         Order order = Order.Get(id);
-        return Ok(Response<Order>.GetResponse(order, 1));
+        return Ok(OrderView.GetResponse(order, 1));
     }
     [HttpPost]
     public ActionResult Post(/*[FromPost] PostOrder p*/)

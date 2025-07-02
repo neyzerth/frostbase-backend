@@ -1,5 +1,6 @@
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
+namespace FrostBase.Models.Truck;
 
 public class StateTruck
 {
