@@ -1,7 +1,4 @@
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using FrostBase.Models.Trip;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 

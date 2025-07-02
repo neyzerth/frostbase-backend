@@ -107,8 +107,6 @@ public class Truck
             Brand = "Test",
             Model = "Test",
             LicensePlate = "JAKAS3R3",
-            Capacity = 100,
-            State = true
         };
         //End test
         return u;
