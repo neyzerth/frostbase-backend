@@ -7,7 +7,8 @@ public class Trip
     #region statement
     
     //Sql or mongo statements
-    private static IMongoCollection<Trip> _tripColl = MongoDbConnection.GetCollection<Trip>("trips");
+    private static IMongoCollection<Trip> _tripColl = 
+        MongoDbConnection.GetCollection<Trip>("trips");
     
     #endregion
     

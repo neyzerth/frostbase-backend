@@ -9,21 +9,24 @@ public class TripController : ControllerBase
     public ActionResult Get()
     {
         List<Trip> trips = Trip.Get();
-        return Ok(TripListView.GetResponse(trips, 1));
+        return Ok(ListResponse<Trip>.GetResponse(trips, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(int id)
     {
         Trip trip = Trip.Get(id);
-        return Ok(TripView.GetResponse(trip, 1));
+        return Ok(Response<Trip>.GetResponse(trip, 1));
     }
     [HttpPost]
-    public ActionResult Post(/*[FromPost] PostTrip p*/)
+    public ActionResult Post([FromForm] Trip t)
     {
-        return Ok(MessageResponse.GetResponse(1, "Trip inserted", MessageType.Success));
+        if(Trip.Insert(t)) 
+            return Ok(MessageResponse.GetResponse(1, "Trip inserted", MessageType.Success));
+            
+        return BadRequest(MessageResponse.GetResponse(1, "Trip not inserted", MessageType.Error));
     }
     [HttpPut("{id}")]
-    public ActionResult Put(int id /*, [FromPost] PostTrip p (??)*/)
+    public ActionResult Put(int id, [FromForm] PostTrip t)
     {
         return Ok(MessageResponse.GetResponse(1, "Trip "+ id +" updated", MessageType.Success));
     }
