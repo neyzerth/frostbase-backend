@@ -8,21 +8,18 @@ public class RoadController : ControllerBase
     public ActionResult Get()
     {
         List<Route> routes = Route.Get();
-        return Ok(ListResponse<Route>.GetResponse(routes, 1));
+        return Ok(RouteListView.GetResponse(routes, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(int id)
     {
         Route route = Route.Get(id);
-        return Ok(Response<Route>.GetResponse(route, 1));
+        return Ok(RouteView.GetResponse(route, 1));
     }
     [HttpPost]
-    public ActionResult Post([FromForm] Route r)
+    public ActionResult Post(/*[FromPost] PostRoad p*/)
     {
-        if(Route.Insert(r))
-            return Ok(MessageResponse.GetResponse(1, "Road inserted", MessageType.Success));
-        
-        return BadRequest(MessageResponse.GetResponse(1, "Road not inserted", MessageType.Error));
+        return Ok(MessageResponse.GetResponse(1, "Road inserted", MessageType.Success));
     }
     [HttpPut("{id}")]
     public ActionResult Put(int id /*, [FromPost] PostRoad p (??)*/)

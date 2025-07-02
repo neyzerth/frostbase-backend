@@ -8,21 +8,18 @@ public class UserController : ControllerBase
     public ActionResult Get()
     {
         List<UserApp> users = UserApp.Get();
-        return Ok(ListResponse<UserApp>.GetResponse(users, 1));
+        return Ok(UserListView.GetResponse(users, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(int id)
     {
         UserApp userApp = UserApp.Get(id);
-        return Ok(Response<UserApp>.GetResponse(userApp, 1));
+        return Ok(UserView.GetResponse(userApp, 1));
     }
     [HttpPost]
-    public ActionResult Post([FromForm] UserApp u)
+    public ActionResult Post(/*[FromPost] PostUser p*/)
     {
-        if(UserApp.Insert(u))
-            return Ok(MessageResponse.GetResponse(1, "User inserted", MessageType.Success));
-            
-        return BadRequest(MessageResponse.GetResponse(1, "User not inserted", MessageType.Error));
+        return Ok(MessageResponse.GetResponse(1, "User inserted", MessageType.Success));
     }
     [HttpPut("{id}")]
     public ActionResult Put(int id /*, [FromPost] PostUser p (??)*/)
