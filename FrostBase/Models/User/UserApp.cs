@@ -13,7 +13,7 @@ public class UserApp
     #region attributes
 
     private int _id;
-    private string _firstName;
+    private string _firtsName;
     private string _lastName;
     private string _middleName;
     private string _email;
@@ -34,10 +34,10 @@ public class UserApp
     }
     
     [BsonElement("first_name")]
-    public string FirstName
+    public string FirtsName
     {
-        get => _firstName;
-        set => _firstName = value;
+        get => _firtsName;
+        set => _firtsName = value;
     }
 
     [BsonElement("last_name")]   
@@ -113,7 +113,7 @@ public class UserApp
             new UserApp
             {
                 Id = 1001,
-                FirstName = "Andres",
+                FirtsName = "Andres",
                 LastName = "Llamas",
                 MiddleName = "Brito",
                 Email = "andres.llamas@gmail.com",
@@ -125,7 +125,7 @@ public class UserApp
             new UserApp
             {
                 Id = 1002,
-                FirstName = "Neyzer",
+                FirtsName = "Neyzer",
                 LastName = "Popomella",
                 MiddleName = "Zapata",
                 Email = "neyzer.pompella@gmail.com",
@@ -151,7 +151,7 @@ public class UserApp
         UserApp u = new UserApp
         {
             Id = id,
-            FirstName = "Andres",
+            FirtsName = "Andres",
             LastName = "Llamas",
             MiddleName = "Brito",
             Email = "<EMAIL>",

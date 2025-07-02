@@ -1,5 +1,6 @@
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
+namespace FrostBase.Models.Truck;
 
 public class StateTruck
 {
@@ -38,27 +39,40 @@ public class StateTruck
             new StateTruck
             {
                 Id = 1,
-                State = "Funcionando"
+                State = "Operating"
             },
 
             new StateTruck
             {
                 Id = 2,
-                State = "Fuera de servicio"
+                State = "Out of service"
             },
 
             new StateTruck
             {
                 Id = 3,
-                State = "En reparación"
+                State = "In maintenance"
+            },
+            
+            new StateTruck
+            {
+            Id = 4,
+            State = "Under repair"
             }
         ];
         return stateTrucks;
     }
     //Returns the state of a specific truck (test)
-    public static StateTruck GetById(int id)
+    public static StateTruck Get(int id)
     {
-        return Get().FirstOrDefault(s => s.Id == id);
+        StateTruck state = new StateTruck
+        {
+            Id = id,
+            State = "Operating"
+
+        };
+        //End test
+        return state;
     }
 
     #endregion
