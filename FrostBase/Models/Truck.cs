@@ -1,4 +1,3 @@
-using FrostBase.Models.Truck;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
