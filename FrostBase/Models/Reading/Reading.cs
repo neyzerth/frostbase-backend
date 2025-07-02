@@ -1,6 +1,5 @@
 using MongoDB.Driver;
-using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
+using System;
 
 public class Reading
 {
@@ -26,63 +25,48 @@ public class Reading
 
     #region properties
 
-    [BsonId]
     public int Id
     {
         get => _id;
         set => _id = value;
     }
 
-    [BsonElement("date")]
     public DateTime Date
     {
         get => _date;
         set => _date = value;
     }
 
-    [BsonElement("door_state")]
     public bool DoorState
     {
         get => _doorState;
         set => _doorState = value;
     }
 
-    [BsonElement("temp")]
-    public decimal Temperature
+    public decimal Temp
     {
         get => _temp;
         set => _temp = value;
     }
 
-    [BsonElement("perc_humidity")]
     public int PercHumidity
     {
         get => _percHumidity;
         set => _percHumidity = value;
     }
 
-    [BsonElement("latitude")]
     public double Latitude
     {
         get => _latitude;
         set => _latitude = value;
     }
 
-    [BsonElement("longitude")]
     public double Longitude
     {
         get => _longitude;
         set => _longitude = value;
     }
 
-    [JsonIgnore]
-    [BsonElement("IDTruck")]
-    public int IDTruck
-    {
-        get => _truck.Id;
-        set => _truck.Id = value;
-    }
-    [BsonIgnore]
     public Truck Truck
     {
         get => _truck;
@@ -107,7 +91,7 @@ public class Reading
                 Id = 1001,
                 Date = DateTime.Now.AddHours(-2),
                 DoorState = false,
-                Temperature = 4.5m,
+                Temp = 4.5m,
                 PercHumidity = 75,
                 Latitude = 32.5123,
                 Longitude = -116.7832,
@@ -118,7 +102,7 @@ public class Reading
                 Id = 1002,
                 Date = DateTime.Now.AddHours(-1),
                 DoorState = true,
-                Temperature = 6.2m,
+                Temp = 6.2m,
                 PercHumidity = 80,
                 Latitude = 32.5145,
                 Longitude = -116.7845,
@@ -143,7 +127,7 @@ public class Reading
             Id = id,
             Date = DateTime.Now.AddHours(-1),
             DoorState = false,
-            Temperature = 5.1m,
+            Temp = 5.1m,
             PercHumidity = 77,
             Latitude = 32.5123,
             Longitude = -116.7832,
