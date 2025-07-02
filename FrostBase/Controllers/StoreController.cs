@@ -9,13 +9,13 @@ public class StoreController : ControllerBase
     public ActionResult Get()
     {
         List<Store> stores = Store.Get();
-        return Ok(StoreListView.GetResponse(stores, 1));
+        return Ok(ListResponse<Store>.GetResponse(stores, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(int id)
     {
         Store store = Store.Get(id);
-        return Ok(StoreView.GetResponse(store, 1));
+        return Ok(Response<Store>.GetResponse(store, 1));
     }
     [HttpPost]
     public ActionResult Post([FromForm] Store s)

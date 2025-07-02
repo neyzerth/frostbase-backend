@@ -10,13 +10,13 @@ public class AlertController : ControllerBase
     public ActionResult Get()
     {
         List<Alert> alerts = Alert.Get();
-        return Ok(AlertListView.GetResponse(alerts, 1));
+        return Ok(ListResponse<Alert>.GetResponse(alerts, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(int id)
     {
         Alert alert = Alert.Get(id);
-        return Ok(AlertView.GetResponse(alert, 1));
+        return Ok(Response<Alert>.GetResponse(alert, 1));
     }
     [HttpPost]
     public ActionResult Post(/*[FromPost] PostAlert p*/)
