@@ -1,7 +1,4 @@
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using FrostBase.Models.Trip;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 
@@ -10,7 +7,8 @@ public class Trip
     #region statement
     
     //Sql or mongo statements
-    private static IMongoCollection<Trip> _tripColl = MongoDbConnection.GetCollection<Trip>("trips");
+    private static IMongoCollection<Trip> _tripColl = 
+        MongoDbConnection.GetCollection<Trip>("trips");
     
     #endregion
     

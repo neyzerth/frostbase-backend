@@ -18,7 +18,6 @@ public class Truck
     private string _brand;
     private string _model;
     private string _licensePlate;
-    private int _capacity;
     private StateTruck _stateTruck;
 
 
@@ -52,13 +51,6 @@ public class Truck
         set => _licensePlate = value;
     }
 
-    [BsonElement("capacity")]
-    public int Capacity
-    {
-        get => _capacity;
-        set => _capacity = value;
-    }
-
     [BsonElement("state")]
     public StateTruck State
     {
@@ -76,7 +68,7 @@ public class Truck
     /// <returns></returns>
     public static List<Truck> Get() 
     {
-        
+        //Test 1
         List<Truck> trucks =
         [
             new Truck
@@ -84,9 +76,7 @@ public class Truck
                 Id = 1001,
                 Brand = "Test",
                 Model = "Test",
-                LicensePlate = "836DAS92",
-                Capacity = 100,
-                State = StateTruck.Get(1001)
+                LicensePlate = "836DAS92"
                 
             },
             new Truck
@@ -94,11 +84,10 @@ public class Truck
                 Id = 1002,
                 Brand = "Test",
                 Model = "Test",
-                LicensePlate = "AS92JAK3",
-                Capacity = 100,
-                State = StateTruck.Get(1002)
+                LicensePlate = "AS92JAK3"
             },
         ];
+        //End test
         
         return trucks;
     }
@@ -112,16 +101,16 @@ public class Truck
     /// <returns></returns>
     public static Truck Get(int id)
     {
+        //Test
         
         Truck u = new Truck
         {
             Id = id,
             Brand = "Test",
             Model = "Test",
-            LicensePlate = "JAKAS3R3",
-            Capacity = 100,
-            
+            LicensePlate = "JAKAS3R3"
         };
+        //End test
         return u;
     }
 
