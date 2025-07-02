@@ -1,3 +1,4 @@
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
 namespace FrostBase.Models.Alert;
@@ -5,7 +6,7 @@ namespace FrostBase.Models.Alert;
 public class AlertType
 {
     #region statement
-    private static IMongoCollection<AlertType> _alertTypeColl = MongoDbConnection.GetCollection<AlertType>("alertType");
+    private static IMongoCollection<AlertType> _alertTypeColl = MongoDbConnection.GetCollection<AlertType>("alertTypes");
     #endregion
     
     #region attributes
@@ -18,18 +19,21 @@ public class AlertType
 
     #region properties
 
+    [BsonId]
     public int Id
     {
         get => _id;
         set => _id = value;
     }
-
+    
+    [BsonElement("type")]
     public string Type
     {
         get => _type;
         set => _type = value;
     }
     
+    [BsonElement("message")]
     public string Message
     {
         get => _message;
@@ -47,23 +51,30 @@ public class AlertType
             new AlertType
             {
                 Id = 1,
-                Type = "Puerta abierta",
-                Message = "La puerta ha sido abierta por más de 2 minutos."
+                Type = "Open door",
+                Message = "Door has been opened for up to 2 minutes"
             },
 
             new AlertType
             {
                 Id = 2,
-                Type = "Temperatura alta",
-                Message = "La temperatura ha superado los 8°C."
+                Type = "High temperature",
+                Message = "Temperature has increased to 8°C."
             }
         ];
         return alertTypes;
     }
-    //Returns the state of a specific truck (test)
+    //Returns the alert of a specific truck
     public static AlertType GetById(int id)
     {
-        return Get().FirstOrDefault(s => s.Id == id);
+        AlertType alert = new AlertType
+        {
+            Id = id,
+            Type = "Open door",
+            Message = "Door has been opened for up to 2 minutes"
+        };
+        
+        return alert;
     }
 
     #endregion

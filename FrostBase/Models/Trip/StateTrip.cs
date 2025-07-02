@@ -38,26 +38,35 @@ public class StateTrip
             new StateTrip
             {
                 Id = 1,
-                State = "En ruta"
+                State = "In transit"
             },
 
             new StateTrip
             {
                 Id = 2,
-                State = "Cancelado"
+                State = "Canceled"
             },
 
             new StateTrip
             {
                 Id = 3,
-                State = "Completado"
+                State = "Completed"
             }
         ];
         return stateTrips;
     }
     
-    
-
+    public static StateTrip Get(int id)
+    {
+        //Test
+        StateTrip state = new StateTrip
+        {
+            Id = id,
+            State = "In transit"
+        };
+        //End test
+        return state;
+    }
     #endregion
 
 }

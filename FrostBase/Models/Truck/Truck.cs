@@ -76,7 +76,7 @@ public class Truck
     /// <returns></returns>
     public static List<Truck> Get() 
     {
-        //Test
+        
         List<Truck> trucks =
         [
             new Truck
@@ -86,7 +86,7 @@ public class Truck
                 Model = "Test",
                 LicensePlate = "836DAS92",
                 Capacity = 100,
-                State = StateTruck.GetById(1001)
+                State = StateTruck.Get(1001)
                 
             },
             new Truck
@@ -96,10 +96,9 @@ public class Truck
                 Model = "Test",
                 LicensePlate = "AS92JAK3",
                 Capacity = 100,
-                State = StateTruck.GetById(1002)
+                State = StateTruck.Get(1002)
             },
         ];
-        //End test
         
         return trucks;
     }
@@ -113,7 +112,6 @@ public class Truck
     /// <returns></returns>
     public static Truck Get(int id)
     {
-        //Test
         
         Truck u = new Truck
         {
@@ -124,7 +122,6 @@ public class Truck
             Capacity = 100,
             
         };
-        //End test
         return u;
     }
 
