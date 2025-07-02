@@ -1,5 +1,6 @@
 using MongoDB.Driver;
 using System;
+using MongoDB.Bson.Serialization.Attributes;
 
 public class Order
 {
@@ -21,31 +22,36 @@ public class Order
     #endregion
 
     #region properties
-
+    
+    [BsonId]
     public int Id
     {
         get => _id;
         set => _id = value;
     }
-
+    
+    [BsonElement("date")]
     public DateTime Date
     {
         get => _date;
         set => _date = value;
     }
-
+    
+    [BsonElement("delivered")]
     public DateTime? Delivered
     {
         get => _delivered;
         set => _delivered = value;
     }
-
+    
+    [BsonElement("user")]
     public UserApp User
     {
         get => _user;
         set => _user = value;
     }
-
+    
+    [BsonElement("store")]
     public Store Store
     {
         get => _store;

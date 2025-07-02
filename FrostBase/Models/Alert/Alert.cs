@@ -1,6 +1,7 @@
 using MongoDB.Driver;
 using System;
-using FrostBase.Enumerators;
+using FrostBase.Models.Alert;
+using MongoDB.Bson.Serialization.Attributes;
 
 public class Alert
 {
@@ -14,9 +15,8 @@ public class Alert
     #region attributes
     
     private int _id;
-    private string _message;
-    private DateTime _date;
     private bool _state;
+    private DateTime _date;
     private decimal _detectedValue;
     private AlertType _alertType;
     private Truck _truck;
@@ -24,43 +24,43 @@ public class Alert
     #endregion
 
     #region properties
-
+    
+    [BsonId]
     public int Id
     {
         get => _id;
         set => _id = value;
     }
-
-    public string Message
-    {
-        get => _message;
-        set => _message = value;
-    }
-
-    public DateTime Date
-    {
-        get => _date;
-        set => _date = value;
-    }
-
+    
+    [BsonElement("state")]
     public bool State
     {
         get => _state;
         set => _state = value;
     }
-
+    
+    [BsonElement("dateTime")] 
+    public DateTime Date
+    {
+        get => _date;
+        set => _date = value;
+    }
+    
+    [BsonElement("detectedValue")] 
     public decimal DetectedValue
     {
         get => _detectedValue;
         set => _detectedValue = value;
     }
-
+    
+    [BsonElement("alertType")] 
     public AlertType AlertType
     {
         get => _alertType;
         set => _alertType = value;
     }
 
+    [BsonElement("truck")] 
     public Truck Truck
     {
         get => _truck;
@@ -83,21 +83,19 @@ public class Alert
             new Alert
             {
                 Id = 1001,
-                Message = "Temperature too high",
                 Date = DateTime.Now.AddHours(-2),
                 State = true,
                 DetectedValue = 9.5m,
-                AlertType = AlertType.HighTemperature,
+                AlertType = AlertType.GetById(1001),
                 Truck = Truck.Get(1001)
             },
             new Alert
             {
                 Id = 1002,
-                Message = "Door left open",
+                State = true,
                 Date = DateTime.Now.AddHours(-1),
-                State = false,
                 DetectedValue = 0.0m,
-                AlertType = AlertType.DoorOpen,
+                AlertType = AlertType.GetById(1001),
                 Truck = Truck.Get(1002)
             },
         ];
@@ -117,11 +115,10 @@ public class Alert
         Alert a = new Alert
         {
             Id = id,
-            Message = "Temperature too low",
             Date = DateTime.Now.AddHours(-3),
             State = true,
             DetectedValue = 1.5m,
-            AlertType = AlertType.LowTemperature,
+            AlertType = AlertType.GetById(1001),
             Truck = Truck.Get(1001)
         };
         //End test

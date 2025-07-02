@@ -1,5 +1,6 @@
 using MongoDB.Driver;
 using System;
+using MongoDB.Bson.Serialization.Attributes;
 
 public class DoorEvent
 {
@@ -20,25 +21,29 @@ public class DoorEvent
     #endregion
 
     #region properties
-
+    
+    [BsonId]
     public int Id
     {
         get => _id;
         set => _id = value;
     }
 
+    [BsonElement("state")]
     public bool State
     {
         get => _state;
         set => _state = value;
     }
-
+    
+    [BsonElement("timeOpened")]
     public TimeSpan TimeOpened
     {
         get => _timeOpened;
         set => _timeOpened = value;
     }
-
+    
+    [BsonElement("truck")]
     public Truck Truck
     {
         get => _truck;

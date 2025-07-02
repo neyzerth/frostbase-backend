@@ -1,4 +1,7 @@
+using FrostBase.Models.Truck;
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
+
 
 public class Truck
 {
@@ -16,48 +19,52 @@ public class Truck
     private string _model;
     private string _licensePlate;
     private int _capacity;
-    private bool _state;
+    private StateTruck _stateTruck;
 
 
     #endregion
 
     #region properties
 
+    [BsonId]
     public int Id
     {
         get => _id;
         set => _id = value;
     }
-
+    [BsonElement("brand")]
     public string Brand
     {
         get => _brand;
         set => _brand = value;
     }
-
+    [BsonElement("model")]
     public string Model
     {
         get => _model;
         set => _model = value;
     }
 
+    [BsonElement("licensePlate")]
     public string LicensePlate
     {
         get => _licensePlate;
         set => _licensePlate = value;
     }
 
+    [BsonElement("capacity")]
     public int Capacity
     {
         get => _capacity;
         set => _capacity = value;
     }
 
-    public bool State
+    [BsonElement("state")]
+    public StateTruck State
     {
-        get => _state;
-        set => _state = value;
-    }
+        get => _stateTruck;
+        set => _stateTruck = value;
+    }   
 
     #endregion
     
@@ -69,7 +76,7 @@ public class Truck
     /// <returns></returns>
     public static List<Truck> Get() 
     {
-        //Test
+        
         List<Truck> trucks =
         [
             new Truck
@@ -79,7 +86,8 @@ public class Truck
                 Model = "Test",
                 LicensePlate = "836DAS92",
                 Capacity = 100,
-                State = true
+                State = StateTruck.Get(1001)
+                
             },
             new Truck
             {
@@ -88,13 +96,14 @@ public class Truck
                 Model = "Test",
                 LicensePlate = "AS92JAK3",
                 Capacity = 100,
-                State = true
+                State = StateTruck.Get(1002)
             },
         ];
-        //End test
         
         return trucks;
     }
+    
+    
 
     /// <summary>
     /// Returns the user with the specified id
@@ -103,7 +112,6 @@ public class Truck
     /// <returns></returns>
     public static Truck Get(int id)
     {
-        //Test
         
         Truck u = new Truck
         {
@@ -112,9 +120,8 @@ public class Truck
             Model = "Test",
             LicensePlate = "JAKAS3R3",
             Capacity = 100,
-            State = true
+            
         };
-        //End test
         return u;
     }
 
