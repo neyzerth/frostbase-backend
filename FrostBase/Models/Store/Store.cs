@@ -1,5 +1,6 @@
 using MongoDB.Driver;
 using System;
+using MongoDB.Bson.Serialization.Attributes;
 
 public class Store
 {
@@ -23,36 +24,42 @@ public class Store
 
     #region properties
 
+    [BsonId]
     public int Id
     {
         get => _id;
         set => _id = value;
     }
-
+    
+    [BsonElement("name")]
     public string Name
     {
         get => _name;
         set => _name = value;
     }
 
+    [BsonElement("phone")]
     public string Phone
     {
         get => _phone;
         set => _phone = value;
     }
 
+    [BsonElement("location")]
     public string Location
     {
         get => _location;
         set => _location = value;
     }
 
+    [BsonElement("latitude")]
     public double Latitude
     {
         get => _latitude;
         set => _latitude = value;
     }
 
+    [BsonElement("longitude")]
     public double Longitude
     {
         get => _longitude;
