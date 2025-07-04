@@ -44,3 +44,6 @@ TestResults/
 *.trx
 *.coverage
 *.coveragex*
+
+## Others
+Config/config.json
