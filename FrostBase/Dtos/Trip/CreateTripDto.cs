@@ -4,6 +4,6 @@ public class CreateTripDto
     public DateTime Date { get; set; }
     public TimeSpan StartHour { get; set; }
     public TimeSpan EndHour { get; set; }
-    public StateTrip State { get; set; }
+    public bool State { get; set; }
     
 }
