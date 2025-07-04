@@ -6,9 +6,7 @@ public class MongoDbConnection
     #region variables
 
     private static string _connectionString =
-        "mongodb+srv://"+ Config.Configuration.MongoDB.User+":"+ Config.Configuration.MongoDB.Password +
-        "@cluster0.x2xlhr4.mongodb.net/" +
-        "?retryWrites=true&w=majority&appName=FrostBase";
+        Config.Configuration.MongoDB.ConnectionString;
     
     private static string _localConnString =
         "mongodb://" + Config.Configuration.MongoDB.Server + ":" + Config.Configuration.MongoDB.Port;
