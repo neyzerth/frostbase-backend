@@ -1,7 +1,10 @@
 public class ConfigMongoDB
 {
-    public string Server { get; set; }
-    public string Port { get; set; }
-    public string Database { get; set; }
+    public string User { get; }
+    public string Password { get; }
+    public string Server { get; }
+    public string Host { get; }
+    public string Port { get; }
+    public string Database { get; }
     
 }
