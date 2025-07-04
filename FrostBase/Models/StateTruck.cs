@@ -14,13 +14,15 @@ public class StateTruck
     #endregion
     
     #region properties
-
+    
+    [BsonId]
     public int Id
     {
         get => _id;
         set => _id = value;
     }
-
+    
+    [BsonElement("state")]
     public string State
     {
         get => _state;
