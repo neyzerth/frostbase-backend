@@ -1,5 +1,3 @@
-namespace FrostBase.PostModels;
-
 public class PostTruck
 {
     public int Id { get; set; }

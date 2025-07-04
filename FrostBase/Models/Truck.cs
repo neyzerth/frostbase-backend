@@ -43,7 +43,7 @@ public class Truck
         set => _model = value;
     }
 
-    [BsonElement("licensePlate")]
+    [BsonElement("license_plate")]
     public string LicensePlate
     {
         get => _licensePlate;
@@ -68,25 +68,27 @@ public class Truck
     public static List<Truck> Get() 
     {
         //Test 1
-        List<Truck> trucks =
-        [
-            new Truck
-            {
-                Id = 1001,
-                Brand = "Test",
-                Model = "Test",
-                LicensePlate = "836DAS92"
-                
-            },
-            new Truck
-            {
-                Id = 1002,
-                Brand = "Test",
-                Model = "Test",
-                LicensePlate = "AS92JAK3"
-            },
-        ];
+        // List<Truck> trucks =
+        // [
+        //     new Truck
+        //     {
+        //         Id = 1001,
+        //         Brand = "Test",
+        //         Model = "Test",
+        //         LicensePlate = "836DAS92"
+        //         
+        //     },
+        //     new Truck
+        //     {
+        //         Id = 1002,
+        //         Brand = "Test",
+        //         Model = "Test",
+        //         LicensePlate = "AS92JAK3"
+        //     },
+        // ];
         //End test
+        
+        var trucks = MongoDbConnection.Find<Truck>("trucks");
         
         return trucks;
     }

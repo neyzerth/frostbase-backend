@@ -17,9 +17,9 @@ public class UserController : ControllerBase
         return Ok(Response<UserApp>.GetResponse(userApp, 1));
     }
     [HttpPost]
-    public ActionResult Post([FromForm] UserApp u)
+    public ActionResult Post([FromForm] CreateUserDto c)
     {
-        if(UserApp.Insert(u))
+        if(UserApp.Insert(c))
             return Ok(MessageResponse.GetResponse(1, "User inserted", MessageType.Success));
             
         return BadRequest(MessageResponse.GetResponse(1, "User not inserted", MessageType.Error));
