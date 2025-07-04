@@ -166,6 +166,16 @@ public class UserApp
         return u;
     }
 
+    public static UserApp createUser(CreateUserDto c)
+    {
+        UserApp u = new UserApp
+        {
+            Id = c.Id
+        };
+        
+        return u;
+    }
+
     public static bool Insert(CreateUserDto c)
     {
         try

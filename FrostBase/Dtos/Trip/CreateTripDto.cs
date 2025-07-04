@@ -1,4 +1,4 @@
-public class PostTrip
+public class CreateTripDto
 {
     public int Id { get; set; }
     public DateTime Date { get; set; }

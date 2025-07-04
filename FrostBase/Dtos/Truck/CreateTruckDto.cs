@@ -1,4 +1,4 @@
-public class PostTruck
+public class CreateTruckDto
 {
     public int Id { get; set; }
     public string Brand { get; set; }

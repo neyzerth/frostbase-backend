@@ -26,7 +26,7 @@ public class TripController : ControllerBase
         return BadRequest(MessageResponse.GetResponse(1, "Trip not inserted", MessageType.Error));
     }
     [HttpPut("{id}")]
-    public ActionResult Put(int id, [FromForm] PostTrip t)
+    public ActionResult Put(int id, [FromForm] CreateUserDto t)
     {
         return Ok(MessageResponse.GetResponse(1, "Trip "+ id +" updated", MessageType.Success));
     }
