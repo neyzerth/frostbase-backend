@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
 [ApiController]
-public class RoadController : ControllerBase
+public class RouteController : ControllerBase
 {
     [HttpGet]
     public ActionResult Get()
