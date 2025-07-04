@@ -3,11 +3,11 @@
     public object Data { get; set; }
     public string Type { get; set; }  
 
-    public static MessageResponse GetResponse(int status, object message, MessageType type)
+    public static MessageResponse GetResponse(int status, object data, MessageType type)
     {
         MessageResponse r = new MessageResponse();
         r.Status = status;
-        r.Data = message;
+        r.Data = data;
         r.Type = type.ToString();
         return r;
     }

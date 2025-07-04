@@ -6,6 +6,6 @@ public class StartTripDto
     public DateTime Date { get; set; }
     public string IDRoute { get; set; }
     public TimeSpan StartHour { get; set; }
-    public List<Order> Orders { get; set; }
+    public List<TripOrder> Orders { get; set; }
     public string State { get; set; }
 }

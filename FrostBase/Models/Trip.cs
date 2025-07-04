@@ -38,7 +38,7 @@ public class Trip
     public string IDRoute { get; set; }
 
     [BsonElement("orders")]
-    public List<Order> Orders { get; set; }
+    public List<TripOrder> Orders { get; set; }
 
     #endregion
     
@@ -58,7 +58,7 @@ public class Trip
                 IDStateTrip = "START",
                 TotalTime = null,
                 IDRoute = ObjectId.GenerateNewId().ToString(),
-                Orders = Order.Get()
+                Orders = null
             },
             new Trip
             {
@@ -69,7 +69,7 @@ public class Trip
                 IDStateTrip = "ENDED",
                 TotalTime = new TimeSpan(5, 0, 0),
                 IDRoute = ObjectId.GenerateNewId().ToString(),
-                Orders = Order.Get()
+                Orders = null
             },
         ];
         
@@ -87,7 +87,7 @@ public class Trip
             EndHour = new TimeSpan(12, 0, 0),
             TotalTime = new TimeSpan(4, 0, 0),
             IDRoute = ObjectId.GenerateNewId().ToString(),
-            Orders = new List<Order>()
+            Orders = new List<TripOrder>()
         };
         //End test
         
@@ -106,6 +106,12 @@ public class Trip
             if (string.IsNullOrEmpty(t.Id))
             {
                 t.Id = ObjectId.GenerateNewId().ToString();
+            }
+            
+            // Asegurarse de que Orders esté inicializado
+            if (t.Orders == null)
+            {
+                t.Orders = new List<TripOrder>();
             }
             
             _tripColl.InsertOne(t);
@@ -138,8 +144,16 @@ public class Trip
             StartHour = c.StartHour,
             IDRoute = c.IDRoute,
             IDStateTrip = c.State,
+            Orders = new List<TripOrder>()
         };
         
+        t.Orders.Add(new TripOrder
+        {
+            IDOrder = ObjectId.GenerateNewId().ToString(),
+            IDStore = ObjectId.GenerateNewId().ToString(),
+            TimeStart = DateTime.Now,
+            TimeEnd = null
+        });
         return Insert(t);
     }
     
@@ -153,6 +167,88 @@ public class Trip
                 .Set(t => t.EndHour, endHour)
                 .Set(t => t.IDStateTrip, stateId)
                 .Set(t => t.TotalTime, totalTime);
+                
+            var result = _tripColl.UpdateOne(filter, update);
+            return result.ModifiedCount > 0;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
+    }
+    public static bool StartOrder(string tripId, string orderId, string storeId = null)
+    {
+        try
+        {
+            // Crear un nuevo objeto TripOrder
+            TripOrder newOrder = new TripOrder
+            {
+                IDOrder = orderId,
+                IDStore = storeId,
+                TimeStart = DateTime.Now,
+                TimeEnd = null
+            };
+            
+            // Crear un filtro para encontrar el viaje por su ID
+            var filter = Builders<Trip>.Filter.Eq(t => t.Id, tripId);
+            
+            try
+            {
+                // Primero intentar añadir directamente, asumiendo que Orders ya existe como array
+                var pushUpdate = Builders<Trip>.Update.Push(t => t.Orders, newOrder);
+                var result = _tripColl.UpdateOne(filter, pushUpdate);
+                
+                if (result.ModifiedCount > 0)
+                {
+                    return true; // Éxito en el primer intento
+                }
+            }
+            catch (MongoWriteException ex) when (ex.Message.Contains("must be an array but is of type null"))
+            {
+                // Si falla porque Orders es null, inicializarlo con el nuevo elemento
+                var setUpdate = Builders<Trip>.Update.Set(t => t.Orders, new List<TripOrder> { newOrder });
+                var result = _tripColl.UpdateOne(filter, setUpdate);
+                
+                return result.ModifiedCount > 0;
+            }
+            
+            // Si llegamos aquí, el documento no se encontró o no se modificó
+            return false;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
+    }
+    
+    public static bool EndOrder(string tripId, string orderId)
+    {
+        try
+        {
+            // Verificar si el viaje existe y tiene órdenes
+            var trip = _tripColl.Find(t => t.Id == tripId).FirstOrDefault();
+            
+            if (trip == null)
+            {
+                return false; // El viaje no existe
+            }
+            
+            if (trip.Orders == null || !trip.Orders.Any(o => o.IDOrder == orderId))
+            {
+                return false; // No hay órdenes o la orden específica no existe
+            }
+            
+            // Crear un filtro que encuentre el viaje y la orden específica dentro de ese viaje
+            var filter = Builders<Trip>.Filter.And(
+                Builders<Trip>.Filter.Eq(t => t.Id, tripId),
+                Builders<Trip>.Filter.ElemMatch(t => t.Orders, o => o.IDOrder == orderId)
+            );
+            
+            // Crear una actualización que establezca el tiempo de fin de la orden
+            var update = Builders<Trip>.Update
+                .Set("orders.$.time_end", DateTime.Now);
                 
             var result = _tripColl.UpdateOne(filter, update);
             return result.ModifiedCount > 0;
