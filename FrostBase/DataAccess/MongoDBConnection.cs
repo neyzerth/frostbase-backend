@@ -48,12 +48,12 @@ public class MongoDbConnection
         return db.GetCollection<T>(collection);
     }
 
-    private static List<T> Find<T>(string collection, BsonDocument? filter)
+    public static List<T> Find<T>(string collection)
     {
-        // use find() in a document with BsonDocument filter
-        return GetCollection<T>(collection).Find(filter).ToList();
+        // Use FilterDefinition<T>.Empty to get all documents
+        return GetCollection<T>(collection).Find(FilterDefinition<T>.Empty).ToList();
     }
-    private static List<BsonDocument> Find(string collection, BsonDocument? filter)
+    public static List<BsonDocument> Find(string collection, BsonDocument? filter)
     {
         // use find() in a document with BsonDocument filter
         return GetCollection<BsonDocument>(collection).Find(filter).ToList();

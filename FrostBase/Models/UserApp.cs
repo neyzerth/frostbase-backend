@@ -6,7 +6,8 @@ public class UserApp
     #region statement
     
     //Sql or mongo statements
-    private static IMongoCollection<UserApp> _userColl = MongoDbConnection.GetCollection<UserApp>("users");
+    private static IMongoCollection<CreateUserDto> _userColl = 
+        MongoDbConnection.GetCollection<CreateUserDto>("users");
     
     #endregion
     
@@ -108,35 +109,36 @@ public class UserApp
     public static List<UserApp> Get() 
     {
         //Test
-        List<UserApp> users =
-        [
-            new UserApp
-            {
-                Id = 1001,
-                FirstName = "Andres",
-                LastName = "Llamas",
-                MiddleName = "Brito",
-                Email = "andres.llamas@gmail.com",
-                Phone = "6643112313",
-                BirthDate = new DateTime(1999, 1, 1),
-                Password = "<PASSWORD>",
-                Truck = Truck.Get(1003)
-            },
-            new UserApp
-            {
-                Id = 1002,
-                FirstName = "Neyzer",
-                LastName = "Popomella",
-                MiddleName = "Zapata",
-                Email = "neyzer.pompella@gmail.com",
-                Phone = "6643123126",
-                BirthDate = new DateTime(2005, 5, 5),
-                Password = "<PASSWORD>",
-                Truck = Truck.Get(1001)
-            },
-        ];
+        // List<UserApp> users =
+        // [
+        //     new UserApp
+        //     {
+        //         Id = 1001,
+        //         FirstName = "Andres",
+        //         LastName = "Llamas",
+        //         MiddleName = "Brito",
+        //         Email = "andres.llamas@gmail.com",
+        //         Phone = "6643112313",
+        //         BirthDate = new DateTime(1999, 1, 1),
+        //         Password = "<PASSWORD>",
+        //         Truck = Truck.Get(1003)
+        //     },
+        //     new UserApp
+        //     {
+        //         Id = 1002,
+        //         FirstName = "Neyzer",
+        //         LastName = "Popomella",
+        //         MiddleName = "Zapata",
+        //         Email = "neyzer.pompella@gmail.com",
+        //         Phone = "6643123126",
+        //         BirthDate = new DateTime(2005, 5, 5),
+        //         Password = "<PASSWORD>",
+        //         Truck = Truck.Get(1001)
+        //     },
+        //];
         //End test
         
+        var users = MongoDbConnection.Find<UserApp>("users");
         return users;
     }
 
@@ -164,11 +166,11 @@ public class UserApp
         return u;
     }
 
-    public static bool Insert(UserApp u)
+    public static bool Insert(CreateUserDto c)
     {
         try
         {
-            _userColl.InsertOne(u);
+            _userColl.InsertOne(c);
             return true;
         }
         catch (Exception e)
