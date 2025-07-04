@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -8,98 +9,41 @@ public class Trip
     
     //Sql or mongo statements
     private static IMongoCollection<Trip> _tripColl = 
-        MongoDbConnection.GetCollection<Trip>("trips");
+        MongoDbConnection.GetCollection<Trip>("Trips");
     
-    #endregion
-    
-    #region attributes
-    
-    private int _id;
-    private DateTime _date;
-    private TimeSpan _startHour;
-    private TimeSpan _endHour;
-    private StateTrip _stateTrip;
-    private TimeSpan _totalTime;
-    private Route _route;
-    private List<Order> _orders;
-
     #endregion
 
     #region properties
 
     [BsonId]
-    public int Id
-    {
-        get => _id;
-        set => _id = value;
-    }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
 
     [BsonElement("date")]
-    public DateTime Date
-    {
-        get => _date;
-        set => _date = value;
-    }
+    public DateTime Date { get; set; }
 
     [BsonElement("start_hour")]
-    public TimeSpan StartHour
-    {
-        get => _startHour;
-        set => _startHour = value;
-    }
+    public TimeSpan StartHour { get; set; }
 
     [BsonElement("end_hour")]   
-    public TimeSpan EndHour
-    {
-        get => _endHour;
-        set => _endHour = value;
-    }
+    public TimeSpan? EndHour { get; set; }
 
-    //TODO - is a object
-    [BsonElement("stateTrip")]  
-    public StateTrip StateTrip
-    {
-        get => _stateTrip;
-        set => _stateTrip = value;
-        
-    }
+    [BsonElement("IDStateTrip")]  
+    public string IDStateTrip { get; set; }
 
     [BsonElement("total_time")] 
-    public TimeSpan TotalTime
-    {
-        get => _totalTime;
-        set => _totalTime = value;
-    }
+    public TimeSpan? TotalTime { get; set; }
     
     [BsonElement("id_route")]
-    [JsonIgnore]
-    public int IDRoute
-    {
-        get => _route.Id;
-        set => _route.Id = value;
-    }
+    public string IDRoute { get; set; }
 
-    [BsonIgnore]
-    public Route Route
-    {
-        get => _route;
-        set => _route = value;
-    }
     [BsonElement("orders")]
-    public List<Order> Orders
-    {
-        get => _orders;
-        set => _orders = value;
-    }
+    public List<Order> Orders { get; set; }
 
     #endregion
     
     #region class methods
 
-    /// <summary>
-    /// Returns a list of all trips
-    /// </summary>
-    /// <returns></returns>
     public static List<Trip> Get() 
     {
         //Test
@@ -107,38 +51,32 @@ public class Trip
         [
             new Trip
             {
-                Id = 1001,
+                Id = ObjectId.GenerateNewId().ToString(),
                 Date = DateTime.Now,
                 StartHour = new TimeSpan(8, 0, 0),
-                EndHour = new TimeSpan(12, 0, 0),
-                StateTrip = new StateTrip{ Id = 1, State = "En ruta"},
-                TotalTime = new TimeSpan(4, 0, 0),
-                IDRoute = 1,
+                EndHour = null,
+                IDStateTrip = "START",
+                TotalTime = null,
+                IDRoute = ObjectId.GenerateNewId().ToString(),
                 Orders = Order.Get()
             },
             new Trip
             {
-                Id = 1002,
+                Id = ObjectId.GenerateNewId().ToString(),
                 Date = DateTime.Now.AddDays(1),
                 StartHour = new TimeSpan(9, 0, 0),
                 EndHour = new TimeSpan(14, 0, 0),
-                StateTrip = new StateTrip{ Id = 1, State = "Cancelado"},
+                IDStateTrip = "ENDED",
                 TotalTime = new TimeSpan(5, 0, 0),
-                IDRoute = 2,
+                IDRoute = ObjectId.GenerateNewId().ToString(),
                 Orders = Order.Get()
             },
         ];
-        //End test
         
         return trips;
     }
 
-    /// <summary>
-    /// Returns the trip with the specified id
-    /// </summary>
-    /// <param name="id">Trip id</param>
-    /// <returns></returns>
-    public static Trip Get(int id)
+    public static Trip Get(string id)
     {
         //Test
         Trip t = new Trip
@@ -147,21 +85,77 @@ public class Trip
             Date = DateTime.Now,
             StartHour = new TimeSpan(8, 0, 0),
             EndHour = new TimeSpan(12, 0, 0),
-            
             TotalTime = new TimeSpan(4, 0, 0),
-            IDRoute = 1,
+            IDRoute = ObjectId.GenerateNewId().ToString(),
             Orders = new List<Order>()
         };
         //End test
+        
+        // Para implementación real con MongoDB:
+        // var filter = Builders<Trip>.Filter.Eq(t => t.Id, id);
+        // return _tripColl.Find(filter).FirstOrDefault();
+        
         return t;
     }
 
-    public static bool Insert(Trip t)
+    public static Trip Insert(Trip t)
     {
         try
         {
+            // Si no hay ID, generar uno nuevo
+            if (string.IsNullOrEmpty(t.Id))
+            {
+                t.Id = ObjectId.GenerateNewId().ToString();
+            }
+            
             _tripColl.InsertOne(t);
-            return true;
+            return t; // Devuelve el objeto con el ID asignado
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return null;
+        }
+    }
+    public static Trip Insert(CreateTripDto c)
+    {
+        Trip t = new Trip
+        {
+            Id = c.Id, // Puede ser null o vacío, el método Insert principal se encargará de generar un nuevo ID
+            Date = c.Date,
+            StartHour = c.StartHour,
+            EndHour = c.EndHour,
+            IDStateTrip = c.State,
+        };
+        
+        return Insert(t);
+    }
+    public static Trip Insert(StartTripDto c)
+    {
+        Trip t = new Trip
+        {
+            Date = c.Date,
+            StartHour = c.StartHour,
+            IDRoute = c.IDRoute,
+            IDStateTrip = c.State,
+        };
+        
+        return Insert(t);
+    }
+    
+    public static bool UpdateEndTime(string tripId, TimeSpan? endHour, string stateId)
+    {
+        try
+        {
+            TimeSpan totalTime = endHour.Value.Subtract(Trip.Get(tripId).StartHour);
+            var filter = Builders<Trip>.Filter.Eq(t => t.Id, tripId);
+            var update = Builders<Trip>.Update
+                .Set(t => t.EndHour, endHour)
+                .Set(t => t.IDStateTrip, stateId)
+                .Set(t => t.TotalTime, totalTime);
+                
+            var result = _tripColl.UpdateOne(filter, update);
+            return result.ModifiedCount > 0;
         }
         catch (Exception e)
         {
@@ -170,5 +164,6 @@ public class Trip
         }
     }
     
+
     #endregion
 }
