@@ -1,5 +1,3 @@
-namespace FrostBase.Dtos.Reading;
-
 public class CreateReadingDto
 {
     public DateTime Date { get; set; }

@@ -1,4 +1,3 @@
-using FrostBase.Dtos.Reading;
 using MongoDB.Driver;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
