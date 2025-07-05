@@ -1,3 +1,4 @@
+using FrostBase.Dtos.Reading;
 using MongoDB.Driver;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -153,18 +154,10 @@ public class Reading
         return r;
     }
 
-    public static bool Insert(Reading r)
+    public static bool Insert(CreateReadingDto r)
     {
-        try
-        {
-            _readingColl.InsertOne(r);
-            return true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return false;
-        }
+        
+        return Insert(r);
     }
     
     #endregion

@@ -5,10 +5,13 @@ public class MongoDbConnection
 {
     #region variables
 
-    private static string connectionString =
+    private static string _connectionString =
+        Config.Configuration.MongoDB.ConnectionString;
+
+    private static string _localConnString =
         "mongodb://" + Config.Configuration.MongoDB.Server + ":" + Config.Configuration.MongoDB.Port;
 
-    private static string databaseName = Config.Configuration.MongoDB.Database;
+    private static string _databaseName = Config.Configuration.MongoDB.Database;
 
     #endregion
 
@@ -19,9 +22,9 @@ public class MongoDbConnection
         try
         {
             // Create a mongo client
-            MongoClient client = new MongoClient(connectionString);
+            MongoClient client = new MongoClient(_connectionString);
             // get the database
-            return client.GetDatabase(databaseName);
+            return client.GetDatabase(_databaseName);
         }
         catch (MongoConfigurationException e)
         {
