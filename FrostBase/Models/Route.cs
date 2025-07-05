@@ -11,52 +11,21 @@ public class Route
     
     #endregion
     
-    #region attributes
-    
-    private int _id;
-    private string _name;
-    private UserApp _user;
-    private List<Store> _stores;
-
-    #endregion
 
     #region properties
 
     [BsonId]
-    public int Id
-    {
-        get => _id;
-        set => _id = value;
-    }
+    public int Id { get; set; }
 
     [BsonElement("name")]
-    public string Name
-    {
-        get => _name;
-        set => _name = value;
-    }
-
+    public string Name { get; set; }
+    
     [JsonIgnore]
     [BsonElement("IDUser")]
-    public int IDUser
-    {
-        get => _user.Id;
-        set => _user.Id = value;
-    }
-
-    [BsonIgnore]
-    public UserApp User
-    {
-        get => _user;
-        set => _user = value;
-    }
-
+    public int IDUser { get; set; }
+    
     [BsonElement("stores")]
-    public List<Store> Stores
-    {
-        get => _stores;
-        set => _stores = value;
-    }
+    public List<Store> Stores { get; set; }
 
     #endregion
     
@@ -75,14 +44,14 @@ public class Route
             {
                 Id = 1001,
                 Name = "Downtown Route",
-                User = UserApp.Get(1001),
+                IDUser = 1001,
                 Stores = Store.Get()
             },
             new Route
             {
                 Id = 1002,
                 Name = "Eastside Route",
-                User = UserApp.Get(1002),
+                IDUser = 1002,
                 Stores = Store.Get()
             },
         ];
@@ -103,7 +72,7 @@ public class Route
         {
             Id = id,
             Name = "Test Route",
-            User = UserApp.Get(1001),
+            IDUser = 1001,
             Stores = Store.Get()
         };
         //End test
@@ -122,6 +91,14 @@ public class Route
             Console.WriteLine(e);
             return false;
         }
+    }
+
+    public static Route GetByUser(int idUser)
+    {
+        //test
+        return Get(1001);
+        
+        //return _routeColl.Find(r => r.IDUser == idUser).FirstOrDefault();
     }
     
     #endregion
