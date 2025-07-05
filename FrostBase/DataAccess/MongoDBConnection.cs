@@ -7,7 +7,7 @@ public class MongoDbConnection
 
     private static string _connectionString =
         Config.Configuration.MongoDB.ConnectionString;
-    
+
     private static string _localConnString =
         "mongodb://" + Config.Configuration.MongoDB.Server + ":" + Config.Configuration.MongoDB.Port;
 

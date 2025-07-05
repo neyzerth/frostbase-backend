@@ -15,7 +15,7 @@ public class CreateUserDto
     [BsonElement("phone")]
     public string Phone { get; set; }
     [BsonElement("birth_date")]
-    public string BirthDate { get; set; }
+    public DateOnly BirthDate { get; set; }
     [BsonElement("password")]
     public string Password { get; set; }
     [BsonElement("IDTruck")]
