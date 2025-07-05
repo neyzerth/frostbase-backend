@@ -75,18 +75,11 @@ public class Reading
         set => _longitude = value;
     }
 
-    [JsonIgnore]
     [BsonElement("IDTruck")]
     public int IDTruck
     {
         get => _truck.Id;
         set => _truck.Id = value;
-    }
-    [BsonIgnore]
-    public Truck Truck
-    {
-        get => _truck;
-        set => _truck = value;
     }
 
     #endregion
@@ -111,7 +104,7 @@ public class Reading
                 PercHumidity = 75,
                 Latitude = 32.5123,
                 Longitude = -116.7832,
-                Truck = Truck.Get(1001)
+                IDTruck = 1001
             },
             new Reading
             {
@@ -122,7 +115,7 @@ public class Reading
                 PercHumidity = 80,
                 Latitude = 32.5145,
                 Longitude = -116.7845,
-                Truck = Truck.Get(1001)
+                IDTruck = 1001
             },
         ];
         //End test
@@ -147,7 +140,7 @@ public class Reading
             PercHumidity = 77,
             Latitude = 32.5123,
             Longitude = -116.7832,
-            Truck = Truck.Get(1001)
+            IDTruck = 1001
         };
         //End test
         return r;
