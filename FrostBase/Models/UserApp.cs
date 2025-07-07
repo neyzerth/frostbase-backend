@@ -33,14 +33,14 @@ public class UserApp
     [BsonElement("phone")]
     public string Phone { get; set; }
     
-    [BsonElement("birth_date")]
-    [BsonRepresentation(BsonType.DateTime)]
+    [BsonElement("birthdate")]
     public DateTime BirthDate { get; set; }
     
     [BsonElement("password")]
     public string Password { get; set; }
     
     [BsonElement("IDTruck")] 
+    [BsonRepresentation(BsonType.ObjectId)]
     public string IDTruck { get; set; }
     
     #endregion

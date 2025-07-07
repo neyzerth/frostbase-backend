@@ -10,6 +10,7 @@ public class Parameter
     private static IMongoCollection<Parameter> _parameterColl = MongoDbConnection.GetCollection<Parameter>("Parameters");
     
     #endregion
+    
     #region properties
 
     [BsonId]

@@ -1,5 +1,6 @@
 using MongoDB.Driver;
 using System;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 public class Store
@@ -11,11 +12,11 @@ public class Store
     
     #endregion
     
-
     #region properties
 
     [BsonId]
-    public int Id { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
     
     [BsonElement("name")]
     public string Name { get; set; }
@@ -40,13 +41,7 @@ public class Store
     {
         return _storeColl.Find(s => true).ToList();       
     }
-
-    /// <summary>
-    /// Returns the store with the specified id
-    /// </summary>
-    /// <param name="id">Store id</param>
-    /// <returns></returns>
-    public static Store Get(int id)
+    public static Store Get(string id)
     {
         return _storeColl.Find(s => s.Id == id).FirstOrDefault();       
     }

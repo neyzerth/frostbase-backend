@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -15,17 +16,18 @@ public class Route
     #region properties
 
     [BsonId]
-    public int Id { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
 
     [BsonElement("name")]
     public string Name { get; set; }
     
-    [JsonIgnore]
     [BsonElement("IDUser")]
-    public int IDUser { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string IDUser { get; set; }
     
     [BsonElement("stores")]
-    public List<Store> Stores { get; set; }
+    public List<RouteStore> Stores { get; set; }
 
     #endregion
     
@@ -36,7 +38,7 @@ public class Route
         return _routeColl.Find(r => true).ToList();
     }
     
-    public static Route Get(int id)
+    public static Route Get(string id)
     {
         return _routeColl.Find(r => r.Id == id).FirstOrDefault();
     }

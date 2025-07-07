@@ -12,7 +12,7 @@ public class StoreController : ControllerBase
         return Ok(ListResponse<Store>.GetResponse(stores, 1));
     }
     [HttpGet("{id}")]
-    public ActionResult Get(int id)
+    public ActionResult Get(string id)
     {
         Store store = Store.Get(id);
         return Ok(Response<Store>.GetResponse(store, 1));

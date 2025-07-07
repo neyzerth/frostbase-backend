@@ -11,7 +11,7 @@ public class RouteController : ControllerBase
         return Ok(ListResponse<Route>.GetResponse(routes, 1));
     }
     [HttpGet("{id}")]
-    public ActionResult Get(int id)
+    public ActionResult Get(string id)
     {
         Route route = Route.Get(id);
         return Ok(Response<Route>.GetResponse(route, 1));
