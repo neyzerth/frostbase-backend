@@ -7,14 +7,14 @@ public class OrderController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        List<Order> orders = Order.Get();
-        return Ok(ListResponse<Order>.GetResponse(orders, 1));
+        List<OrderDto> orders = OrderDto.FromModel(Order.Get());
+        return Ok(ListResponse<OrderDto>.GetResponse(orders, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(string id)
     {
-        Order order = Order.Get(id);
-        return Ok(Response<Order>.GetResponse(order, 1));
+        OrderDto order = OrderDto.FromModel(Order.Get(id));
+        return Ok(Response<OrderDto>.GetResponse(order, 1));
     }
     [HttpPost]
     public ActionResult Post([FromForm] CreateOrderDto c)

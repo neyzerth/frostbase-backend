@@ -1,6 +1,5 @@
 using MongoDB.Driver;
-using System;
-using FrostBase.Models.Alert;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 public class Alert
@@ -8,121 +7,47 @@ public class Alert
     #region statement
     
     //Sql or mongo statements
-    private static IMongoCollection<Alert> _alertColl = MongoDbConnection.GetCollection<Alert>("alerts");
+    private static IMongoCollection<Alert> _alertColl = MongoDbConnection.GetCollection<Alert>("Alerts");
     
     #endregion
     
-    #region attributes
-    
-    private int _id;
-    private bool _state;
-    private DateTime _date;
-    private decimal _detectedValue;
-    private AlertType _alertType;
-    private Truck _truck;
-
-    #endregion
 
     #region properties
     
     [BsonId]
-    public int Id
-    {
-        get => _id;
-        set => _id = value;
-    }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id
+    { get; set; }
     
     [BsonElement("state")]
-    public bool State
-    {
-        get => _state;
-        set => _state = value;
-    }
+    public bool State { get; set; }
     
     [BsonElement("dateTime")] 
-    public DateTime Date
-    {
-        get => _date;
-        set => _date = value;
-    }
+    public DateTime Date { get; set; }
     
     [BsonElement("detectedValue")] 
-    public decimal DetectedValue
-    {
-        get => _detectedValue;
-        set => _detectedValue = value;
-    }
+    public decimal DetectedValue { get; set; }
     
     [BsonElement("alertType")] 
-    public AlertType AlertType
-    {
-        get => _alertType;
-        set => _alertType = value;
-    }
+    public AlertType AlertType { get; set; }
 
-    [BsonElement("truck")] 
-    public Truck Truck
-    {
-        get => _truck;
-        set => _truck = value;
-    }
+    [BsonElement("IDTruck")] 
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string IDTruck { get; set; }
+
 
     #endregion
     
     #region class methods
 
-    /// <summary>
-    /// Returns a list of all alerts
-    /// </summary>
-    /// <returns></returns>
     public static List<Alert> Get() 
     {
-        //Test
-        List<Alert> alerts =
-        [
-            new Alert
-            {
-                Id = 1001,
-                Date = DateTime.Now.AddHours(-2),
-                State = true,
-                DetectedValue = 9.5m,
-                AlertType = AlertType.GetById(1001),
-                Truck = Truck.Get(1001)
-            },
-            new Alert
-            {
-                Id = 1002,
-                State = true,
-                Date = DateTime.Now.AddHours(-1),
-                DetectedValue = 0.0m,
-                AlertType = AlertType.GetById(1001),
-                Truck = Truck.Get(1002)
-            },
-        ];
-        //End test
-        
-        return alerts;
+        return _alertColl.Find(a => true).ToList();
     }
 
-    /// <summary>
-    /// Returns the alert with the specified id
-    /// </summary>
-    /// <param name="id">Alert id</param>
-    /// <returns></returns>
-    public static Alert Get(int id)
+    public static Alert Get(string id)
     {
-        //Test
-        Alert a = new Alert
-        {
-            Id = id,
-            Date = DateTime.Now.AddHours(-3),
-            State = true,
-            DetectedValue = 1.5m,
-            AlertType = AlertType.GetById(1001),
-            Truck = Truck.Get(1001)
-        };
-        //End test
-        return a;
+        return _alertColl.Find(a => a.Id == id).FirstOrDefault();
     }
 
     public static bool Insert(Alert a)

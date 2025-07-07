@@ -7,14 +7,14 @@ public class TripController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        List<Trip> trips = Trip.Get();
-        return Ok(ListResponse<Trip>.GetResponse(trips, 1));
+        List<TripDto> trips = TripDto.FromModel(Trip.Get());
+        return Ok(ListResponse<TripDto>.GetResponse(trips, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(string id)
     {
-        Trip trip = Trip.Get(id);
-        return Ok(Response<Trip>.GetResponse(trip, 1));
+        TripDto trip = TripDto.FromModel(Trip.Get(id));
+        return Ok(Response<TripDto>.GetResponse(trip, 1));
     }
     [HttpPost]
     public ActionResult Post([FromForm] CreateTripDto c)
@@ -25,16 +25,16 @@ public class TripController : ControllerBase
             
         return BadRequest(MessageResponse.GetResponse(0, "Trip not inserted", MessageType.Error));
     }
-    [HttpPut("{id}")]
-    public ActionResult Put(int id, [FromForm] CreateUserDto t)
-    {
-        return Ok(MessageResponse.GetResponse(1, "Trip "+ id +" updated", MessageType.Success));
-    }
-    [HttpDelete("{id}")]
-    public ActionResult Delete(int id)
-    {
-        return Ok(MessageResponse.GetResponse(1, "Trip "+ id +" deleted", MessageType.Success));
-    }
+    // [HttpPut("{id}")]
+    // public ActionResult Put(int id, [FromForm] CreateUserDto t)
+    // {
+    //     return Ok(MessageResponse.GetResponse(1, "Trip "+ id +" updated", MessageType.Success));
+    // }
+    // [HttpDelete("{id}")]
+    // public ActionResult Delete(int id)
+    // {
+    //     return Ok(MessageResponse.GetResponse(1, "Trip "+ id +" deleted", MessageType.Success));
+    // }
     
     
     [HttpPost("[action]/route/{idRoute}/")]
@@ -61,22 +61,16 @@ public class TripController : ControllerBase
     [HttpPost("[action]/{idTrip}/")]
     public ActionResult End(string idTrip)
     {
-        Trip t = new Trip
-        {
-            Id = idTrip,
-            EndHour = DateTime.Now.TimeOfDay,
-            IDStateTrip = "ENDED"
-        };
-        if(Trip.UpdateEndTime(t.Id, t.EndHour, t.IDStateTrip)) 
+        if(Trip.UpdateEndTime(idTrip, DateTime.Now.TimeOfDay, "ENDED")) 
             return Ok(MessageResponse.GetResponse(1, "Trip ended successfully", MessageType.Success));
             
         return BadRequest(MessageResponse.GetResponse(0, "Failed to end trip", MessageType.Error));
     }
     
     [HttpPost("{tripId}/order/{orderId}/start")]
-    public ActionResult StartOrder(string tripId, string orderId, [FromQuery] string storeId = null)
+    public ActionResult StartOrder(string tripId, string orderId)
     {
-        if(Trip.StartOrder(tripId, orderId, storeId))
+        if(Trip.StartOrder(tripId, orderId))
             return Ok(MessageResponse.GetResponse(1, "Order started successfully", MessageType.Success));
             
         return BadRequest(MessageResponse.GetResponse(0, "Failed to start order", MessageType.Error));

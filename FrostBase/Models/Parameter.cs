@@ -7,109 +7,38 @@ public class Parameter
     #region statement
     
     //Sql or mongo statements
-    private static IMongoCollection<Parameter> _parameterColl = MongoDbConnection.GetCollection<Parameter>("parameters");
+    private static IMongoCollection<Parameter> _parameterColl = MongoDbConnection.GetCollection<Parameter>("Parameters");
     
     #endregion
     
-    #region attributes
-    
-    private int _id;
-    private decimal _maxTemperature;
-    private int _maxHumidity;
-    private decimal _minTemperature;
-    private int _minHumidity;
-
-    #endregion
-
     #region properties
 
     [BsonId]
-    public int Id
-    {
-        get => _id;
-        set => _id = value;
-    }
+    public int Id { get; set; }
 
     [BsonElement("max_temperature")]
-    public decimal MaxTemperature
-    {
-        get => _maxTemperature;
-        set => _maxTemperature = value;
-    }
+    public decimal MaxTemperature{ get; set; }
     [BsonElement("max_humidity")]
-    public int MaxHumidity
-    {
-        get => _maxHumidity;
-        set => _maxHumidity = value;
-    }
+    public int MaxHumidity{ get; set; }
 
     [BsonElement("min_temperature")]
-    public decimal MinTemperature
-    {
-        get => _minTemperature;
-        set => _minTemperature = value;
-    }
+    public decimal MinTemperature{ get; set; }
 
     [BsonElement("min_humidity")]
-    public int MinHumidity
-    {
-        get => _minHumidity;
-        set => _minHumidity = value;
-    }
+    public int MinHumidity{ get; set; }
 
     #endregion
     
     #region class methods
 
-    /// <summary>
-    /// Returns a list of all parameters
-    /// </summary>
-    /// <returns></returns>
     public static List<Parameter> Get() 
     {
-        //Test
-        List<Parameter> parameters =
-        [
-            new Parameter
-            {
-                Id = 1001,
-                MaxTemperature = 8.5m,
-                MaxHumidity = 90,
-                MinTemperature = 2.0m,
-                MinHumidity = 65
-            },
-            new Parameter
-            {
-                Id = 1002,
-                MaxTemperature = 5.0m,
-                MaxHumidity = 85,
-                MinTemperature = 0.0m,
-                MinHumidity = 70
-            },
-        ];
-        //End test
-        
-        return parameters;
+        return _parameterColl.Find(p => true).ToList();
     }
 
-    /// <summary>
-    /// Returns the parameter with the specified id
-    /// </summary>
-    /// <param name="id">Parameter id</param>
-    /// <returns></returns>
     public static Parameter Get(int id)
     {
-        //Test
-        Parameter p = new Parameter
-        {
-            Id = id,
-            MaxTemperature = 8.0m,
-            MaxHumidity = 85,
-            MinTemperature = 2.0m,
-            MinHumidity = 70
-        };
-        //End test
-        return p;
+        return _parameterColl.Find(p => p.Id == id).FirstOrDefault();       
     }
 
     public static bool Insert(Parameter p)

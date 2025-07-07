@@ -1,105 +1,35 @@
 using MongoDB.Driver;
 using System;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 public class DoorEvent
 {
-    #region statement
-    
     //Sql or mongo statements
-    private static IMongoCollection<DoorEvent> _doorEventColl = MongoDbConnection.GetCollection<DoorEvent>("doorEvents");
-    
-    #endregion
-    
-    #region attributes
-    
-    private int _id;
-    private bool _state;
-    private TimeSpan _timeOpened;
-    private Truck _truck;
-
-    #endregion
-
-    #region properties
+    private static IMongoCollection<DoorEvent> _doorEventColl = MongoDbConnection.GetCollection<DoorEvent>("DoorEvents");
     
     [BsonId]
-    public int Id
-    {
-        get => _id;
-        set => _id = value;
-    }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
 
     [BsonElement("state")]
-    public bool State
-    {
-        get => _state;
-        set => _state = value;
-    }
+    public bool State { get; set; }
     
-    [BsonElement("timeOpened")]
-    public TimeSpan TimeOpened
-    {
-        get => _timeOpened;
-        set => _timeOpened = value;
-    }
+    [BsonElement("time_opened")]
+    public TimeSpan TimeOpened { get; set; }
     
-    [BsonElement("truck")]
-    public Truck Truck
-    {
-        get => _truck;
-        set => _truck = value;
-    }
+    [BsonElement("IDTruck")]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string IDTruck { get; set; }
 
-    #endregion
-    
-    #region class methods
-
-    /// <summary>
-    /// Returns a list of all door events
-    /// </summary>
-    /// <returns></returns>
     public static List<DoorEvent> Get() 
     {
-        //Test
-        List<DoorEvent> doorEvents =
-        [
-            new DoorEvent
-            {
-                Id = 1001,
-                State = true,
-                TimeOpened = new TimeSpan(0, 5, 30),
-                Truck = Truck.Get(1001)
-            },
-            new DoorEvent
-            {
-                Id = 1002,
-                State = false,
-                TimeOpened = new TimeSpan(0, 3, 45),
-                Truck = Truck.Get(1002)
-            },
-        ];
-        //End test
-        
-        return doorEvents;
+        return _doorEventColl.Find(d => true).ToList();
     }
 
-    /// <summary>
-    /// Returns the door event with the specified id
-    /// </summary>
-    /// <param name="id">DoorEvent id</param>
-    /// <returns></returns>
-    public static DoorEvent Get(int id)
+    public static DoorEvent Get(string id)
     {
-        //Test
-        DoorEvent d = new DoorEvent
-        {
-            Id = id,
-            State = true,
-            TimeOpened = new TimeSpan(0, 4, 15),
-            Truck = Truck.Get(1001)
-        };
-        //End test
-        return d;
+        return _doorEventColl.Find(d => d.Id == id).FirstOrDefault();       
     }
 
     public static bool Insert(DoorEvent d)
@@ -115,6 +45,4 @@ public class DoorEvent
             return false;
         }
     }
-    
-    #endregion
 }

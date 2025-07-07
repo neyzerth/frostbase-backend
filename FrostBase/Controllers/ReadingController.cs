@@ -19,7 +19,7 @@ public class ReadingController : ControllerBase
     }
 
     [HttpPost("/Truck/{idTruck}")]
-    public ActionResult Post(string idTruck, [FromForm] CreateReadingDto c)
+    public ActionResult Post(string idTruck, [FromBody] CreateReadingDto c)
     {   
         
         if(Reading.Insert(idTruck, c))
@@ -28,15 +28,15 @@ public class ReadingController : ControllerBase
         return BadRequest(MessageResponse.GetResponse(1, "Reading not inserted", MessageType.Error));
     }
 
-    [HttpPut("{id}")]
-    public ActionResult Put(int id /*, [FromForm] UpdateReadingDto u*/)
-    {
-        return Ok(MessageResponse.GetResponse(1, $"Reading {id} updated", MessageType.Success));
-    }
-
-    [HttpDelete("{id}")]
-    public ActionResult Delete(int id)
-    {
-        return Ok(MessageResponse.GetResponse(1, $"Reading {id} deleted", MessageType.Success));
-    }
+    // [HttpPut("{id}")]
+    // public ActionResult Put(int id /*, [FromForm] UpdateReadingDto u*/)
+    // {
+    //     return Ok(MessageResponse.GetResponse(1, $"Reading {id} updated", MessageType.Success));
+    // }
+    //
+    // [HttpDelete("{id}")]
+    // public ActionResult Delete(int id)
+    // {
+    //     return Ok(MessageResponse.GetResponse(1, $"Reading {id} deleted", MessageType.Success));
+    // }
 }

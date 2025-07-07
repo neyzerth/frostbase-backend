@@ -4,76 +4,29 @@ using MongoDB.Driver;
 public class StateTruck
 {
     #region statement
-    private static IMongoCollection<StateTrip> _stateTruckColl = MongoDbConnection.GetCollection<StateTrip>("stateTruck");
-    #endregion
-    
-    #region attributes
-    private int _id;
-    private string _state;
-
+    private static IMongoCollection<StateTruck> _stateTruckColl = MongoDbConnection.GetCollection<StateTruck>("StateTruck");
     #endregion
     
     #region properties
     
     [BsonId]
-    public int Id
-    {
-        get => _id;
-        set => _id = value;
-    }
+    public string Id { get; set; }
     
     [BsonElement("state")]
-    public string State
-    {
-        get => _state;
-        set => _state = value;
-    }
-
+    public string State { get; set; }
+    
     #endregion
     
     #region class methods
     //Returns a list of the statesTruck
     public static List<StateTruck> Get()
     {
-        List<StateTruck> stateTrucks =
-        [
-            new StateTruck
-            {
-                Id = 1,
-                State = "Operating"
-            },
-
-            new StateTruck
-            {
-                Id = 2,
-                State = "Out of service"
-            },
-
-            new StateTruck
-            {
-                Id = 3,
-                State = "In maintenance"
-            },
-            
-            new StateTruck
-            {
-            Id = 4,
-            State = "Under repair"
-            }
-        ];
-        return stateTrucks;
+        return _stateTruckColl.Find(_ => true).ToList();
     }
-    //Returns the state of a specific truck (test)
-    public static StateTruck Get(int id)
+    //Returns the state of a specific truck
+    public static StateTruck Get(string id)
     {
-        StateTruck state = new StateTruck
-        {
-            Id = id,
-            State = "Operating"
-
-        };
-        //End test
-        return state;
+        return _stateTruckColl.Find(st => st.Id == id).FirstOrDefault();
     }
 
     #endregion
