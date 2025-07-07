@@ -11,7 +11,7 @@ public class UserController : ControllerBase
         return Ok(ListResponse<UserApp>.GetResponse(users, 1));
     }
     [HttpGet("{id}")]
-    public ActionResult Get(int id)
+    public ActionResult Get(string id)
     {
         UserApp userApp = UserApp.Get(id);
         return Ok(Response<UserApp>.GetResponse(userApp, 1));
@@ -19,8 +19,9 @@ public class UserController : ControllerBase
     [HttpPost]
     public ActionResult Post([FromForm] CreateUserDto c)
     {
-        if(UserApp.Insert(c))
-            return Ok(MessageResponse.GetResponse(1, "User inserted", MessageType.Success));
+        UserApp inserted = UserApp.Insert(c);
+        if(inserted != null )
+            return Ok(Response<UserApp>.GetResponse(inserted, 1));
             
         return BadRequest(MessageResponse.GetResponse(1, "User not inserted", MessageType.Error));
     }
