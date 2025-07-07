@@ -8,7 +8,7 @@ public class Order
     #region statement
     
     //Sql or mongo statements
-    private static IMongoCollection<Order> _orderColl = MongoDbConnection.GetCollection<Order>("orders");
+    private static IMongoCollection<Order> _orderColl = MongoDbConnection.GetCollection<Order>("Orders");
     
     #endregion
     

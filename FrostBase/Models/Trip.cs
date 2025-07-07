@@ -28,13 +28,14 @@ public class Trip
     [BsonElement("end_hour")]   
     public TimeSpan? EndHour { get; set; }
 
-    [BsonElement("IDStateTrip")]  
-    public string IDStateTrip { get; set; }
-
     [BsonElement("total_time")] 
     public TimeSpan? TotalTime { get; set; }
     
-    [BsonElement("id_route")]
+    [BsonElement("IDStateTrip")]  
+    public string IDStateTrip { get; set; }
+
+    
+    [BsonElement("IDRoute")]
     [BsonRepresentation(BsonType.ObjectId)]
     public string IDRoute { get; set; }
 
