@@ -6,8 +6,9 @@ public class TruckDto
     public string LicensePlate { get; set; }
     public StateTruck State { get; set; }
 
-    public static TruckDto FromModel(Truck t)
+    public static TruckDto FromModel(Truck? t)
     {
+        if (t == null) return null!;
         return new TruckDto
         {
             Id = t.Id,
