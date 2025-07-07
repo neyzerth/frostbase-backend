@@ -25,16 +25,16 @@ public class TripController : ControllerBase
             
         return BadRequest(MessageResponse.GetResponse(0, "Trip not inserted", MessageType.Error));
     }
-    [HttpPut("{id}")]
-    public ActionResult Put(int id, [FromForm] CreateUserDto t)
-    {
-        return Ok(MessageResponse.GetResponse(1, "Trip "+ id +" updated", MessageType.Success));
-    }
-    [HttpDelete("{id}")]
-    public ActionResult Delete(int id)
-    {
-        return Ok(MessageResponse.GetResponse(1, "Trip "+ id +" deleted", MessageType.Success));
-    }
+    // [HttpPut("{id}")]
+    // public ActionResult Put(int id, [FromForm] CreateUserDto t)
+    // {
+    //     return Ok(MessageResponse.GetResponse(1, "Trip "+ id +" updated", MessageType.Success));
+    // }
+    // [HttpDelete("{id}")]
+    // public ActionResult Delete(int id)
+    // {
+    //     return Ok(MessageResponse.GetResponse(1, "Trip "+ id +" deleted", MessageType.Success));
+    // }
     
     
     [HttpPost("[action]/route/{idRoute}/")]

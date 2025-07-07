@@ -24,14 +24,14 @@ public class UserController : ControllerBase
             
         return BadRequest(MessageResponse.GetResponse(1, "User not inserted", MessageType.Error));
     }
-    [HttpPut("{id}")]
-    public ActionResult Put(int id /*, [FromPost] PostUser p (??)*/)
-    {
-        return Ok(MessageResponse.GetResponse(1, "User "+ id +" updated", MessageType.Success));
-    }
-    [HttpDelete("{id}")]
-    public ActionResult Delete(int id)
-    {
-        return Ok(MessageResponse.GetResponse(1, "User "+ id +" deleted", MessageType.Success));
-    }
+    // [HttpPut("{id}")]
+    // public ActionResult Put(int id /*, [FromPost] PostUser p (??)*/)
+    // {
+    //     return Ok(MessageResponse.GetResponse(1, "User "+ id +" updated", MessageType.Success));
+    // }
+    // [HttpDelete("{id}")]
+    // public ActionResult Delete(int id)
+    // {
+    //     return Ok(MessageResponse.GetResponse(1, "User "+ id +" deleted", MessageType.Success));
+    // }
 }
