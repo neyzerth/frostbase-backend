@@ -1,12 +1,4 @@
 services:
-  mongo:
-    image: mongo:7.0
-    ports:
-      - "27018:27017"
-    volumes:
-      - ./.mongo-data:/data/db
-    networks:
-      - app-network
   apache:
     image: httpd:2.4
     container_name: image-server
@@ -14,13 +6,7 @@ services:
       - "81:80"
     volumes:
       - ./images:/usr/local/apache2/htdocs/images
-    networks:
-      - app-network
 
 volumes:
-  mongo-data:
   image:
 
-networks:
-  app-network:
-    driver: bridge
