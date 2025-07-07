@@ -12,7 +12,7 @@ public class AlertController : ControllerBase
         return Ok(ListResponse<Alert>.GetResponse(alerts, 1));
     }
     [HttpGet("{id}")]
-    public ActionResult Get(int id)
+    public ActionResult Get(string id)
     {
         Alert alert = Alert.Get(id);
         return Ok(Response<Alert>.GetResponse(alert, 1));

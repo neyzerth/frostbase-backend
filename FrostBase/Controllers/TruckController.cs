@@ -11,7 +11,7 @@ public class TruckController : ControllerBase
         return Ok(ListResponse<Truck>.GetResponse(trucks, 1));
     }
     [HttpGet("{id}")]
-    public ActionResult Get(int id)
+    public ActionResult Get(string id)
     {
         return Ok(Response<Truck>.GetResponse(Truck.Get(id), 1));
     }
