@@ -15,6 +15,7 @@ public class Order
     #region properties
     
     [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
 
     [BsonElement("date")]
@@ -24,9 +25,11 @@ public class Order
     public DateTime? Delivered { get; set; }
 
     [BsonElement("IDUser")]
+    [BsonRepresentation(BsonType.ObjectId)]
     public string IDUser { get; set; }
 
     [BsonElement("IDStore")]
+    [BsonRepresentation(BsonType.ObjectId)]
     public string IDStore { get; set; }
 
     #endregion

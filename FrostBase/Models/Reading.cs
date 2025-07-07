@@ -28,6 +28,7 @@ public class Reading
     #region properties
 
     [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
     public string Id
     {
         get => _id;

@@ -35,6 +35,7 @@ public class Trip
     public TimeSpan? TotalTime { get; set; }
     
     [BsonElement("id_route")]
+    [BsonRepresentation(BsonType.ObjectId)]
     public string IDRoute { get; set; }
 
     [BsonElement("orders")]
