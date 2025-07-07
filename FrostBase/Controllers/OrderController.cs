@@ -11,7 +11,7 @@ public class OrderController : ControllerBase
         return Ok(ListResponse<Order>.GetResponse(orders, 1));
     }
     [HttpGet("{id}")]
-    public ActionResult Get(int id)
+    public ActionResult Get(string id)
     {
         Order order = Order.Get(id);
         return Ok(Response<Order>.GetResponse(order, 1));
@@ -21,14 +21,14 @@ public class OrderController : ControllerBase
     {
         return Ok(MessageResponse.GetResponse(1, "Order inserted", MessageType.Success));
     }
-    [HttpPut("{id}")]
-    public ActionResult Put(int id /*, [FromPost] PostOrder p (??)*/)
-    {
-        return Ok(MessageResponse.GetResponse(1, "Order "+ id +" updated", MessageType.Success));
-    }
-    [HttpDelete("{id}")]
-    public ActionResult Delete(int id)
-    {
-        return Ok(MessageResponse.GetResponse(1, "Order "+ id +" deleted", MessageType.Success));
-    }
+    // [HttpPut("{id}")]
+    // public ActionResult Put(int id /*, [FromPost] PostOrder p (??)*/)
+    // {
+    //     return Ok(MessageResponse.GetResponse(1, "Order "+ id +" updated", MessageType.Success));
+    // }
+    // [HttpDelete("{id}")]
+    // public ActionResult Delete(int id)
+    // {
+    //     return Ok(MessageResponse.GetResponse(1, "Order "+ id +" deleted", MessageType.Success));
+    // }
 }

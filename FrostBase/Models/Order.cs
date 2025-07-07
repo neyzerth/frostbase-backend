@@ -1,5 +1,6 @@
 using MongoDB.Driver;
 using System;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 public class Order
@@ -11,61 +12,27 @@ public class Order
     
     #endregion
     
-    #region attributes
-    
-    private int _id;
-    private DateTime _date;
-    private DateTime? _delivered;
-    private UserApp _user;
-    private Store _store;
-
-    #endregion
-
     #region properties
     
     [BsonId]
-    public int Id
-    {
-        get => _id;
-        set => _id = value;
-    }
-    
+    public string Id { get; set; }
+
     [BsonElement("date")]
-    public DateTime Date
-    {
-        get => _date;
-        set => _date = value;
-    }
-    
+    public DateTime Date { get; set; }
+
     [BsonElement("delivered")]
-    public DateTime? Delivered
-    {
-        get => _delivered;
-        set => _delivered = value;
-    }
-    
-    [BsonElement("user")]
-    public UserApp User
-    {
-        get => _user;
-        set => _user = value;
-    }
-    
-    [BsonElement("store")]
-    public Store Store
-    {
-        get => _store;
-        set => _store = value;
-    }
+    public DateTime? Delivered { get; set; }
+
+    [BsonElement("IDUser")]
+    public string IDUser { get; set; }
+
+    [BsonElement("IDStore")]
+    public string IDStore { get; set; }
 
     #endregion
     
     #region class methods
 
-    /// <summary>
-    /// Returns a list of all orders
-    /// </summary>
-    /// <returns></returns>
     public static List<Order> Get() 
     {
         //Test
@@ -73,19 +40,19 @@ public class Order
         [
             new Order
             {
-                Id = 1001,
+                Id = ObjectId.GenerateNewId().ToString(),
                 Date = DateTime.Now.AddDays(-2),
                 Delivered = DateTime.Now.AddDays(-1),
-                User = UserApp.Get(1001),
-                Store = Store.Get(1001)
+                IDUser = ObjectId.GenerateNewId().ToString(),
+                IDStore = ObjectId.GenerateNewId().ToString()
             },
             new Order
             {
-                Id = 1002,
+                Id = ObjectId.GenerateNewId().ToString(),
                 Date = DateTime.Now.AddDays(-1),
                 Delivered = null,
-                User = UserApp.Get(1002),
-                Store = Store.Get(1002)
+                IDUser = ObjectId.GenerateNewId().ToString(),
+                IDStore = ObjectId.GenerateNewId().ToString()
             },
         ];
         //End test
@@ -93,12 +60,7 @@ public class Order
         return orders;
     }
 
-    /// <summary>
-    /// Returns the order with the specified id
-    /// </summary>
-    /// <param name="id">Order id</param>
-    /// <returns></returns>
-    public static Order Get(int id)
+    public static Order Get(string id)
     {
         //Test
         Order o = new Order
@@ -106,8 +68,8 @@ public class Order
             Id = id,
             Date = DateTime.Now.AddDays(-1),
             Delivered = null,
-            User = UserApp.Get(1001),
-            Store = Store.Get(1001)
+            IDUser = ObjectId.GenerateNewId().ToString(),
+            IDStore = ObjectId.GenerateNewId().ToString()
         };
         //End test
         return o;
