@@ -19,7 +19,7 @@ public class ReadingController : ControllerBase
     }
 
     [HttpPost("/Truck/{idTruck}")]
-    public ActionResult Post(string idTruck, [FromForm] CreateReadingDto c)
+    public ActionResult Post(string idTruck, [FromBody] CreateReadingDto c)
     {   
         
         if(Reading.Insert(idTruck, c))

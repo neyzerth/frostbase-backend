@@ -51,10 +51,15 @@ public class MongoDbConnection
         return db.GetCollection<T>(collection);
     }
 
-    public static List<T> Find<T>(string collection)
+    public static List<T> FindAll<T>(string collection)
     {
         // Use FilterDefinition<T>.Empty to get all documents
         return GetCollection<T>(collection).Find(FilterDefinition<T>.Empty).ToList();
+    }
+    public static List<T> FindOne<T>(string collection)
+    {
+        // Use FilterDefinition<T>.Empty to get all documents
+        return GetCollection<T>(collection).Find(_ => true).ToList();
     }
     public static List<BsonDocument> Find(string collection, BsonDocument? filter)
     {

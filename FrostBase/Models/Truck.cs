@@ -88,7 +88,7 @@ public class Truck
         // ];
         //End test
         
-        var trucks = MongoDbConnection.Find<Truck>("trucks");
+        var trucks = MongoDbConnection.FindAll<Truck>("trucks");
         
         return trucks;
     }
