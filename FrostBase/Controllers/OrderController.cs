@@ -17,9 +17,13 @@ public class OrderController : ControllerBase
         return Ok(Response<Order>.GetResponse(order, 1));
     }
     [HttpPost]
-    public ActionResult Post(/*[FromPost] PostOrder p*/)
+    public ActionResult Post([FromForm] CreateOrderDto c)
     {
-        return Ok(MessageResponse.GetResponse(1, "Order inserted", MessageType.Success));
+        Order insert = Order.Insert(c);
+        if(insert != null)
+            return Ok(Response<Order>.GetResponse(insert, 1));
+        
+        return BadRequest(MessageResponse.GetResponse(0, "Order not inserted", MessageType.Error));
     }
     // [HttpPut("{id}")]
     // public ActionResult Put(int id /*, [FromPost] PostOrder p (??)*/)

@@ -78,17 +78,30 @@ public class Order
         return o;
     }
 
-    public static bool Insert(Order o)
+    public static Order Insert(CreateOrderDto c)
+    {
+        Order order = new Order
+        {
+            Id = ObjectId.GenerateNewId().ToString(),
+            Date = DateTime.Now,
+            Delivered = null,
+            IDUser = c.IDUser,
+            IDStore = c.IDStore
+        };
+        return Insert(order);
+    }
+
+    public static Order Insert(Order o)
     {
         try
         {
             _orderColl.InsertOne(o);
-            return true;
+            return o;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return false;
+            return null;
         }
     }
 
