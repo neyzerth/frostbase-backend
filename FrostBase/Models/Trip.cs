@@ -47,56 +47,12 @@ public class Trip
 
     public static List<Trip> Get() 
     {
-        //Test
-        List<Trip> trips =
-        [
-            new Trip
-            {
-                Id = ObjectId.GenerateNewId().ToString(),
-                Date = DateTime.Now,
-                StartHour = new TimeSpan(8, 0, 0),
-                EndHour = null,
-                IDStateTrip = "START",
-                TotalTime = null,
-                IDRoute = ObjectId.GenerateNewId().ToString(),
-                Orders = null
-            },
-            new Trip
-            {
-                Id = ObjectId.GenerateNewId().ToString(),
-                Date = DateTime.Now.AddDays(1),
-                StartHour = new TimeSpan(9, 0, 0),
-                EndHour = new TimeSpan(14, 0, 0),
-                IDStateTrip = "ENDED",
-                TotalTime = new TimeSpan(5, 0, 0),
-                IDRoute = ObjectId.GenerateNewId().ToString(),
-                Orders = null
-            },
-        ];
-        
-        return trips;
+        return _tripColl.Find(t => true).ToList();
     }
 
     public static Trip Get(string id)
     {
-        //Test
-        Trip t = new Trip
-        {
-            Id = id,
-            Date = DateTime.Now,
-            StartHour = new TimeSpan(8, 0, 0),
-            EndHour = new TimeSpan(12, 0, 0),
-            TotalTime = new TimeSpan(4, 0, 0),
-            IDRoute = ObjectId.GenerateNewId().ToString(),
-            Orders = new List<TripOrder>()
-        };
-        //End test
-        
-        // Para implementación real con MongoDB:
-        // var filter = Builders<Trip>.Filter.Eq(t => t.Id, id);
-        // return _tripColl.Find(filter).FirstOrDefault();
-        
-        return t;
+        return _tripColl.Find(t => t.Id == id).FirstOrDefault();
     }
 
     public static Trip Insert(Trip t)
@@ -178,7 +134,7 @@ public class Trip
             return false;
         }
     }
-    public static bool StartOrder(string tripId, string orderId, string storeId = null)
+    public static bool StartOrder(string tripId, string orderId)
     {
         try
         {
@@ -186,7 +142,6 @@ public class Trip
             TripOrder newOrder = new TripOrder
             {
                 IDOrder = orderId,
-                IDStore = storeId,
                 TimeStart = DateTime.Now,
                 TimeEnd = null
             };
@@ -194,28 +149,10 @@ public class Trip
             // Crear un filtro para encontrar el viaje por su ID
             var filter = Builders<Trip>.Filter.Eq(t => t.Id, tripId);
             
-            try
-            {
-                // Primero intentar añadir directamente, asumiendo que Orders ya existe como array
-                var pushUpdate = Builders<Trip>.Update.Push(t => t.Orders, newOrder);
-                var result = _tripColl.UpdateOne(filter, pushUpdate);
-                
-                if (result.ModifiedCount > 0)
-                {
-                    return true; // Éxito en el primer intento
-                }
-            }
-            catch (MongoWriteException ex) when (ex.Message.Contains("must be an array but is of type null"))
-            {
-                // Si falla porque Orders es null, inicializarlo con el nuevo elemento
-                var setUpdate = Builders<Trip>.Update.Set(t => t.Orders, new List<TripOrder> { newOrder });
-                var result = _tripColl.UpdateOne(filter, setUpdate);
-                
-                return result.ModifiedCount > 0;
-            }
-            
-            // Si llegamos aquí, el documento no se encontró o no se modificó
-            return false;
+            var pushUpdate = Builders<Trip>.Update.Push(t => t.Orders, newOrder);
+            var result = _tripColl.UpdateOne(filter, pushUpdate);
+
+            return result.ModifiedCount > 0;
         }
         catch (Exception e)
         {
@@ -229,7 +166,7 @@ public class Trip
         try
         {
             // Verificar si el viaje existe y tiene órdenes
-            var trip = _tripColl.Find(t => t.Id == tripId).FirstOrDefault();
+            Trip trip = _tripColl.Find(t => t.Id == tripId).FirstOrDefault();
             
             if (trip == null)
             {
@@ -247,7 +184,6 @@ public class Trip
                 Builders<Trip>.Filter.ElemMatch(t => t.Orders, o => o.IDOrder == orderId)
             );
             
-            // Crear una actualización que establezca el tiempo de fin de la orden
             var update = Builders<Trip>.Update
                 .Set("orders.$.time_end", DateTime.Now);
                 

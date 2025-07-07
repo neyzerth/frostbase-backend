@@ -38,44 +38,12 @@ public class Order
 
     public static List<Order> Get() 
     {
-        //Test
-        List<Order> orders =
-        [
-            new Order
-            {
-                Id = ObjectId.GenerateNewId().ToString(),
-                Date = DateTime.Now.AddDays(-2),
-                Delivered = DateTime.Now.AddDays(-1),
-                IDUser = ObjectId.GenerateNewId().ToString(),
-                IDStore = ObjectId.GenerateNewId().ToString()
-            },
-            new Order
-            {
-                Id = ObjectId.GenerateNewId().ToString(),
-                Date = DateTime.Now.AddDays(-1),
-                Delivered = null,
-                IDUser = ObjectId.GenerateNewId().ToString(),
-                IDStore = ObjectId.GenerateNewId().ToString()
-            },
-        ];
-        //End test
-        
-        return orders;
+        return _orderColl.Find(_ => true).ToList();
     }
-
+    
     public static Order Get(string id)
     {
-        //Test
-        Order o = new Order
-        {
-            Id = id,
-            Date = DateTime.Now.AddDays(-1),
-            Delivered = null,
-            IDUser = ObjectId.GenerateNewId().ToString(),
-            IDStore = ObjectId.GenerateNewId().ToString()
-        };
-        //End test
-        return o;
+        return _orderColl.Find(o => o.Id == id).FirstOrDefault();
     }
 
     public static Order Insert(CreateOrderDto c)

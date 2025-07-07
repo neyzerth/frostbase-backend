@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
@@ -7,112 +8,38 @@ public class Truck
     #region statement
     
     //Sql or mongo statements
-    private static IMongoCollection<Truck> _truckColl = MongoDbConnection.GetCollection<Truck>("trucks");
+    private static IMongoCollection<Truck> _truckColl = MongoDbConnection.GetCollection<Truck>("Trucks");
     
-    #endregion
-    
-    #region attributes
-    
-    private int _id;
-    private string _brand;
-    private string _model;
-    private string _licensePlate;
-    private StateTruck _stateTruck;
-
-
     #endregion
 
     #region properties
 
     [BsonId]
-    public int Id
-    {
-        get => _id;
-        set => _id = value;
-    }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
     [BsonElement("brand")]
-    public string Brand
-    {
-        get => _brand;
-        set => _brand = value;
-    }
+    public string Brand { get; set; }
     [BsonElement("model")]
-    public string Model
-    {
-        get => _model;
-        set => _model = value;
-    }
+    public string Model { get; set; }
 
     [BsonElement("license_plate")]
-    public string LicensePlate
-    {
-        get => _licensePlate;
-        set => _licensePlate = value;
-    }
+    public string LicensePlate { get; set; }
 
-    [BsonElement("state")]
-    public StateTruck State
-    {
-        get => _stateTruck;
-        set => _stateTruck = value;
-    }   
+    [BsonElement("IDStateTruck")]
+    public string State { get; set; }
 
     #endregion
     
     #region class methods
 
-    /// <summary>
-    /// Returns a list of all trucks
-    /// </summary>
-    /// <returns></returns>
     public static List<Truck> Get() 
     {
-        //Test 1
-        // List<Truck> trucks =
-        // [
-        //     new Truck
-        //     {
-        //         Id = 1001,
-        //         Brand = "Test",
-        //         Model = "Test",
-        //         LicensePlate = "836DAS92"
-        //         
-        //     },
-        //     new Truck
-        //     {
-        //         Id = 1002,
-        //         Brand = "Test",
-        //         Model = "Test",
-        //         LicensePlate = "AS92JAK3"
-        //     },
-        // ];
-        //End test
-        
-        var trucks = MongoDbConnection.FindAll<Truck>("trucks");
-        
-        return trucks;
+        return _truckColl.Find(t => true).ToList();
     }
     
-    
-
-    /// <summary>
-    /// Returns the user with the specified id
-    /// </summary>
-    /// <param name="id">Truck id</param>
-    /// <returns></returns>
-    public static Truck Get(int id)
+    public static Truck Get(string id)
     {
-        //Test
-        
-        Truck u = new Truck
-        {
-            Id = id,
-            Brand = "Test",
-            Model = "Test",
-            LicensePlate = "JAKAS3R3"
-        };
-        //End test
-        return u;
+        return _truckColl.Find(t => t.Id == id).FirstOrDefault();
     }
 
     public static bool Insert(Truck u)

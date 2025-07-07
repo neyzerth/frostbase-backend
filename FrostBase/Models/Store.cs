@@ -7,100 +7,38 @@ public class Store
     #region statement
     
     //Sql or mongo statements
-    private static IMongoCollection<Store> _storeColl = MongoDbConnection.GetCollection<Store>("stores");
+    private static IMongoCollection<Store> _storeColl = MongoDbConnection.GetCollection<Store>("Stores");
     
     #endregion
     
-    #region attributes
-    
-    private int _id;
-    private string _name;
-    private string _phone;
-    private string _location;
-    private double _latitude;
-    private double _longitude;
-
-    #endregion
 
     #region properties
 
     [BsonId]
-    public int Id
-    {
-        get => _id;
-        set => _id = value;
-    }
+    public int Id { get; set; }
     
     [BsonElement("name")]
-    public string Name
-    {
-        get => _name;
-        set => _name = value;
-    }
+    public string Name { get; set; }
 
     [BsonElement("phone")]
-    public string Phone
-    {
-        get => _phone;
-        set => _phone = value;
-    }
+    public string Phone { get; set; }
 
     [BsonElement("location")]
-    public string Location
-    {
-        get => _location;
-        set => _location = value;
-    }
+    public string Location { get; set; }
 
     [BsonElement("latitude")]
-    public double Latitude
-    {
-        get => _latitude;
-        set => _latitude = value;
-    }
+    public double Latitude { get; set; }
 
     [BsonElement("longitude")]
-    public double Longitude
-    {
-        get => _longitude;
-        set => _longitude = value;
-    }
+    public double Longitude { get; set; }
 
     #endregion
     
     #region class methods
 
-    /// <summary>
-    /// Returns a list of all stores
-    /// </summary>
-    /// <returns></returns>
     public static List<Store> Get() 
     {
-        //Test
-        List<Store> stores =
-        [
-            new Store
-            {
-                Id = 1001,
-                Name = "Downtown Store",
-                Phone = "664-123-4567",
-                Location = "123 Main St",
-                Latitude = 32.5342,
-                Longitude = -116.9765
-            },
-            new Store
-            {
-                Id = 1002,
-                Name = "Eastside Market",
-                Phone = "664-765-4321",
-                Location = "456 Oak Ave",
-                Latitude = 32.5489,
-                Longitude = -116.8754
-            },
-        ];
-        //End test
-        
-        return stores;
+        return _storeColl.Find(s => true).ToList();       
     }
 
     /// <summary>
@@ -110,18 +48,7 @@ public class Store
     /// <returns></returns>
     public static Store Get(int id)
     {
-        //Test
-        Store s = new Store
-        {
-            Id = id,
-            Name = "Test Store",
-            Phone = "664-555-1234",
-            Location = "789 Test Blvd",
-            Latitude = 32.5342,
-            Longitude = -116.9765
-        };
-        //End test
-        return s;
+        return _storeColl.Find(s => s.Id == id).FirstOrDefault();       
     }
 
     public static bool Insert(Store s)

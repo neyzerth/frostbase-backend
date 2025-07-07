@@ -61,22 +61,16 @@ public class TripController : ControllerBase
     [HttpPost("[action]/{idTrip}/")]
     public ActionResult End(string idTrip)
     {
-        Trip t = new Trip
-        {
-            Id = idTrip,
-            EndHour = DateTime.Now.TimeOfDay,
-            IDStateTrip = "ENDED"
-        };
-        if(Trip.UpdateEndTime(t.Id, t.EndHour, t.IDStateTrip)) 
+        if(Trip.UpdateEndTime(idTrip, DateTime.Now.TimeOfDay, "ENDED")) 
             return Ok(MessageResponse.GetResponse(1, "Trip ended successfully", MessageType.Success));
             
         return BadRequest(MessageResponse.GetResponse(0, "Failed to end trip", MessageType.Error));
     }
     
     [HttpPost("{tripId}/order/{orderId}/start")]
-    public ActionResult StartOrder(string tripId, string orderId, [FromQuery] string storeId = null)
+    public ActionResult StartOrder(string tripId, string orderId)
     {
-        if(Trip.StartOrder(tripId, orderId, storeId))
+        if(Trip.StartOrder(tripId, orderId))
             return Ok(MessageResponse.GetResponse(1, "Order started successfully", MessageType.Success));
             
         return BadRequest(MessageResponse.GetResponse(0, "Failed to start order", MessageType.Error));
