@@ -12,7 +12,23 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy
+            .AllowAnyOrigin() //  Cannot be used together with AllowCredentials()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        //.AllowCredentials(); // Cannot be used together with AllowAnyOrigin()
+    });
+});
+
 var app = builder.Build();
+
+//enable CORS
+app.UseCors("CorsPolicy");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
