@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -13,21 +14,21 @@ public class Reading
     
     #region attributes
     
-    private int _id;
+    private string _id;
     private DateTime _date;
     private bool _doorState;
-    private decimal _temp;
+    private double _temp;
     private int _percHumidity;
     private double _latitude;
     private double _longitude;
-    private Truck _truck;
+    private string _idTruck;
 
     #endregion
 
     #region properties
 
     [BsonId]
-    public int Id
+    public string Id
     {
         get => _id;
         set => _id = value;
@@ -48,7 +49,7 @@ public class Reading
     }
 
     [BsonElement("temp")]
-    public decimal Temperature
+    public double Temperature
     {
         get => _temp;
         set => _temp = value;
@@ -75,19 +76,8 @@ public class Reading
         set => _longitude = value;
     }
 
-    [JsonIgnore]
     [BsonElement("IDTruck")]
-    public int IDTruck
-    {
-        get => _truck.Id;
-        set => _truck.Id = value;
-    }
-    [BsonIgnore]
-    public Truck Truck
-    {
-        get => _truck;
-        set => _truck = value;
-    }
+    public string IDTruck { get; set; }
 
     #endregion
     
@@ -104,25 +94,25 @@ public class Reading
         [
             new Reading
             {
-                Id = 1001,
+                Id = ObjectId.GenerateNewId().ToString(),
                 Date = DateTime.Now.AddHours(-2),
                 DoorState = false,
-                Temperature = 4.5m,
+                Temperature = 4.5,
                 PercHumidity = 75,
                 Latitude = 32.5123,
                 Longitude = -116.7832,
-                Truck = Truck.Get(1001)
+                IDTruck = ObjectId.GenerateNewId().ToString(),
             },
             new Reading
             {
-                Id = 1002,
+                Id = ObjectId.GenerateNewId().ToString(),
                 Date = DateTime.Now.AddHours(-1),
                 DoorState = true,
-                Temperature = 6.2m,
+                Temperature = 6.2,
                 PercHumidity = 80,
                 Latitude = 32.5145,
                 Longitude = -116.7845,
-                Truck = Truck.Get(1001)
+                IDTruck =ObjectId.GenerateNewId().ToString(),
             },
         ];
         //End test
@@ -135,7 +125,7 @@ public class Reading
     /// </summary>
     /// <param name="id">Reading id</param>
     /// <returns></returns>
-    public static Reading Get(int id)
+    public static Reading Get(string id)
     {
         //Test
         Reading r = new Reading
@@ -143,11 +133,11 @@ public class Reading
             Id = id,
             Date = DateTime.Now.AddHours(-1),
             DoorState = false,
-            Temperature = 5.1m,
+            Temperature = 5.1,
             PercHumidity = 77,
             Latitude = 32.5123,
             Longitude = -116.7832,
-            Truck = Truck.Get(1001)
+            IDTruck = ObjectId.GenerateNewId().ToString(),
         };
         //End test
         return r;
@@ -163,8 +153,25 @@ public class Reading
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return false;
+            throw;
         }
+    }
+
+    public static bool Insert(string idTruck, CreateReadingDto c)
+    {
+        Reading r = new Reading
+        {
+            Id = ObjectId.GenerateNewId().ToString(),
+            Date = DateTime.Now,
+            IDTruck = idTruck,
+            DoorState = c.DoorState,
+            Latitude = c.Latitude,
+            Longitude = c.Longitude,
+            PercHumidity = c.Humidity,
+            Temperature = c.Temperature,
+        };
+        
+        return Insert(r);
     }
     
     #endregion

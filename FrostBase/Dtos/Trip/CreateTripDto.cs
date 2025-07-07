@@ -5,5 +5,4 @@ public class CreateTripDto
     public TimeSpan StartHour { get; set; }
     public TimeSpan EndHour { get; set; }
     public string State { get; set; }
-    
 }
