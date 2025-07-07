@@ -7,14 +7,14 @@ public class UserController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        List<UserApp> users = UserApp.Get();
-        return Ok(ListResponse<UserApp>.GetResponse(users, 1));
+        List<UserDto> users = UserDto.FromModel(UserApp.Get());
+        return Ok(ListResponse<UserDto>.GetResponse(users, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(string id)
     {
-        UserApp userApp = UserApp.Get(id);
-        return Ok(Response<UserApp>.GetResponse(userApp, 1));
+        UserDto userApp = UserDto.FromModel(UserApp.Get(id));
+        return Ok(Response<UserDto>.GetResponse(userApp, 1));
     }
     [HttpPost]
     public ActionResult Post([FromForm] CreateUserDto c)

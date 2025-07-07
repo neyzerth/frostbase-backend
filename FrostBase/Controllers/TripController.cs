@@ -7,14 +7,14 @@ public class TripController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        List<Trip> trips = Trip.Get();
-        return Ok(ListResponse<Trip>.GetResponse(trips, 1));
+        List<TripDto> trips = TripDto.FromModel(Trip.Get());
+        return Ok(ListResponse<TripDto>.GetResponse(trips, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(string id)
     {
-        Trip trip = Trip.Get(id);
-        return Ok(Response<Trip>.GetResponse(trip, 1));
+        TripDto trip = TripDto.FromModel(Trip.Get(id));
+        return Ok(Response<TripDto>.GetResponse(trip, 1));
     }
     [HttpPost]
     public ActionResult Post([FromForm] CreateTripDto c)

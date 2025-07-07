@@ -8,14 +8,14 @@ public class StoreController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        List<Store> stores = Store.Get();
-        return Ok(ListResponse<Store>.GetResponse(stores, 1));
+        List<StoreDto> stores = StoreDto.FromModel(Store.Get());
+        return Ok(ListResponse<StoreDto>.GetResponse(stores, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(string id)
     {
-        Store store = Store.Get(id);
-        return Ok(Response<Store>.GetResponse(store, 1));
+        StoreDto store = StoreDto.FromModel(Store.Get(id));
+        return Ok(Response<StoreDto>.GetResponse(store, 1));
     }
     // [HttpPost]
     // public ActionResult Post([FromForm] Store s)

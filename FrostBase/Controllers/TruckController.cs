@@ -7,13 +7,14 @@ public class TruckController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        List<Truck> trucks = Truck.Get();
-        return Ok(ListResponse<Truck>.GetResponse(trucks, 1));
+        List<TruckDto> trucks = TruckDto.FromModel(Truck.Get());
+        return Ok(ListResponse<TruckDto>.GetResponse(trucks, 1));
     }
     [HttpGet("{id}")]
     public ActionResult Get(string id)
     {
-        return Ok(Response<Truck>.GetResponse(Truck.Get(id), 1));
+        TruckDto truck = TruckDto.FromModel(Truck.Get(id));
+        return Ok(Response<TruckDto>.GetResponse(truck, 1));
     }
 
     // [HttpPost]
