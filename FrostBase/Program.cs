@@ -7,6 +7,9 @@ Config.Configuration = JsonConvert.DeserializeObject<Config>(json);
 
 var builder = WebApplication.CreateBuilder(args);
 
+// listen in all directions, not only localhost
+builder.WebHost.UseUrls("http://0.0.0.0:5125");
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
