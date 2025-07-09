@@ -11,7 +11,6 @@ public class Alert
     
     #endregion
     
-
     #region properties
     
     [BsonId]
@@ -22,19 +21,15 @@ public class Alert
     [BsonElement("state")]
     public bool State { get; set; }
     
-    [BsonElement("dateTime")] 
+    [BsonElement("date")] 
     public DateTime Date { get; set; }
     
-    [BsonElement("detectedValue")] 
-    public decimal DetectedValue { get; set; }
-    
-    [BsonElement("alertType")] 
-    public AlertType AlertType { get; set; }
+    [BsonElement("IDAlertTypes")] 
+    public string AlertType { get; set; }
 
-    [BsonElement("IDTruck")] 
+    [BsonElement("IDReading")] 
     [BsonRepresentation(BsonType.ObjectId)]
-    public string IDTruck { get; set; }
-
+    public string IDReading { get; set; }
 
     #endregion
     

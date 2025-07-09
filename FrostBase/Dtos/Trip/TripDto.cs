@@ -1,22 +1,37 @@
 public class TripDto
 {
     public string Id { get; set; }
-    public DateOnly Date { get; set; }
     public Time TripTime { get; set; }
     public StateTrip State { get; set; }
+    public TruckDto Truck { get; set; }
+    public UserDto Driver { get; set; }
     public RouteDto Route { get; set; }
     public List<TripOrderDto> Orders { get; set; }
 
     public static TripDto FromModel(Trip t)
     {
-        return new TripDto
+        try
         {
-            Id = t.Id,
-            Date = DateOnly.FromDateTime(t.Date),
-            State = StateTrip.Get(t.IDStateTrip),
-            Route = RouteDto.FromModel(global::Route.Get(t.IDRoute)),
-            Orders = TripOrderDto.FromModel(t.Orders)
-        };
+            return new TripDto
+            {
+                Id = t.Id,
+                TripTime = new Time
+                {
+                    StartTime = t.StartTime,
+                    EndTime = t.EndTime
+                },
+                State = StateTrip.Get(t.IDStateTrip),
+                Truck = TruckDto.FromModel(global::Truck.Get(t.IDTruck)),
+                Driver = UserDto.FromModel(UserApp.Get(t.IDUser)),
+                Route = RouteDto.FromModel(global::Route.Get(t.IDRoute)),
+                Orders = TripOrderDto.FromModel(t.Orders)
+            };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return null;
+        }
     }
 
     public static List<TripDto> FromModel(List<Trip> trips)
@@ -30,14 +45,6 @@ public class TripDto
     }
 }
 
-public class Time
-{
-    public TimeSpan StartHour { get; set; }
-    public TimeSpan? EndHour { get; set; }
-    public TimeSpan TotalTime { get; set; }
-}
-
-
 public class TripOrderDto
 {
     public OrderDto Order { get; set; }
@@ -50,10 +57,8 @@ public class TripOrderDto
             Order = OrderDto.FromModel(global::Order.Get(to.IDOrder)),
             OrderTime = new Time
             {
-                StartHour = to.TimeStart.TimeOfDay,
-                EndHour = to.TimeEnd.HasValue ? to.TimeEnd.Value.TimeOfDay : TimeSpan.Zero,
-                TotalTime = to.TimeEnd.HasValue ? 
-                    (to.TimeEnd.Value - to.TimeStart) : DateTime.Now - to.TimeStart
+                StartTime = to.StartTime,
+                EndTime = to.EndTime
             }
         };
     }
@@ -66,5 +71,20 @@ public class TripOrderDto
             tosDto.Add(FromModel(to));
         }
         return tosDto;   
+    }
+}
+
+public class Time
+{
+    public DateTime StartTime { get; set; }
+    public DateTime? EndTime { get; set; }
+    public TimeSpan? TotalTime => Total(); 
+
+    public TimeSpan? Total()
+    {
+        TimeSpan endTime = EndTime.HasValue? 
+            EndTime.Value.TimeOfDay : DateTime.Now.TimeOfDay;
+        
+        return endTime.Subtract(StartTime.TimeOfDay);
     }
 }

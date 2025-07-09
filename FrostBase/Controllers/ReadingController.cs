@@ -18,7 +18,7 @@ public class ReadingController : ControllerBase
         return Ok(Response<Reading>.GetResponse(reading, 1));
     }
 
-    [HttpPost("/Truck/{idTruck}")]
+    [HttpPost("Truck/{idTruck}")]
     public ActionResult Post(string idTruck, [FromBody] CreateReadingDto c)
     {   
         
