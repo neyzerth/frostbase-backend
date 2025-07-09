@@ -214,7 +214,6 @@ db.Alerts.insertMany([
         state: true,
         IDReading: ObjectId("674a9001000000000000001d"),
         IDAlertTypes: "HT",
-        IDTruck: ObjectId("674a4001000000000000001c")
     },
     {
         _id: ObjectId("674ac001000000000000001b"),
@@ -222,7 +221,6 @@ db.Alerts.insertMany([
         state: true,
         IDReading: ObjectId("674a9001000000000000001c"),
         IDAlertTypes: "LH",
-        IDTruck: ObjectId("674a4001000000000000001b")
     },
     {
         _id: ObjectId("674ac001000000000000001c"),
@@ -230,6 +228,5 @@ db.Alerts.insertMany([
         state: true,
         IDReading: ObjectId("674a9001000000000000001e"),
         IDAlertTypes: "OD",
-        IDTruck: ObjectId("674a4001000000000000001e")
     }
 ]);
