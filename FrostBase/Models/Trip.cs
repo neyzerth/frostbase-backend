@@ -24,9 +24,6 @@ public class Trip
 
     [BsonElement("end_time")]   
     public DateTime? EndTime { get; set; }
-
-    [BsonElement("total_time")] 
-    public long? TotalTime => TotalSeconds();
     
     [BsonElement("IDTruck")]
     [BsonRepresentation(BsonType.ObjectId)]
@@ -50,14 +47,7 @@ public class Trip
     
     #region class methods
     
-    private long? TotalSeconds()
-    {
-        if (!EndTime.HasValue)
-            return null;
-        
-        DateTime endTime = EndTime.Value;
-        return endTime.TimeOfDay.Subtract(StartTime.TimeOfDay).Seconds;
-    }
+    
 
     public static List<Trip> Get() 
     {
@@ -78,6 +68,15 @@ public class Trip
             
             if (t.Orders == null)
                 t.Orders = new List<TripOrder>();
+            
+            if(Truck.Get(t.IDTruck) == null) 
+                throw new Exception("Truck not founded with id "+ t.IDTruck);
+            
+            if(UserApp.Get(t.IDUser) == null) 
+                throw new Exception("User not founded with id "+ t.IDUser);
+            
+            if(Route.Get(t.IDRoute) == null)
+                throw new Exception("Route not founded with id "+ t.IDRoute);
             
             
             _tripColl.InsertOne(t);
@@ -109,19 +108,13 @@ public class Trip
     {
         Trip t = new Trip
         {
-            StartTime = c.StartHour,
+            StartTime = DateTime.Now,
+            IDTruck = c.IDTruck,
+            IDUser = c.IDDriver,
             IDRoute = c.IDRoute,
-            IDStateTrip = c.State,
+            IDStateTrip = "IP",
             Orders = new List<TripOrder>()
         };
-        
-        t.Orders.Add(new TripOrder
-        {
-            IDOrder = ObjectId.GenerateNewId().ToString(),
-            IDStore = ObjectId.GenerateNewId().ToString(),
-            StartTime = DateTime.Now,
-            EndTime = null
-        });
         return Insert(t);
     }
     
@@ -136,8 +129,7 @@ public class Trip
             var filter = Builders<Trip>.Filter.Eq(t => t.Id, trip.Id);
             var update = Builders<Trip>.Update
                 .Set(t => t.EndTime, endTime)
-                .Set(t => t.IDStateTrip, "compl")
-                .Set(t => t.TotalTime, totalTime.Seconds);
+                .Set(t => t.IDStateTrip, "compl");
                 
             return _tripColl.FindOneAndUpdate(filter, update,
                     new FindOneAndUpdateOptions<Trip>

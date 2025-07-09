@@ -10,21 +10,29 @@ public class TripDto
 
     public static TripDto FromModel(Trip t)
     {
-        return new TripDto
+        try
         {
-            Id = t.Id,
-            TripTime = new Time
+            
+            return new TripDto
             {
-                StartTime = t.StartTime,
-                EndTime = t.EndTime,
-                TotalTime = Time.Total(t.TotalTime)
-            },
-            State = StateTrip.Get(t.IDStateTrip),
-            Truck = TruckDto.FromModel(global::Truck.Get(t.IDTruck)),
-            Driver = UserDto.FromModel(UserApp.Get(t.IDUser)),
-            Route = RouteDto.FromModel(global::Route.Get(t.IDRoute)),
-            Orders = TripOrderDto.FromModel(t.Orders)
-        };
+                Id = t.Id,
+                TripTime = new Time
+                {
+                    StartTime = t.StartTime,
+                    EndTime = t.EndTime
+                },
+                State = StateTrip.Get(t.IDStateTrip),
+                Truck = TruckDto.FromModel(global::Truck.Get(t.IDTruck)),
+                Driver = UserDto.FromModel(UserApp.Get(t.IDUser)),
+                Route = RouteDto.FromModel(global::Route.Get(t.IDRoute)),
+                Orders = TripOrderDto.FromModel(t.Orders)
+            };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return null;
+        }
     }
 
     public static List<TripDto> FromModel(List<Trip> trips)
@@ -71,10 +79,13 @@ public class Time
 {
     public DateTime StartTime { get; set; }
     public DateTime? EndTime { get; set; }
-    public TimeSpan? TotalTime { get; set; } 
+    public TimeSpan? TotalTime => Total(); 
 
-    public static TimeSpan? Total(long? seconds)
+    public TimeSpan? Total()
     {
-        return TimeSpan.FromSeconds(seconds.Value);
+        TimeSpan endTime = EndTime.HasValue? 
+            EndTime.Value.TimeOfDay : DateTime.Now.TimeOfDay;
+        
+        return endTime.Subtract(StartTime.TimeOfDay);
     }
 }
