@@ -53,7 +53,7 @@ public class StateTruck : State
 }
 public class AlertType : State
 {
-    private static IMongoCollection<AlertType> _alertType = MongoDbConnection.GetCollection<AlertType>("AlertType");
+    private static IMongoCollection<AlertType> _alertType = MongoDbConnection.GetCollection<AlertType>("AlertTypes");
 
     #region class methods
     
