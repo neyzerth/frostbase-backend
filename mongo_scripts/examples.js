@@ -56,8 +56,8 @@ db.Trips.insertMany([
         {
             IDOrder: ObjectId("674a7001000000000000001a"),
             IDStore: ObjectId("674a3001000000000000001a"),
-            time_start: new Date("2025-06-29T08:30:00Z"),
-            time_end: new Date("2025-06-29T09:00:00Z")
+            start_time: new Date("2025-06-29T08:30:00Z"),
+            end_time: new Date("2025-06-29T09:00:00Z")
         },
         {
             IDOrder: ObjectId("674a7001000000000000001b"),
