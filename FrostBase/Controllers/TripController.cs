@@ -67,7 +67,7 @@ public class TripController : ControllerBase
         return BadRequest(MessageResponse.GetResponse(0, "Failed to start order", MessageType.Error));
     }
     
-    [HttpPost("{tripId}/order/{orderId}/end")]
+    [HttpPost("{tripId}/[action]/{orderId}")]
     public ActionResult EndOrder(string tripId, string orderId)
     {
         TripDto trip = TripDto.FromModel(Trip.EndOrder(tripId, orderId));

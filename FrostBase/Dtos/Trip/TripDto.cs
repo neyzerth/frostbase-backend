@@ -12,7 +12,6 @@ public class TripDto
     {
         try
         {
-            
             return new TripDto
             {
                 Id = t.Id,
