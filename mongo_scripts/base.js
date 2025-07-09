@@ -1,6 +1,6 @@
 // ===== COLECCIÓN: StateTruck =====
 db.StateTruck.insertMany([
-  { _id: "avail", state: "Available" }, 
+  { _id: "avail", state: "Available" },
   { _id: "inrou", state: "In route" },
   { _id: "maint", state: "In maintenance" },
   { _id: "outos", state: "Out of service" }
@@ -13,31 +13,34 @@ db.StateTrip.insertMany([
   { _id: "cancl", state: "Cancelado" }
 ]);
 
+// ===== COLECCIÓN: StateOrder =====
+db.StateTrip.insertMany([
+  { _id: "pendi", state: "Orden pendiente" },
+  { _id: "deliv", state: "Orden Entregada" },
+  { _id: "cancl", state: "Orden Cancelada" },
+  { _id: "delay", state: "Fecha de entrega de orden atrasada" }
+]);
+
 // ===== COLECCIÓN: AlertTypes =====
 db.AlertTypes.insertMany([
   {
     _id: "htemp",
-    type: "High temperature",
     message: "La temperatura del contenedor ha superado el límite máximo permitido"
   },
   {
     _id: "ltemp",
-    type: "Low temperature",
     message: "La temperatura del contenedor está por debajo del límite mínimo"
   },
   {
     _id: "hhumi",
-    type: "High humidity",
     message: "El nivel de humedad ha excedido el máximo permitido"
   },
   {
     _id: "lhumi",
-    type: "Low humidity",
     message: "El nivel de humedad está por debajo del mínimo requerido"
   },
   {
     _id: "odoor",
-    type: "Open door",
     message: "La puerta del contenedor ha sido abierta sin autorización"
   }
 ]);
