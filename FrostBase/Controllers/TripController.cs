@@ -17,7 +17,7 @@ public class TripController : ControllerBase
         return Ok(Response<TripDto>.GetResponse(trip, 1));
     }
     [HttpPost]
-    public ActionResult Post([FromForm] CreateTripDto c)
+    public ActionResult Post([FromBody] CreateTripDto c)
     {
         Trip insertedTrip = Trip.Insert(c);
         if(insertedTrip != null) 
@@ -38,7 +38,7 @@ public class TripController : ControllerBase
     
     
     [HttpPost("[action]")]
-    public ActionResult Start([FromForm] StartTripDto t)
+    public ActionResult Start([FromBody] StartTripDto t)
     {
         TripDto trip = TripDto.FromModel(Trip.Insert(t));
         

@@ -29,7 +29,7 @@ public class UserController : ControllerBase
         return Ok(Response<UserDto>.GetResponse(userApp, 1));
     }
     [HttpPost]
-    public ActionResult Post([FromForm] CreateUserDto c)
+    public ActionResult Post([FromBody] CreateUserDto c)
     {
         UserApp inserted = UserApp.Insert(c);
         if(inserted != null )

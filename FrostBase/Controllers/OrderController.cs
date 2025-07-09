@@ -17,7 +17,7 @@ public class OrderController : ControllerBase
         return Ok(Response<OrderDto>.GetResponse(order, 1));
     }
     [HttpPost]
-    public ActionResult Post([FromForm] CreateOrderDto c)
+    public ActionResult Post([FromBody] CreateOrderDto c)
     {
         Order insert = Order.Insert(c);
         if(insert != null)
