@@ -1,47 +1,47 @@
 // ===== COLECCIÓN: StateTruck =====
 db.StateTruck.insertMany([
-  { _id: "avail", state: "Available" },
-  { _id: "inrou", state: "In route" },
-  { _id: "maint", state: "In maintenance" },
-  { _id: "outos", state: "Out of service" }
+  { _id: "AV", state: "Available" },
+  { _id: "IR", state: "In route" },
+  { _id: "IM", state: "In maintenance" },
+  { _id: "OS", state: "Out of service" }
 ]);
 
 // ===== COLECCIÓN: StateTrip =====
 db.StateTrip.insertMany([
-  { _id: "inpro", state: "En progreso" },
-  { _id: "compl", state: "Completado" },
-  { _id: "cancl", state: "Cancelado" }
+  { _id: "IP", state: "In progress" },
+  { _id: "CP", state: "Completed" },
+  { _id: "CN", state: "Cancelled" }
 ]);
 
 // ===== COLECCIÓN: StateOrder =====
-db.StateTrip.insertMany([
-  { _id: "pendi", state: "Orden pendiente" },
-  { _id: "deliv", state: "Orden Entregada" },
-  { _id: "cancl", state: "Orden Cancelada" },
-  { _id: "delay", state: "Fecha de entrega de orden atrasada" }
+db.StateOrder.insertMany([
+  { _id: "PO", state: "Pending order" },
+  { _id: "DO", state: "Delivered order" },
+  { _id: "CO", state: "Cancelled order" },
+  { _id: "LO", state: "Late order" }
 ]);
 
 // ===== COLECCIÓN: AlertTypes =====
 db.AlertTypes.insertMany([
   {
-    _id: "htemp",
-    message: "La temperatura del contenedor ha superado el límite máximo permitido"
+    _id: "HT",
+    message: "The container temperature has exceeded the maximum allowed limit"
   },
   {
-    _id: "ltemp",
-    message: "La temperatura del contenedor está por debajo del límite mínimo"
+    _id: "LT",
+    message: "The container temperature is below the minimum limit"
   },
   {
-    _id: "hhumi",
-    message: "El nivel de humedad ha excedido el máximo permitido"
+    _id: "HH",
+    message: "Humidity level has exceeded the maximum allowed"
   },
   {
-    _id: "lhumi",
-    message: "El nivel de humedad está por debajo del mínimo requerido"
+    _id: "LH",
+    message: "Humidity level is below the required minimum"
   },
   {
-    _id: "odoor",
-    message: "La puerta del contenedor ha sido abierta sin autorización"
+    _id: "OD",
+    message: "Container door has been opened without authorization"
   }
 ]);
 
@@ -117,18 +117,18 @@ db.Stores.insertMany([
 
 // ===== COLECCIÓN: Trucks =====
 db.Trucks.insertMany([
-  { _id: ObjectId("674a4001000000000000001a"), brand: "Freightliner", model: "Cascadia 2022", license_plate: "TIJ-001-RF", IDStateTruck: "avail" },
-  { _id: ObjectId("674a4001000000000000001b"), brand: "Volvo", model: "VNL 860 2021", license_plate: "TIJ-002-RF", IDStateTruck: "avail" },
-  { _id: ObjectId("674a4001000000000000001c"), brand: "Kenworth", model: "T680 2023", license_plate: "TIJ-003-RF", IDStateTruck: "avail" },
-  { _id: ObjectId("674a4001000000000000001d"), brand: "Peterbilt", model: "579 2022", license_plate: "TIJ-004-RF", IDStateTruck: "avail" },
-  { _id: ObjectId("674a4001000000000000001e"), brand: "Mack", model: "Anthem 2021", license_plate: "TIJ-005-RF", IDStateTruck: "avail" },
-  { _id: ObjectId("674a4001000000000000002a"), brand: "International", model: "LT625 2023", license_plate: "TIJ-006-RF", IDStateTruck: "avail" },
-  { _id: ObjectId("674a4001000000000000002b"), brand: "Freightliner", model: "Cascadia 2021", license_plate: "TIJ-007-RF", IDStateTruck: "avail" },
-  { _id: ObjectId("674a4001000000000000002c"), brand: "Volvo", model: "VNL 760 2022", license_plate: "TIJ-008-RF", IDStateTruck: "avail" },
-  { _id: ObjectId("674a4001000000000000002d"), brand: "Kenworth", model: "T880 2021", license_plate: "TIJ-009-RF", IDStateTruck: "maint" },
-  { _id: ObjectId("674a4001000000000000002e"), brand: "Peterbilt", model: "367 2023", license_plate: "TIJ-010-RF", IDStateTruck: "avail" },
-  { _id: ObjectId("674a4001000000000000003a"), brand: "Mack", model: "Granite 2022", license_plate: "TIJ-011-RF", IDStateTruck: "avail" },
-  { _id: ObjectId("674a4001000000000000003b"), brand: "International", model: "ProStar 2021", license_plate: "TIJ-012-RF", IDStateTruck: "outos" }
+  { _id: ObjectId("674a4001000000000000001a"), brand: "Freightliner", model: "Cascadia 2022", license_plate: "TIJ-001-RF", IDStateTruck: "AV" },
+  { _id: ObjectId("674a4001000000000000001b"), brand: "Volvo", model: "VNL 860 2021", license_plate: "TIJ-002-RF", IDStateTruck: "AV" },
+  { _id: ObjectId("674a4001000000000000001c"), brand: "Kenworth", model: "T680 2023", license_plate: "TIJ-003-RF", IDStateTruck: "AV" },
+  { _id: ObjectId("674a4001000000000000001d"), brand: "Peterbilt", model: "579 2022", license_plate: "TIJ-004-RF", IDStateTruck: "AV" },
+  { _id: ObjectId("674a4001000000000000001e"), brand: "Mack", model: "Anthem 2021", license_plate: "TIJ-005-RF", IDStateTruck: "AV" },
+  { _id: ObjectId("674a4001000000000000002a"), brand: "International", model: "LT625 2023", license_plate: "TIJ-006-RF", IDStateTruck: "AV" },
+  { _id: ObjectId("674a4001000000000000002b"), brand: "Freightliner", model: "Cascadia 2021", license_plate: "TIJ-007-RF", IDStateTruck: "AV" },
+  { _id: ObjectId("674a4001000000000000002c"), brand: "Volvo", model: "VNL 760 2022", license_plate: "TIJ-008-RF", IDStateTruck: "AV" },
+  { _id: ObjectId("674a4001000000000000002d"), brand: "Kenworth", model: "T880 2021", license_plate: "TIJ-009-RF", IDStateTruck: "IM" },
+  { _id: ObjectId("674a4001000000000000002e"), brand: "Peterbilt", model: "367 2023", license_plate: "TIJ-010-RF", IDStateTruck: "AV" },
+  { _id: ObjectId("674a4001000000000000003a"), brand: "Mack", model: "Granite 2022", license_plate: "TIJ-011-RF", IDStateTruck: "AV" },
+  { _id: ObjectId("674a4001000000000000003b"), brand: "International", model: "ProStar 2021", license_plate: "TIJ-012-RF", IDStateTruck: "OS" }
 ]);
 
 // ===== COLECCIÓN: Users =====
