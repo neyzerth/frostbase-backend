@@ -32,6 +32,9 @@ public class Store
 
     [BsonElement("longitude")]
     public double Longitude { get; set; }
+    
+    [BsonElement("active")]
+    public bool Active { get; set; }
 
     #endregion
     
@@ -39,7 +42,7 @@ public class Store
 
     public static List<Store> Get() 
     {
-        return _storeColl.Find(s => true).ToList();       
+        return _storeColl.Find(s => s.Active == true).ToList();       
     }
     public static Store Get(string id)
     {
