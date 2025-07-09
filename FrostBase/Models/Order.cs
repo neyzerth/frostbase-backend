@@ -24,13 +24,16 @@ public class Order
     [BsonElement("delivered")]
     public DateTime? Delivered { get; set; }
 
-    [BsonElement("IDUser")]
+    [BsonElement("IDCreatedByUser")]
     [BsonRepresentation(BsonType.ObjectId)]
     public string IDUser { get; set; }
 
     [BsonElement("IDStore")]
     [BsonRepresentation(BsonType.ObjectId)]
     public string IDStore { get; set; }
+    
+    [BsonElement("IDStateOrder")]
+    public string IDStateOrder { get; set; }
 
     #endregion
     
@@ -54,7 +57,8 @@ public class Order
             Date = DateTime.Now,
             Delivered = null,
             IDUser = c.IDUser,
-            IDStore = c.IDStore
+            IDStore = c.IDStore,
+            IDStateOrder = "pendi",
         };
         return Insert(order);
     }
