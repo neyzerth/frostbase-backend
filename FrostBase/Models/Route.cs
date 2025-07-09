@@ -12,7 +12,6 @@ public class Route
     
     #endregion
     
-
     #region properties
 
     [BsonId]
@@ -22,9 +21,12 @@ public class Route
     [BsonElement("name")]
     public string Name { get; set; }
     
-    [BsonElement("IDUser")]
+    [BsonElement("IDAssignedUser")]
     [BsonRepresentation(BsonType.ObjectId)]
     public string IDUser { get; set; }
+    
+    [BsonElement("active")]
+    public bool Active { get; set; }
     
     [BsonElement("stores")]
     public List<RouteStore> Stores { get; set; }
@@ -35,7 +37,7 @@ public class Route
 
     public static List<Route> Get() 
     {
-        return _routeColl.Find(r => true).ToList();
+        return _routeColl.Find(r => r.Active == true).ToList();
     }
     
     public static Route Get(string id)
