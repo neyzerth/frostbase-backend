@@ -4,36 +4,41 @@ db.Orders.insertMany([
         _id: ObjectId("674a7001000000000000001a"),
         date: new Date("2025-06-28"),
         delivered: new Date("2025-06-29"),
-        IDUser: ObjectId("674a5001000000000000002a"),
-        IDStore: ObjectId("674a3001000000000000001a")
+        IDCreatedByUser: ObjectId("674a5001000000000000002a"),
+        IDStore: ObjectId("674a3001000000000000001a"),
+        IDStateOrder: "DO" // Delivered order
     },
     {
         _id: ObjectId("674a7001000000000000001b"),
         date: new Date("2025-06-28"),
-        delivered: null,
-        IDUser: ObjectId("674a5001000000000000002a"),
-        IDStore: ObjectId("674a3001000000000000001c")
+        delivered: new Date("2025-06-29"),
+        IDCreatedByUser: ObjectId("674a5001000000000000002a"),
+        IDStore: ObjectId("674a3001000000000000001c"),
+        IDStateOrder: "DO"
     },
     {
         _id: ObjectId("674a7001000000000000001c"),
         date: new Date("2025-06-29"),
-        delivered: null,
-        IDUser: ObjectId("674a5001000000000000002b"),
-        IDStore: ObjectId("674a3001000000000000001b")
+        delivered: new Date("2025-06-29"),
+        IDCreatedByUser: ObjectId("674a5001000000000000002b"),
+        IDStore: ObjectId("674a3001000000000000001b"),
+        IDStateOrder: "DO"
     },
     {
         _id: ObjectId("674a7001000000000000001d"),
         date: new Date("2025-06-29"),
-        delivered: null,
-        IDUser: ObjectId("674a5001000000000000002c"),
-        IDStore: ObjectId("674a3001000000000000002a")
+        delivered: new Date("2025-06-29"),
+        IDCreatedByUser: ObjectId("674a5001000000000000002c"),
+        IDStore: ObjectId("674a3001000000000000002a"),
+        IDStateOrder: "DO"
     },
     {
         _id: ObjectId("674a7001000000000000001e"),
         date: new Date("2025-06-29"),
-        delivered: null,
-        IDUser: ObjectId("674a5001000000000000002d"),
-        IDStore: ObjectId("674a3001000000000000002d")
+        delivered: new Date("2025-06-29"),
+        IDCreatedByUser: ObjectId("674a5001000000000000002d"),
+        IDStore: ObjectId("674a3001000000000000002d"),
+        IDStateOrder: "DO"
     }
 ]);
 
@@ -41,10 +46,11 @@ db.Orders.insertMany([
 db.Trips.insertMany([
     {
         _id: ObjectId("674a8001000000000000001a"),
-        date: new Date("2025-06-29"),
-        start_hour: new Date("2025-06-29T08:00:00Z"),
-        end_hour: new Date("2025-06-29T14:30:00Z"),
+        start_time: new Date("2025-06-29T08:00:00Z"),
+        end_time: new Date("2025-06-29T14:30:00Z"),
         total_time: 390,
+        IDTruck: ObjectId("674a4001000000000000001a"),
+        IDUserDriver: ObjectId("674a5001000000000000002a"),
         IDRoute: ObjectId("674a6001000000000000001a"),
         orders: [
         {
@@ -56,28 +62,29 @@ db.Trips.insertMany([
         {
             IDOrder: ObjectId("674a7001000000000000001b"),
             IDStore: ObjectId("674a3001000000000000001c"),
-            time_start: new Date("2025-06-29T10:15:00Z"),
-            time_end: new Date("2025-06-29T10:45:00Z")
+            start_time: new Date("2025-06-29T10:15:00Z"),
+            end_time: new Date("2025-06-29T10:45:00Z")
         }
         ],
-            IDStateTrip: "compl"
+        IDStateTrip: "CP" // Completed
     },
     {
         _id: ObjectId("674a8001000000000000001b"),
-        date: new Date("2025-06-30"),
-        start_hour: new Date("2025-06-30T07:30:00Z"),
-        end_hour: null,
-        total_time: null,
+        start_time: new Date("2025-06-30T07:30:00Z"),
+        end_time: new Date("2025-06-30T12:00:00Z"),
+        total_time: 270,
+        IDTruck: ObjectId("674a4001000000000000001b"),
+        IDUserDriver: ObjectId("674a5001000000000000002b"),
         IDRoute: ObjectId("674a6001000000000000001b"),
         orders: [
             {
                 IDOrder: ObjectId("674a7001000000000000001c"),
-        IDStore: ObjectId("674a3001000000000000001b"),
-        time_start: null,
-        time_end: null
+                IDStore: ObjectId("674a3001000000000000001b"),
+                start_time: new Date("2025-06-30T08:00:00Z"),
+                end_time: new Date("2025-06-30T08:30:00Z")
             }
         ],
-        IDStateTrip: "inpro"
+        IDStateTrip: "CP"
     }
 ]);
 
@@ -205,24 +212,24 @@ db.Alerts.insertMany([
         _id: ObjectId("674ac001000000000000001a"),
         date: new Date("2025-06-29T11:30:00Z"),
         state: true,
-        detected_value: 5.2,
-        IDAlertTypes: "htemp",
+        IDReading: ObjectId("674a9001000000000000001d"),
+        IDAlertTypes: "HT",
         IDTruck: ObjectId("674a4001000000000000001c")
     },
     {
         _id: ObjectId("674ac001000000000000001b"),
         date: new Date("2025-06-30T09:10:00Z"),
-        state: false,
-        detected_value: 1,
-        IDAlertTypes: "lhum",
+        state: true,
+        IDReading: ObjectId("674a9001000000000000001c"),
+        IDAlertTypes: "LH",
         IDTruck: ObjectId("674a4001000000000000001b")
     },
     {
         _id: ObjectId("674ac001000000000000001c"),
         date: new Date("2025-06-28T16:45:00Z"),
         state: true,
-        detected_value: 88,
-        IDAlertTypes: "odoor",
+        IDReading: ObjectId("674a9001000000000000001e"),
+        IDAlertTypes: "OD",
         IDTruck: ObjectId("674a4001000000000000001e")
     }
 ]);
