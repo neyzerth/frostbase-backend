@@ -6,7 +6,6 @@ public class UserDto
     public string Email { get; set; }
     public string Phone { get; set; }
     public DateOnly? BirthDate { get; set; }
-    public TruckDto? Truck { get; set; }
 
     public static UserDto FromModel(UserApp u)
     {
@@ -21,8 +20,7 @@ public class UserDto
             },
             Email = u.Email,
             Phone = u.Phone,
-            BirthDate = DateOnly.FromDateTime(u.BirthDate),
-            Truck = TruckDto.FromModel(global::Truck.Get(u.IDTruck))
+            BirthDate = DateOnly.FromDateTime(u.BirthDate)
         };
     }
 

@@ -10,6 +10,18 @@ public class UserController : ControllerBase
         List<UserDto> users = UserDto.FromModel(UserApp.Get());
         return Ok(ListResponse<UserDto>.GetResponse(users, 1));
     }
+    [HttpGet("/Drivers")]
+    public ActionResult GetDrivers()
+    {
+        List<UserDto> users = UserDto.FromModel(UserApp.GetDriver());
+        return Ok(ListResponse<UserDto>.GetResponse(users, 1));
+    }
+    [HttpGet("/Admins")]
+    public ActionResult GetAdmins()
+    {
+        List<UserDto> users = UserDto.FromModel(UserApp.GetAdmin());
+        return Ok(ListResponse<UserDto>.GetResponse(users, 1));
+    }
     [HttpGet("{id}")]
     public ActionResult Get(string id)
     {

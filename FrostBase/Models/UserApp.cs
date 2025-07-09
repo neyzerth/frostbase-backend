@@ -39,9 +39,11 @@ public class UserApp
     [BsonElement("password")]
     public string Password { get; set; }
     
-    [BsonElement("IDTruck")] 
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string IDTruck { get; set; }
+    [BsonElement("is_admin")] 
+    public bool IsAdmin { get; set; }
+    
+    [BsonElement("active")] 
+    public bool Active { get; set; }
     
     #endregion
 
@@ -57,6 +59,16 @@ public class UserApp
     {
         
         return _userColl.Find(_ => true).ToList();;
+    }
+    public static List<UserApp> GetAdmin() 
+    {
+        
+        return _userColl.Find( u => u.IsAdmin == true).ToList();;
+    }
+    public static List<UserApp> GetDriver() 
+    {
+        
+        return _userColl.Find( u => u.IsAdmin == false).ToList();;
     }
 
     public static UserApp Get(string id)
@@ -77,7 +89,8 @@ public class UserApp
             Phone = c.Phone,
             BirthDate = c.BirthDate,
             Password = c.Password,
-            IDTruck = c.IDTruck
+            IsAdmin = c.IsAdmin,
+            Active = true
         };
         
         return Insert(u);
