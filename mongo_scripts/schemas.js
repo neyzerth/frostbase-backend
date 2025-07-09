@@ -616,23 +616,3 @@ db.createCollection("Parameters", {
     }
   }
 });
-
-/* 
-NOTAS IMPORTANTES:
-
-1. Para usar estos esquemas, ejecuta cada comando db.createCollection() en MongoDB
-2. Si las colecciones ya existen, usa db.runCommand() con collMod para agregar validación:
-   
-   db.runCommand({
-     collMod: "NombreColeccion",
-     validator: { $jsonSchema: { ... } }
-   });
-
-3. Los campos con bsonType 'objectId' requieren ObjectId válidos
-4. Los campos de tipo 'date' deben ser objetos Date válidos
-5. Los rangos de latitud (-90 a 90) y longitud (-180 a 180) están validados
-6. Los porcentajes de humedad están limitados de 0 a 100
-7. Las validaciones de email incluyen un patrón regex básico
-8. Las contraseñas requieren mínimo 8 caracteres
-
-*/
