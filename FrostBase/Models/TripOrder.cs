@@ -7,10 +7,6 @@ public class TripOrder
     [BsonRepresentation(BsonType.ObjectId)]
     public string IDOrder { get; set; }
     
-    [BsonElement("IDStore")]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string IDStore { get; set; }
-    
     [BsonElement("start_time")] 
     public DateTime StartTime { get; set; }
     

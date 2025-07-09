@@ -54,13 +54,11 @@ db.Trips.insertMany([
         orders: [
         {
             IDOrder: ObjectId("674a7001000000000000001a"),
-            IDStore: ObjectId("674a3001000000000000001a"),
             start_time: new Date("2025-06-29T08:30:00Z"),
             end_time: new Date("2025-06-29T09:00:00Z")
         },
         {
             IDOrder: ObjectId("674a7001000000000000001b"),
-            IDStore: ObjectId("674a3001000000000000001c"),
             start_time: new Date("2025-06-29T10:15:00Z"),
             end_time: new Date("2025-06-29T10:45:00Z")
         }
@@ -77,7 +75,6 @@ db.Trips.insertMany([
         orders: [
             {
                 IDOrder: ObjectId("674a7001000000000000001c"),
-                IDStore: ObjectId("674a3001000000000000001b"),
                 start_time: new Date("2025-06-30T08:00:00Z"),
                 end_time: new Date("2025-06-30T08:30:00Z")
             }
