@@ -1,24 +1,24 @@
 // ===== COLECCIÓN: StateTruck =====
 db.StateTruck.insertMany([
-  { _id: "AV", state: "Available" },
-  { _id: "IR", state: "In route" },
-  { _id: "IM", state: "In maintenance" },
-  { _id: "OS", state: "Out of service" }
+  { _id: "AV", message: "Available" },
+  { _id: "IR", message: "In route" },
+  { _id: "IM", message: "In maintenance" },
+  { _id: "OS", message: "Out of service" }
 ]);
 
 // ===== COLECCIÓN: StateTrip =====
 db.StateTrip.insertMany([
-  { _id: "IP", state: "In progress" },
-  { _id: "CP", state: "Completed" },
-  { _id: "CN", state: "Cancelled" }
+  { _id: "IP", message: "In progress" },
+  { _id: "CP", message: "Completed" },
+  { _id: "CN", message: "Cancelled" }
 ]);
 
 // ===== COLECCIÓN: StateOrder =====
 db.StateOrder.insertMany([
-  { _id: "PO", state: "Pending order" },
-  { _id: "DO", state: "Delivered order" },
-  { _id: "CO", state: "Cancelled order" },
-  { _id: "LO", state: "Late order" }
+  { _id: "PO", message: "Pending order" },
+  { _id: "DO", message: "Delivered order" },
+  { _id: "CO", message: "Cancelled order" },
+  { _id: "LO", message: "Late order" }
 ]);
 
 // ===== COLECCIÓN: AlertTypes =====
