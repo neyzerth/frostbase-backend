@@ -11,10 +11,10 @@ public class TripOrder
     [BsonRepresentation(BsonType.ObjectId)]
     public string IDStore { get; set; }
     
-    [BsonElement("time_start")] 
-    public DateTime TimeStart { get; set; }
+    [BsonElement("start_time")] 
+    public DateTime StartTime { get; set; }
     
-    [BsonElement("time_end")] 
-    public DateTime? TimeEnd { get; set; }
+    [BsonElement("end_time")] 
+    public DateTime? EndTime { get; set; }
     
 }

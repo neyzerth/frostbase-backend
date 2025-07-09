@@ -1,9 +1,10 @@
 public class TripDto
 {
     public string Id { get; set; }
-    public DateOnly Date { get; set; }
     public Time TripTime { get; set; }
     public StateTrip State { get; set; }
+    public TruckDto Truck { get; set; }
+    public UserDto Driver { get; set; }
     public RouteDto Route { get; set; }
     public List<TripOrderDto> Orders { get; set; }
 
@@ -12,7 +13,6 @@ public class TripDto
         return new TripDto
         {
             Id = t.Id,
-            Date = DateOnly.FromDateTime(t.Date),
             State = StateTrip.Get(t.IDStateTrip),
             Route = RouteDto.FromModel(global::Route.Get(t.IDRoute)),
             Orders = TripOrderDto.FromModel(t.Orders)
@@ -30,14 +30,6 @@ public class TripDto
     }
 }
 
-public class Time
-{
-    public TimeSpan StartHour { get; set; }
-    public TimeSpan? EndHour { get; set; }
-    public TimeSpan TotalTime { get; set; }
-}
-
-
 public class TripOrderDto
 {
     public OrderDto Order { get; set; }
@@ -50,10 +42,10 @@ public class TripOrderDto
             Order = OrderDto.FromModel(global::Order.Get(to.IDOrder)),
             OrderTime = new Time
             {
-                StartHour = to.TimeStart.TimeOfDay,
-                EndHour = to.TimeEnd.HasValue ? to.TimeEnd.Value.TimeOfDay : TimeSpan.Zero,
-                TotalTime = to.TimeEnd.HasValue ? 
-                    (to.TimeEnd.Value - to.TimeStart) : DateTime.Now - to.TimeStart
+                StartTime = to.StartTime,
+                EndTime = to.EndTime,
+                TotalTime = to.EndTime.HasValue ? 
+                    (to.EndTime.Value - to.StartTime) : null
             }
         };
     }
@@ -67,4 +59,11 @@ public class TripOrderDto
         }
         return tosDto;   
     }
+}
+
+public class Time
+{
+    public DateTime StartTime { get; set; }
+    public DateTime? EndTime { get; set; }
+    public TimeSpan? TotalTime { get; set; }
 }
