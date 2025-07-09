@@ -13,7 +13,15 @@ public class TripDto
         return new TripDto
         {
             Id = t.Id,
+            TripTime = new Time
+            {
+                StartTime = t.StartTime,
+                EndTime = t.EndTime,
+                TotalTime = Time.Total(t.TotalTime)
+            },
             State = StateTrip.Get(t.IDStateTrip),
+            Truck = TruckDto.FromModel(global::Truck.Get(t.IDTruck)),
+            Driver = UserDto.FromModel(UserApp.Get(t.IDUser)),
             Route = RouteDto.FromModel(global::Route.Get(t.IDRoute)),
             Orders = TripOrderDto.FromModel(t.Orders)
         };
@@ -43,9 +51,7 @@ public class TripOrderDto
             OrderTime = new Time
             {
                 StartTime = to.StartTime,
-                EndTime = to.EndTime,
-                TotalTime = to.EndTime.HasValue ? 
-                    (to.EndTime.Value - to.StartTime) : null
+                EndTime = to.EndTime
             }
         };
     }
@@ -65,5 +71,10 @@ public class Time
 {
     public DateTime StartTime { get; set; }
     public DateTime? EndTime { get; set; }
-    public TimeSpan? TotalTime { get; set; }
+    public TimeSpan? TotalTime { get; set; } 
+
+    public static TimeSpan? Total(long? seconds)
+    {
+        return TimeSpan.FromSeconds(seconds.Value);
+    }
 }

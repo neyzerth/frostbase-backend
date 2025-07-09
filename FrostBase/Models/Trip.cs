@@ -26,7 +26,7 @@ public class Trip
     public DateTime? EndTime { get; set; }
 
     [BsonElement("total_time")] 
-    public TimeSpan? TotalTime { get; set; }
+    public long? TotalTime => TotalSeconds();
     
     [BsonElement("IDTruck")]
     [BsonRepresentation(BsonType.ObjectId)]
@@ -49,6 +49,15 @@ public class Trip
     #endregion
     
     #region class methods
+    
+    private long? TotalSeconds()
+    {
+        if (!EndTime.HasValue)
+            return null;
+        
+        DateTime endTime = EndTime.Value;
+        return endTime.TimeOfDay.Subtract(StartTime.TimeOfDay).Seconds;
+    }
 
     public static List<Trip> Get() 
     {
@@ -128,7 +137,7 @@ public class Trip
             var update = Builders<Trip>.Update
                 .Set(t => t.EndTime, endTime)
                 .Set(t => t.IDStateTrip, "compl")
-                .Set(t => t.TotalTime, totalTime);
+                .Set(t => t.TotalTime, totalTime.Seconds);
                 
             return _tripColl.FindOneAndUpdate(filter, update,
                     new FindOneAndUpdateOptions<Trip>
@@ -176,7 +185,6 @@ public class Trip
         try
         {
             Trip trip = _tripColl.Find(t => t.Id == tripId).FirstOrDefault();
-            TimeSpan totalTime = DateTime.Now.TimeOfDay.Subtract(trip.StartTime.TimeOfDay);
             
             if (trip == null)
                 return null; // El viaje no existe
@@ -190,7 +198,6 @@ public class Trip
             );
             
             var update = Builders<Trip>.Update
-                .Set(t => t.TotalTime, totalTime)
                 .Set(t => t.Orders[0].EndTime, DateTime.Now);
                 
             var result = _tripColl.FindOneAndUpdate(filter, update,
