@@ -54,7 +54,7 @@ public class Order
         Order order = new Order
         {
             Date = c.Date.Value,
-            IDUser = c.IDUser,
+            IDUser = c.IDCreatedByUser,
             IDStore = c.IDStore,
             IDStateOrder = "PO",
         };
