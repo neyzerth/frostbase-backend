@@ -218,6 +218,7 @@ db.createCollection("Routes", {
       required: [
         '_id',
         'name',
+        'deliverDays',
         'IDAssignedUser',
         'active'
       ],
@@ -229,6 +230,13 @@ db.createCollection("Routes", {
         name: {
           bsonType: 'string',
           description: 'Nombre descriptivo de la ruta'
+        },
+        deliverDays: {
+          bsonType: 'array',
+          items: {
+            "bsonType": "int"
+          },
+          description: 'Arreglo que indica cuáles  días de la semana se va a realizar esa ruta. Por convención de librerías de fechas, solo admisibles del 0 al 6, donde 0 es domingo.'
         },
         IDAssignedUser: {
           bsonType: 'objectId',
