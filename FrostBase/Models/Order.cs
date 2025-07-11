@@ -53,14 +53,14 @@ public class Order
     {
         Order order = new Order
         {
-            Date = c.Date,
+            Date = c.Date.Value,
             IDUser = c.IDUser,
             IDStore = c.IDStore,
             IDStateOrder = "PO",
         };
         
         if(c.Date == null) order.Date = DateTime.Now;
-        order.CalculateDeliverDate();
+        order.DeliverDate = order.CalculateDeliverDate();
         
         return Insert(order);
     }
@@ -121,7 +121,7 @@ public class Order
     {
         //un dia de semana nunca puede ser 8
         int closerDay = 8;
-        int now = (int)DateTime.Now.DayOfWeek;
+        int now = (int)Date.DayOfWeek;
         
         //buscar el siguiente dia mas cercano
         foreach (int day in days)
@@ -129,7 +129,7 @@ public class Order
             //contemplar solo los dias siguientes
             if (now <= day)
                 //tomar el dia menor
-                closerDay = int.Min(day, closerDay);;
+                closerDay = int.Min(day, closerDay);
         }
 
         //si no paso niguna validacion, que agarre el menor dia
