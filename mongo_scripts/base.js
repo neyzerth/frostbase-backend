@@ -280,6 +280,7 @@ db.Routes.insertMany([
   {
     _id: ObjectId("674a6001000000000000001a"),
     name: "Ruta Norte - Zona Centro",
+    deliverDays: [2, 5],
     IDAssignedUser: ObjectId("674a5001000000000000002a"),
     stores: [
       { IDStore: ObjectId("674a3001000000000000001a"), sequence: 1 },
@@ -293,6 +294,7 @@ db.Routes.insertMany([
   {
     _id: ObjectId("674a6001000000000000001b"),
     name: "Ruta Norte - Hipódromo",
+    deliverDays: [1, 2, 6],
     IDAssignedUser: ObjectId("674a5001000000000000002b"),
     stores: [
       { IDStore: ObjectId("674a3001000000000000001b"), sequence: 1 },
@@ -307,6 +309,7 @@ db.Routes.insertMany([
     _id: ObjectId("674a6001000000000000001c"),
     name: "Ruta Este - Mesa de Otay",
     IDAssignedUser: ObjectId("674a5001000000000000002c"),
+    deliverDays: [1, 4],
     stores: [
       { IDStore: ObjectId("674a3001000000000000002a"), sequence: 1 },
       { IDStore: ObjectId("674a3001000000000000002b"), sequence: 2 },
@@ -319,6 +322,7 @@ db.Routes.insertMany([
   {
     _id: ObjectId("674a6001000000000000001d"),
     name: "Ruta Este - Otay Universidad",
+    deliverDays: [1, 3],
     IDAssignedUser: ObjectId("674a5001000000000000002d"),
     stores: [
       { IDStore: ObjectId("674a3001000000000000002d"), sequence: 1 },
@@ -332,6 +336,7 @@ db.Routes.insertMany([
   {
     _id: ObjectId("674a6001000000000000001e"),
     name: "Ruta Sur - Playas",
+    deliverDays: [3, 6],
     IDAssignedUser: ObjectId("674a5001000000000000002e"),
     stores: [
       { IDStore: ObjectId("674a3001000000000000003b"), sequence: 1 },
@@ -345,6 +350,7 @@ db.Routes.insertMany([
   {
     _id: ObjectId("674a6001000000000000002a"),
     name: "Ruta Sur - Zona Sur",
+    deliverDays: [2],
     IDAssignedUser: ObjectId("674a5001000000000000003a"),
     stores: [
       { IDStore: ObjectId("674a3001000000000000003a"), sequence: 1 },
@@ -358,6 +364,7 @@ db.Routes.insertMany([
   {
     _id: ObjectId("674a6001000000000000002b"),
     name: "Ruta Sureste - La Presa",
+    deliverDays: [1, 4],
     IDAssignedUser: ObjectId("674a5001000000000000003b"),
     stores: [
       { IDStore: ObjectId("674a3001000000000000006b"), sequence: 1 },
@@ -371,6 +378,7 @@ db.Routes.insertMany([
   {
     _id: ObjectId("674a6001000000000000002c"),
     name: "Ruta Suroeste - Fronteriza",
+    deliverDays: [4],
     IDAssignedUser: ObjectId("674a5001000000000000003c"),
     stores: [
       { IDStore: ObjectId("674a3001000000000000007b"), sequence: 1 },
