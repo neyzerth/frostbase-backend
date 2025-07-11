@@ -21,6 +21,9 @@ public class Route
     [BsonElement("name")]
     public string Name { get; set; }
     
+    [BsonElement("deliverDays")]
+    public List<int> DeliverDays{ get; set; }
+    
     [BsonElement("IDAssignedUser")]
     [BsonRepresentation(BsonType.ObjectId)]
     public string IDUser { get; set; }
