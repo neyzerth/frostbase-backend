@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Routing.Template;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Bson.Serialization.Attributes;
@@ -47,12 +48,11 @@ public class Trip
     
     #region class methods
     
-    
-
     public static List<Trip> Get() 
     {
         return _tripColl.Find(t => true).ToList();
     }
+    
 
     public static Trip Get(string id)
     {
@@ -205,6 +205,50 @@ public class Trip
         }
     }
     
+
+    #endregion
+
+    #region simulator
+
+    public static Trip Simulate()
+    {
+        Trip trip = GenerateStartTrip();
+        List<Order> orders = Order.GetByRoute(trip.IDRoute);
+        foreach (Order o in orders)
+        {
+            
+        }
+
+        return trip;
+
+    }
+
+    public static Trip GenerateStartTrip()
+    {
+        Random rnd = new Random();
+        
+        //get random route (that its valid for today)
+        List<Route> routes = Route.GetByDate(DateTime.Now);
+        Route route = routes[rnd.Next(0, routes.Count-1)];
+        
+        //get a random truck
+        List<Truck> trucks = Truck.GetAvailable();
+        Truck truck = trucks[rnd.Next(0, trucks.Count-1)];
+        
+        StartTripDto t = new StartTripDto
+        {
+            IDTruck = truck.Id,
+            IDDriver = route.IDUser,
+            IDRoute = route.Id
+        };
+
+        return Insert(t);
+    }
+
+    public static Trip GenerateStartOrder(string tripId)
+    {
+        return null;
+    }
 
     #endregion
 }

@@ -37,6 +37,11 @@ public class Truck
         return _truckColl.Find(t => true).ToList();
     }
     
+    public static List<Truck> GetAvailable() 
+    {
+        return _truckColl.Find(t => t.State == "AV").ToList();
+    }
+    
     public static Truck Get(string id)
     {
         return _truckColl.Find(t => t.Id == id).FirstOrDefault();

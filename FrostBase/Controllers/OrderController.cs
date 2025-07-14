@@ -36,6 +36,13 @@ public class OrderController : ControllerBase
     //     return Ok(MessageResponse.GetResponse(1, "Order "+ id +" deleted", MessageType.Success));
     // }
     
+    [HttpGet("route/{idRoute}/")]
+    public ActionResult GetByRoute(string idRoute)
+    {
+        List<OrderDto> orders = OrderDto.FromModel(Order.GetByRoute(idRoute));
+        return Ok(ListResponse<OrderDto>.GetResponse(orders, 1));
+    }
+    
     [HttpGet("pending/")]
     public ActionResult GetPending()
     {

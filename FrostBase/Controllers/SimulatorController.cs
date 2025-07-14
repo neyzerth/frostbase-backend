@@ -11,7 +11,7 @@ public class SimulatorController : ControllerBase
         return Ok(Response<OrderDto>.GetResponse( order, 1));
     }
     
-    [HttpPost("trip/generate")]
+    [HttpPost("trip/start/generate")]
     public ActionResult GenerateTrip()
     {
         return Ok("not implemented");

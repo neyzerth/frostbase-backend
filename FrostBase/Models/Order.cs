@@ -52,6 +52,46 @@ public class Order
     {
         return _orderColl.Find(o => o.IDStateOrder == "PO" || o.IDStateOrder == "LO").ToList();;
     }
+    public static List<Order> GetByRoute(string idRoute) {
+
+        var routeId = ObjectId.Parse("674a6001000000000000001e");
+        var pipeline = new BsonDocument[]
+        {
+            new("$match", new BsonDocument("IDStateOrder", "PO")),
+    
+            new("$lookup", new BsonDocument
+            {
+                { "from", "Stores" },
+                { "localField", "IDStore" },
+                { "foreignField", "_id" },
+                { "as", "stores" }
+            }),
+
+            new("$lookup", new BsonDocument
+            {
+                { "from", "Routes" },
+                { "localField", "stores._id" },
+                { "foreignField", "stores.IDStore" },
+                { "as", "routes" }
+            }),
+
+            new("$unwind", "$routes"),
+
+            new("$match", new BsonDocument("routes._id", routeId)),
+
+            new("$project", new BsonDocument
+            {
+                { "_id", 1 },
+                { "date", 1 },
+                { "delivered", 1 },
+                { "IDCreatedByUser", 1 },
+                { "IDStore", 1 },
+                { "IDStateOrder", 1 }
+            })
+        };
+
+        return  _orderColl.Aggregate<Order>(pipeline).ToList();
+    }
 
     public static Order Insert(CreateOrderDto c)
     {
