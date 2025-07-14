@@ -35,4 +35,20 @@ public class StoreController : ControllerBase
     // {
     //     return Ok(MessageResponse.GetResponse(1, "Store "+ id +" deleted", MessageType.Success));
     // }
+    
+    
+    [HttpGet("no-ordered/")]
+    public ActionResult GetNoOrdered()
+    {
+        List<StoreDto> stores = StoreDto.FromModel(Store.GetNotOrders());
+        return Ok(ListResponse<StoreDto>.GetResponse(stores, 1));
+    }
+    [HttpGet("ordered/{id}")]
+    public ActionResult GetOrdered(string id)
+    {
+        if(Store.Ordered(id))
+            return Ok(MessageResponse.GetResponse(1, "Store "+ id +" has ordered", MessageType.Success));
+        
+        return Ok(MessageResponse.GetResponse(0, "Store "+ id +" hasn't ordered", MessageType.Success));
+    }
 }

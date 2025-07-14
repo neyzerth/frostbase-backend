@@ -62,5 +62,18 @@ public class Route
         }
     }
     
+    
+    public static List<Route> GetByDate(DateTime date)
+    {
+        int day = (int)date.DayOfWeek;
+        return GetByDay(day);
+    }
+    
+    public static List<Route> GetByDay(int day)
+    {
+        return _routeColl.Find(r => r.DeliverDays.Contains(day)).ToList();
+    }
+    
     #endregion
+
 }

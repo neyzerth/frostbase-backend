@@ -22,7 +22,7 @@ public class Order
     public DateTime Date { get; set; }
 
     [BsonElement("delivered")]
-    public DateTime? DeliverDate { get; set; }
+    public DateTime DeliverDate { get; set; }
 
     [BsonElement("IDCreatedByUser")]
     [BsonRepresentation(BsonType.ObjectId)]
@@ -48,12 +48,17 @@ public class Order
     {
         return _orderColl.Find(o => o.Id == id).FirstOrDefault();
     }
+    public static List<Order> GetPending()
+    {
+        return _orderColl.Find(o => o.IDStateOrder == "PO" || o.IDStateOrder == "LO").ToList();;
+    }
 
     public static Order Insert(CreateOrderDto c)
     {
+        DateTime date = c.Date == null ? DateTime.Now : c.Date.Value;
         Order order = new Order
         {
-            Date = c.Date.Value,
+            Date = date,
             IDUser = c.IDCreatedByUser,
             IDStore = c.IDStore,
             IDStateOrder = "PO",

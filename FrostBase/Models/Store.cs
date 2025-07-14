@@ -44,9 +44,46 @@ public class Store
     {
         return _storeColl.Find(s => s.Active == true).ToList();       
     }
+    public static List<Store> GetNotOrders() 
+    {
+        var ordersCollection = MongoDbConnection.GetCollection<Order>("Orders");
+
+        var pipeline = new[]
+        {
+            new BsonDocument("$lookup", new BsonDocument
+            {
+                { "from", "Orders" },
+                { "localField", "_id" },
+                { "foreignField", "IDStore" },
+                { "as", "orders" }
+            }),
+            new BsonDocument("$match", new BsonDocument
+            {
+                { "orders.IDStateOrder", new BsonDocument("$ne", "PO") }
+            }),
+            new BsonDocument("$project", new BsonDocument
+            {
+                { "name", 1 },
+                { "phone", 1 },
+                { "location", 1 },
+                { "latitude", 1 },
+                { "longitude", 1 },
+                { "active", 1 }
+            })
+        };
+
+        return _storeColl.Aggregate<Store>(pipeline).ToList();
+    }
     public static Store Get(string id)
     {
         return _storeColl.Find(s => s.Id == id).FirstOrDefault();       
+    } 
+    public static bool Ordered(string id)
+    {
+        var ordersCollection = MongoDbConnection.GetCollection<Order>("Orders");
+        
+        long orders = ordersCollection.Find(o => o.IDStore == id && o.IDStateOrder == "PO").CountDocuments();
+        return orders > 0;
     }
 
     public static bool Insert(Store s)

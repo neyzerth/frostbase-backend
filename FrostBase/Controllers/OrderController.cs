@@ -21,7 +21,7 @@ public class OrderController : ControllerBase
     {
         Order insert = Order.Insert(c);
         if(insert != null)
-            return Ok(Response<Order>.GetResponse(insert, 1));
+            return Ok(Response<OrderDto>.GetResponse(OrderDto.FromModel(insert), 1));
         
         return BadRequest(MessageResponse.GetResponse(0, "Order not inserted", MessageType.Error));
     }
@@ -35,4 +35,11 @@ public class OrderController : ControllerBase
     // {
     //     return Ok(MessageResponse.GetResponse(1, "Order "+ id +" deleted", MessageType.Success));
     // }
+    
+    [HttpGet("pending/")]
+    public ActionResult GetPending()
+    {
+        List<OrderDto> orders = OrderDto.FromModel(Order.GetPending());
+        return Ok(ListResponse<OrderDto>.GetResponse(orders, 1));
+    }
 }
