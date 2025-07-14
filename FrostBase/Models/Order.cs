@@ -145,4 +145,29 @@ public class Order
     }
 
     #endregion
+    
+    #region simulator
+
+    public static Order GenerateOrder()
+    {
+        //get a random admin
+        Random rnd = new Random();
+        List<UserApp> users = UserApp.GetAdmin();
+        UserApp admin = users[rnd.Next(0, users.Count-1)];
+        
+        //get a random store that not ordered yet
+        List<Store> stores = Store.GetNotOrders();
+        Store store = stores[rnd.Next(0, stores.Count-1)];
+
+        CreateOrderDto o = new CreateOrderDto
+        {
+            Date = DateTime.Now,
+            IDCreatedByUser = admin.Id,
+            IDStore = store.Id
+        };
+        
+        return Order.Insert(o);
+    }
+    
+    #endregion
 }
