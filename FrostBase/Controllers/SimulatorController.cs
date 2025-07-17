@@ -11,10 +11,11 @@ public class SimulatorController : ControllerBase
         return Ok(Response<OrderDto>.GetResponse( order, 1));
     }
     
-    [HttpPost("trip/start/generate")]
-    public ActionResult GenerateTrip()
+    [HttpPost("trip/generate")]
+    public ActionResult GenerateTrip([FromBody] SimulateTripDto simulate)
     {
-        return Ok("not implemented");
+        TripDto trip = TripDto.FromModel(Trip.Simulate(simulate.Date));
+        return Ok(Response<TripDto>.GetResponse( trip, 1));
     }
     
     [HttpPost("reading/generate")]

@@ -30,6 +30,9 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+//Exception handler
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 //enable CORS
 app.UseCors("CorsPolicy");
 
