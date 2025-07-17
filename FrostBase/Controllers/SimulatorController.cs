@@ -12,9 +12,9 @@ public class SimulatorController : ControllerBase
     }
     
     [HttpPost("trip/generate")]
-    public ActionResult GenerateTrip()
+    public ActionResult GenerateTrip([FromBody] SimulateTripDto simulate)
     {
-        TripDto trip = TripDto.FromModel(Trip.Simulate());
+        TripDto trip = TripDto.FromModel(Trip.Simulate(simulate.Date));
         return Ok(Response<TripDto>.GetResponse( trip, 1));
     }
     

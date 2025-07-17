@@ -202,9 +202,9 @@ public class Trip
 
     #region simulator
 
-    public static Trip Simulate()
+    public static Trip Simulate(DateTime? date = null)
     {
-        Trip trip = GenerateStartTrip();
+        Trip trip = GenerateStartTrip(date);
         List<OrderDto> orders = OrderDto.FromModel(Order.GetByRoute(trip.IDRoute));
         
         trip.Orders = TripOrder.GenerateOrders(trip.StartTime, orders);
@@ -214,14 +214,16 @@ public class Trip
         return InsertSimulate(trip);
     }
 
-    public static Trip GenerateStartTrip()
+    public static Trip GenerateStartTrip(DateTime? date = null)
     {
+        if (date == null) date = DateTime.Now;
+        
         Random random = new Random();
         
         //get random route (that its valid for today)
-        List<Route> routes = Route.GetByDate(DateTime.Now);
+        List<Route> routes = Route.GetByDate(date.Value);
         
-        if (routes.Count == 0) throw new Exception("No routes for " + DateTime.Now.Date);
+        if (routes.Count == 0) throw new Exception("No routes for " + date.Value.Date);
         
         Route route = routes[random.Next(0, routes.Count-1)];
         
