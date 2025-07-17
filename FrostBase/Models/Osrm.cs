@@ -1,10 +1,11 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 public class Osrm
 {
     #region properties
 
-    private static readonly HttpClient _httpClient; 
+    private static readonly HttpClient _httpClient = new HttpClient();
 
     public double Distance { get; set; }
     public double Duration { get; set; }
@@ -23,6 +24,8 @@ public class Osrm
     public static async Task<Osrm> GetRoute(double startLat, double startLon, double endLat, double endLon)
     {
         var url = $"https://router.project-osrm.org/route/v1/driving/{startLon},{startLat};{endLon},{endLat}?overview=false";
+        
+        Console.WriteLine("OSRM URL: " + url);
 
         var response = await _httpClient.GetAsync(url);
         response.EnsureSuccessStatusCode();
@@ -35,7 +38,11 @@ public class Osrm
         var route = osrmApiResponse?.Routes?.FirstOrDefault();
 
         if (route == null)
+        {
+            Console.WriteLine("Respuesta OSRM sin rutas:");
+            Console.WriteLine(json); // Imprime el JSON para debug
             throw new Exception("No se encontro una ruta valida");
+        }
 
         return new Osrm
         {
@@ -50,13 +57,20 @@ public class Osrm
 // Define classes that match the OSRM API response structure
 public class OsrmApiResponse
 {
+    [JsonPropertyName("code")]
     public string Code { get; set; }
+    [JsonPropertyName("routes")]
     public List<OsrmRoute> Routes { get; set; }
 }
 
 public class OsrmRoute
 {
-    public double Distance { get; set; } 
-    public double Duration { get; set; } 
+    [JsonPropertyName("distance")]
+    public double Distance { get; set; }
+
+    [JsonPropertyName("duration")]
+    public double Duration { get; set; }
+
+    [JsonPropertyName("geometry")]
     public string Geometry { get; set; }
 }
