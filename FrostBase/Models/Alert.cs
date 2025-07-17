@@ -25,7 +25,7 @@ public class Alert
     public DateTime Date { get; set; }
     
     [BsonElement("IDAlertTypes")] 
-    public string AlertType { get; set; }
+    public string IDAlertType { get; set; }
 
     [BsonElement("IDReading")] 
     [BsonRepresentation(BsonType.ObjectId)]
@@ -35,7 +35,7 @@ public class Alert
     
     #region class methods
 
-    public static List<Alert> Get() 
+    public static List<Alert> Get()
     {
         return _alertColl.Find(a => true).ToList();
     }

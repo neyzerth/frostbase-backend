@@ -4,7 +4,7 @@ public class TruckDto
     public string Brand { get; set; }
     public string Model { get; set; }
     public string LicensePlate { get; set; }
-    public StateTruck State { get; set; }
+    public StateDto State { get; set; }
 
     public static TruckDto FromModel(Truck? t)
     {
@@ -14,8 +14,7 @@ public class TruckDto
             Id = t.Id,
             Brand = t.Brand,
             Model = t.Model,
-            LicensePlate = t.LicensePlate,
-            State = StateTruck.Get(t.State)
+            LicensePlate = t.LicensePlate
         };
     }
 

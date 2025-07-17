@@ -34,4 +34,18 @@ public class RouteController : ControllerBase
     // {
     //     return Ok(MessageResponse.GetResponse(1, "Road "+ id +" deleted", MessageType.Success));
     // }
+    
+    [HttpGet("today/")]
+    public ActionResult GetTodayRoutes()
+    {
+        
+        List<RouteDto> route = RouteDto.FromModel(Route.GetByDate(DateTime.Now));
+        return Ok(ListResponse<RouteDto>.GetResponse(route, 1));
+    }
+    [HttpGet("days/{day}")]
+    public ActionResult GetTodayRoutes(int day)
+    {
+        List<RouteDto> route = RouteDto.FromModel(Route.GetByDay(day));
+        return Ok(ListResponse<RouteDto>.GetResponse(route, 1));
+    }
 }

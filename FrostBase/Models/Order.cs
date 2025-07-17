@@ -22,7 +22,7 @@ public class Order
     public DateTime Date { get; set; }
 
     [BsonElement("delivered")]
-    public DateTime? DeliverDate { get; set; }
+    public DateTime DeliverDate { get; set; }
 
     [BsonElement("IDCreatedByUser")]
     [BsonRepresentation(BsonType.ObjectId)]
@@ -48,12 +48,57 @@ public class Order
     {
         return _orderColl.Find(o => o.Id == id).FirstOrDefault();
     }
+    public static List<Order> GetPending()
+    {
+        return _orderColl.Find(o => o.IDStateOrder == "PO" || o.IDStateOrder == "LO").ToList();;
+    }
+    public static List<Order> GetByRoute(string idRoute) {
+
+        var routeId = ObjectId.Parse("674a6001000000000000001e");
+        var pipeline = new BsonDocument[]
+        {
+            new("$match", new BsonDocument("IDStateOrder", "PO")),
+    
+            new("$lookup", new BsonDocument
+            {
+                { "from", "Stores" },
+                { "localField", "IDStore" },
+                { "foreignField", "_id" },
+                { "as", "stores" }
+            }),
+
+            new("$lookup", new BsonDocument
+            {
+                { "from", "Routes" },
+                { "localField", "stores._id" },
+                { "foreignField", "stores.IDStore" },
+                { "as", "routes" }
+            }),
+
+            new("$unwind", "$routes"),
+
+            new("$match", new BsonDocument("routes._id", routeId)),
+
+            new("$project", new BsonDocument
+            {
+                { "_id", 1 },
+                { "date", 1 },
+                { "delivered", 1 },
+                { "IDCreatedByUser", 1 },
+                { "IDStore", 1 },
+                { "IDStateOrder", 1 }
+            })
+        };
+
+        return  _orderColl.Aggregate<Order>(pipeline).ToList();
+    }
 
     public static Order Insert(CreateOrderDto c)
     {
+        DateTime date = c.Date == null ? DateTime.Now : c.Date.Value;
         Order order = new Order
         {
-            Date = c.Date.Value,
+            Date = date,
             IDUser = c.IDCreatedByUser,
             IDStore = c.IDStore,
             IDStateOrder = "PO",
@@ -139,5 +184,30 @@ public class Order
         return (DayOfWeek)closerDay;
     }
 
+    #endregion
+    
+    #region simulator
+
+    public static Order GenerateOrder()
+    {
+        //get a random admin
+        Random rnd = new Random();
+        List<UserApp> users = UserApp.GetAdmin();
+        UserApp admin = users[rnd.Next(0, users.Count-1)];
+        
+        //get a random store that not ordered yet
+        List<Store> stores = Store.GetNotOrders();
+        Store store = stores[rnd.Next(0, stores.Count-1)];
+
+        CreateOrderDto o = new CreateOrderDto
+        {
+            Date = DateTime.Now,
+            IDCreatedByUser = admin.Id,
+            IDStore = store.Id
+        };
+        
+        return Order.Insert(o);
+    }
+    
     #endregion
 }

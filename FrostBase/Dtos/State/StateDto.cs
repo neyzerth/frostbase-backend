@@ -5,6 +5,10 @@ public class StateDto
 
     public static StateDto FromModel(State s)
     {
-        return new StateDto();
+        return new StateDto
+        {
+            Id = s.Id,
+            Description = s.Message
+        };
     }
 }

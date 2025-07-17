@@ -6,4 +6,6 @@ public class CreateReadingDto
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     
+
+    
 }
