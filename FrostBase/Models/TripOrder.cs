@@ -80,8 +80,8 @@ public class TripOrder
         return new TripOrder
         {
             IDOrder = tripOrd.Order.Id,
-            StartTime = tripOrd.OrderTime.EndTime.Value,
-            EndTime = null,
+            StartTime = tripOrd.OrderTime.StartTime,
+            EndTime = tripOrd.OrderTime.EndTime.Value,
         };
     }
     

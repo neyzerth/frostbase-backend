@@ -12,6 +12,9 @@ public class Trip
     private static IMongoCollection<Trip> _tripColl = 
         MongoDbConnection.GetCollection<Trip>("Trips");
     
+    private static IMongoCollection<Trip> _tripSimulation = 
+        MongoDbConnection.GetCollection<Trip>("TripsSimulation");
+    
     #endregion
 
     #region properties
@@ -116,6 +119,20 @@ public class Trip
         };
         return Insert(t);
     }
+
+    public static Trip InsertSimulate(Trip t)
+    {
+        try
+        {
+            _tripSimulation.InsertOne(t);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Error inserting simulation of trip");
+        }
+        return t;
+    }
     
     public static Trip UpdateEndTime(string idTrip)
     {
@@ -192,7 +209,7 @@ public class Trip
         
         trip.Orders = TripOrder.GenerateOrders(trip.StartTime, orders);
 
-        return trip;
+        return InsertSimulate(trip);
     }
 
     public static Trip GenerateStartTrip()
