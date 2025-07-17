@@ -208,6 +208,8 @@ public class Trip
         List<OrderDto> orders = OrderDto.FromModel(Order.GetByRoute(trip.IDRoute));
         
         trip.Orders = TripOrder.GenerateOrders(trip.StartTime, orders);
+        
+        trip.GenerateEndTimeTrip();
 
         return InsertSimulate(trip);
     }
@@ -237,6 +239,29 @@ public class Trip
         };
 
         return Insert(t);
+    }
+
+    public void GenerateEndTimeTrip()
+    {
+        //get the last order
+        TripOrder lastOrder = Orders.Last();
+        StoreDto s = OrderDto.FromModel(Order.Get(lastOrder.IDOrder)).Store;
+        Location lastLocation = s.Location;
+
+        Location lalaBase = new Location
+        {
+            Latitude = 32.45900929216648,
+            Longitude = -116.97966765227373
+        };
+
+        double timeToReturn = Osrm.GetRoute(lastLocation, lalaBase).Result.Duration;
+        
+        DateTime lastOrderTime = lastOrder.EndTime.Value;
+        
+        this.EndTime = lastOrderTime.AddSeconds(timeToReturn);
+        
+        this.IDStateTrip = "CP";
+        
     }
 
 
