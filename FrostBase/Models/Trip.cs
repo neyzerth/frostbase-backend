@@ -7,7 +7,7 @@ public class Trip
 {
     #region statement
     
-    //Sql or mongo statements
+    //mongo statements
     private static IMongoCollection<Trip> _tripColl = 
         MongoDbConnection.GetCollection<Trip>("Trips");
     
@@ -47,8 +47,6 @@ public class Trip
     
     #region class methods
     
-    
-
     public static List<Trip> Get() 
     {
         return _tripColl.Find(t => true).ToList();
@@ -85,7 +83,7 @@ public class Trip
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return null;
+            throw new Exception("Error: " + e.Message);
         }
     }
     public static Trip Insert(CreateTripDto c)
@@ -139,7 +137,7 @@ public class Trip
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return null;
+            throw new Exception("Error: " + e.Message);
         }
     }
     public static Trip StartOrder(string tripId, string orderId)
@@ -168,7 +166,7 @@ public class Trip
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return null;
+            throw new Exception("Error: " + e.Message);
         }
     }
     
@@ -179,10 +177,10 @@ public class Trip
             Trip trip = _tripColl.Find(t => t.Id == tripId).FirstOrDefault();
             
             if (trip == null)
-                return null; // El viaje no existe
+                throw new Exception("Trip doesn't exists"); // El viaje no existe
             
             if (trip.Orders == null || trip.Orders.All(o => o.IDOrder != orderId))
-                return null; // La orden específica no existe
+                throw new Exception("Order doesn't exists"); // El viaje no existe
             
             var filter = Builders<Trip>.Filter.And(
                 Builders<Trip>.Filter.Eq(t => t.Id, trip.Id),
@@ -201,10 +199,11 @@ public class Trip
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return null;
+            throw new Exception("Error: " + e.Message);
         }
     }
-    
 
     #endregion
+
+   
 }
