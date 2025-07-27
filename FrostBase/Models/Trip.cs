@@ -11,6 +11,9 @@ public class Trip
     private static IMongoCollection<Trip> _tripColl = 
         MongoDbConnection.GetCollection<Trip>("Trips");
     
+    private static IMongoCollection<Trip> _tripSimulation = 
+        MongoDbConnection.GetCollection<Trip>("TripsSimulation");
+    
     #endregion
 
     #region properties
@@ -47,6 +50,8 @@ public class Trip
     
     #region class methods
     
+    
+
     public static List<Trip> Get() 
     {
         return _tripColl.Find(t => true).ToList();
@@ -83,7 +88,7 @@ public class Trip
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw new Exception("Error: " + e.Message);
+            return null;
         }
     }
     public static Trip Insert(CreateTripDto c)
@@ -116,6 +121,20 @@ public class Trip
         return Insert(t);
     }
     
+    public static Trip InsertSimulate(Trip t)
+    {
+        try
+        {
+            _tripSimulation.InsertOne(t);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Error inserting simulation of trip");
+        }
+        return t;
+    }
+    
     public static Trip UpdateEndTime(string idTrip)
     {
         try
@@ -137,7 +156,7 @@ public class Trip
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw new Exception("Error: " + e.Message);
+            return null;
         }
     }
     public static Trip StartOrder(string tripId, string orderId)
@@ -166,7 +185,7 @@ public class Trip
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw new Exception("Error: " + e.Message);
+            return null;
         }
     }
     
@@ -177,10 +196,10 @@ public class Trip
             Trip trip = _tripColl.Find(t => t.Id == tripId).FirstOrDefault();
             
             if (trip == null)
-                throw new Exception("Trip doesn't exists"); // El viaje no existe
+                return null; // El viaje no existe
             
             if (trip.Orders == null || trip.Orders.All(o => o.IDOrder != orderId))
-                throw new Exception("Order doesn't exists"); // El viaje no existe
+                return null; // La orden específica no existe
             
             var filter = Builders<Trip>.Filter.And(
                 Builders<Trip>.Filter.Eq(t => t.Id, trip.Id),
@@ -199,11 +218,79 @@ public class Trip
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw new Exception("Error: " + e.Message);
+            return null;
         }
     }
+    
 
     #endregion
+    
+    #region simulator
 
-   
+    public static Trip Simulate(DateTime? date = null)
+    {
+        Trip trip = GenerateStartTrip(date);
+        List<OrderDto> orders = OrderDto.FromModel(Order.GetByRoute(trip.IDRoute));
+        
+        trip.Orders = TripOrder.GenerateOrders(trip.StartTime, orders);
+        
+        trip.GenerateEndTimeTrip();
+
+        return InsertSimulate(trip);
+    }
+
+    public static Trip GenerateStartTrip(DateTime? date = null)
+    {
+        if (date == null) date = DateTime.Now;
+        
+        Random random = new Random();
+        
+        //get random route (that its valid for today)
+        List<Route> routes = Route.GetByDate(date.Value);
+        
+        if (routes.Count == 0) throw new Exception("No routes for " + date.Value.Date);
+        
+        Route route = routes[random.Next(0, routes.Count-1)];
+        
+        //get a random truck
+        List<Truck> trucks = Truck.GetAvailable();
+        if (trucks.Count == 0) throw new Exception("No trucks available");
+        
+        Truck truck = trucks[random.Next(0, trucks.Count-1)];
+        
+        StartTripDto t = new StartTripDto
+        {
+            IDTruck = truck.Id,
+            IDDriver = route.IDUser,
+            IDRoute = route.Id
+        };
+
+        return Insert(t);
+    }
+
+    public void GenerateEndTimeTrip()
+    {
+        //get the last order
+        TripOrder lastOrder = Orders.Last();
+        StoreDto s = OrderDto.FromModel(Order.Get(lastOrder.IDOrder)).Store;
+        Location lastLocation = s.Location;
+
+        Location lalaBase = new Location
+        {
+            Latitude = 32.45900929216648,
+            Longitude = -116.97966765227373
+        };
+
+        double timeToReturn = Osrm.GetRoute(lastLocation, lalaBase).Result.Duration;
+        
+        DateTime lastOrderTime = lastOrder.EndTime.Value;
+        
+        this.EndTime = lastOrderTime.AddSeconds(timeToReturn);
+        
+        this.IDStateTrip = "CP";
+        
+    }
+
+
+    #endregion
 }
