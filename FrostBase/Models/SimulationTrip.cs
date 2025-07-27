@@ -11,7 +11,7 @@ public class SimulationTrip
 
     //collection of the trips
     private static IMongoCollection<SimulationTrip> _simTripColl = 
-        MongoDbConnection.GetCollection<SimulationTrip>("SimulationTrips");
+        MongoDbConnection.GetCollection<SimulationTrip>("TripsSimulation");
 
     #region attributes
 
@@ -28,8 +28,9 @@ public class SimulationTrip
     
     #region simulation
     
-    public static List<Trip> CheckSimulationsTrips(DateTime date)
+    public static List<Trip> CheckSimulationsTrips(DateTime? dateTime)
     {  
+        DateTime date = dateTime ?? DateTime.Now;
         var simTrips =  _simTripColl.Find(t =>
             !t.OrdersInserted && t.SimulatedTrip.StartTime.Date <= date).ToList();
         
