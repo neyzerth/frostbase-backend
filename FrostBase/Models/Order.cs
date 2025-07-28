@@ -95,7 +95,7 @@ public class Order
 
     public static Order Insert(CreateOrderDto c)
     {
-        DateTime date = c.Date == null ? DateTime.Now : c.Date.Value;
+        DateTime date = c.Date ?? DateTime.Now;
         Order order = new Order
         {
             Date = date,
@@ -104,7 +104,6 @@ public class Order
             IDStateOrder = "PO",
         };
         
-        if(c.Date == null) order.Date = DateTime.Now;
         order.DeliverDate = order.CalculateDeliverDate();
         
         return Insert(order);
@@ -188,20 +187,27 @@ public class Order
     
     #region simulator
 
-    public static Order GenerateOrder()
+    public static Order GenerateOrder(DateTime? date)
     {
-        //get a random admin
+        date ??= DateTime.Now;
         Random rnd = new Random();
-        List<UserApp> users = UserApp.GetAdmin();
-        UserApp admin = users[rnd.Next(0, users.Count-1)];
         
-        //get a random store that not ordered yet
+        //get admins and store that not ordered yet
+        List<UserApp> users = UserApp.GetAdmin();
         List<Store> stores = Store.GetNotOrders();
+        
+        if(users.Count < 1)
+            throw new Exception("No hay administradores");
+        if(stores.Count < 1)
+            throw new Exception("No hay tiendas sin ordenar hoy");
+        
+        //get a random store and admin
+        UserApp admin = users[rnd.Next(0, users.Count-1)];
         Store store = stores[rnd.Next(0, stores.Count-1)];
 
         CreateOrderDto o = new CreateOrderDto
         {
-            Date = DateTime.Now,
+            Date = date,
             IDCreatedByUser = admin.Id,
             IDStore = store.Id
         };

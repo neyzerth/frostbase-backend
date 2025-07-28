@@ -5,6 +5,7 @@ public class StartTripDto
     public string IDTruck { get; set; }
     public string IDDriver { get; set; }
     public string IDRoute { get; set; }
+    public DateTime StartDate { get; set; }
     
 
 }

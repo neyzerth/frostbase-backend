@@ -41,6 +41,10 @@ public class Truck
     {
         return _truckColl.Find(t => t.State == "AV").ToList();
     }
+    public static List<Truck> GetAvailableByDate(DateTime date) 
+    {
+        return _truckColl.Find(t => t.State == "AV").ToList();
+    }
     
     public static Truck Get(string id)
     {
