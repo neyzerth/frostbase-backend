@@ -54,7 +54,7 @@ public class SimulationTrip
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            throw new Exception("Error inserting simulation trip: "+e.Message);
         }
     }
 
@@ -67,7 +67,7 @@ public class SimulationTrip
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            throw new Exception("Error inserting simulation trip of "+simulatedTrip.Id+": "+e.Message);
         }
     }
 

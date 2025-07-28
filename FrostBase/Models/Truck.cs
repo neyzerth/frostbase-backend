@@ -51,17 +51,19 @@ public class Truck
         return _truckColl.Find(t => t.Id == id).FirstOrDefault();
     }
 
-    public static bool Insert(Truck u)
+    public static Truck Insert(Truck t)
     {
         try
         {
-            _truckColl.InsertOne(u);
-            return true;
+            if(string.IsNullOrEmpty(t.Id))
+                t.Id = ObjectId.GenerateNewId().ToString();
+            _truckColl.InsertOne(t);
+            return t;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return false;
+            throw new Exception("Error inserting truck: "+e.Message);
         }
     }
     

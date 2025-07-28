@@ -48,17 +48,19 @@ public class Route
         return _routeColl.Find(r => r.Id == id).FirstOrDefault();
     }
 
-    public static bool Insert(Route r)
+    public static Route Insert(Route r)
     {
         try
         {
+            if(string.IsNullOrEmpty(r.Id))
+                r.Id = ObjectId.GenerateNewId().ToString();
             _routeColl.InsertOne(r);
-            return true;
+            return r;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return false;
+            throw new Exception("Error inserting route: "+e.Message);
         }
     }
     

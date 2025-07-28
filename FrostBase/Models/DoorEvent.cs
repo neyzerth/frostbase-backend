@@ -32,17 +32,19 @@ public class DoorEvent
         return _doorEventColl.Find(d => d.Id == id).FirstOrDefault();       
     }
 
-    public static bool Insert(DoorEvent d)
+    public static DoorEvent Insert(DoorEvent d)
     {
         try
         {
+            if(string.IsNullOrEmpty(d.Id))
+                d.Id = ObjectId.GenerateNewId().ToString();
             _doorEventColl.InsertOne(d);
-            return true;
+            return d;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return false;
+            throw new Exception("Error inserting door event: "+e.Message);
         }
     }
 }

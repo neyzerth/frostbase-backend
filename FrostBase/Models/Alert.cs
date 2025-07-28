@@ -45,17 +45,19 @@ public class Alert
         return _alertColl.Find(a => a.Id == id).FirstOrDefault();
     }
 
-    public static bool Insert(Alert a)
+    public static Alert Insert(Alert a)
     {
         try
         {
+            if(string.IsNullOrEmpty(a.Id))
+                a.Id = ObjectId.GenerateNewId().ToString();
             _alertColl.InsertOne(a);
-            return true;
+            return a;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return false;
+            throw new Exception("Error inserting alert: "+e.Message);
         }
     }
     

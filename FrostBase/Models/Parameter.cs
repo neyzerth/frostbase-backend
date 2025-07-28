@@ -41,17 +41,17 @@ public class Parameter
         return _parameterColl.Find(p => p.Id == id).FirstOrDefault();       
     }
 
-    public static bool Insert(Parameter p)
+    public static Parameter Insert(Parameter p)
     {
         try
         {
             _parameterColl.InsertOne(p);
-            return true;
+            return p;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return false;
+            throw new Exception("Error inserting parameter: "+e.Message);
         }
     }
     

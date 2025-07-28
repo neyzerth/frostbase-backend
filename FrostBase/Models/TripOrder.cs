@@ -34,7 +34,7 @@ public class TripOrder
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            throw new Exception("Error generating order deliver time: "+e.Message);
         }
 
         return new Time(startTime, endTime);

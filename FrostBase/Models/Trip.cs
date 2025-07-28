@@ -112,7 +112,7 @@ public class Trip
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw new Exception("Error inserting trip");
+            throw new Exception("Error inserting trip "+t.Id+": "+e.Message);
         }
     }
     public static Trip Insert(CreateTripDto c)
@@ -174,7 +174,7 @@ public class Trip
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw new Exception("Error updating trip");
+            throw new Exception("Error updating trip endtime: "+e.Message);
         }
     }
     public static Trip StartOrder(string tripId, string orderId)

@@ -71,7 +71,7 @@ public class TripLog
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            throw new Exception("Error inserting trip log: "+e.Message);
         }
     }
 
@@ -94,7 +94,7 @@ public class TripLog
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            throw new Exception("Error inserting log of trip "+ t.Id+": "+e.Message);
         }
     }
 }

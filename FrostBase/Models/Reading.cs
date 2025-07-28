@@ -54,25 +54,26 @@ public class Reading
         return _readingColl.Find(r => r.Id == id).FirstOrDefault();
     }
 
-    public static bool Insert(Reading r)
+    public static Reading Insert(Reading r)
     {
         try
         {
+            if(string.IsNullOrEmpty(r.Id))
+                r.Id = ObjectId.GenerateNewId().ToString();
             _readingColl.InsertOne(r);
-            return true;
+            return r;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            throw new Exception("Error inserting reading: "+e.Message);
         }
     }
 
-    public static bool Insert(string idTruck, CreateReadingDto c)
+    public static Reading Insert(string idTruck, CreateReadingDto c)
     {
         Reading r = new Reading
         {
-            Id = ObjectId.GenerateNewId().ToString(),
             Date = DateTime.Now,
             IDTruck = idTruck,
             DoorState = c.DoorState,

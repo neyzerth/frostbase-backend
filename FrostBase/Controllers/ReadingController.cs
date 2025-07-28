@@ -22,10 +22,7 @@ public class ReadingController : ControllerBase
     public ActionResult Post(string idTruck, [FromBody] CreateReadingDto c)
     {   
         
-        if(Reading.Insert(idTruck, c))
-            return Ok(MessageResponse.GetResponse("Reading inserted"));
-        
-        return BadRequest(MessageResponse.GetResponse("Reading not inserted", 1, MessageType.Error));
+        return Ok(MessageResponse.GetResponse("Reading inserted"));
     }
 
     // [HttpPut("{id}")]

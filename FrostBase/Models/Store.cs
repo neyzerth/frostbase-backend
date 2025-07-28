@@ -87,17 +87,19 @@ public class Store
         return orders > 0;
     }
 
-    public static bool Insert(Store s)
+    public static Store Insert(Store s)
     {
         try
         {
+            if(string.IsNullOrEmpty(s.Id))
+                s.Id = ObjectId.GenerateNewId().ToString();
             _storeColl.InsertOne(s);
-            return true;
+            return s;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return false;
+            throw new Exception("Error inserting store: "+e.Message);
         }
     }
     

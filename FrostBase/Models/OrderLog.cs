@@ -40,14 +40,15 @@ public class OrderLog
     {
         try
         {
-            o.Id = ObjectId.GenerateNewId().ToString();
+            if(string.IsNullOrEmpty(o.Id))
+                o.Id = ObjectId.GenerateNewId().ToString();
             _orderLogColl.InsertOne(o);
             return o;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            throw new Exception("Error inserting order log: "+e.Message);
         }
     }
 
@@ -66,7 +67,7 @@ public class OrderLog
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            throw new Exception("Error inserting log of order "+ o.Id+": "+e.Message);
         }
     }
 }

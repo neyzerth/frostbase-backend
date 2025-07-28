@@ -81,7 +81,6 @@ public class UserApp
     {
         UserApp u = new UserApp
         {
-            Id = ObjectId.GenerateNewId().ToString(),
             FirstName = c.Name,
             LastName = c.LastName,
             MiddleName = c.MiddleName,
@@ -100,13 +99,15 @@ public class UserApp
     {
         try
         {
+            if(string.IsNullOrEmpty(u.Id))
+                u.Id = ObjectId.GenerateNewId().ToString();
             _userColl.InsertOne(u);
             return u;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return null;
+            throw new Exception("Error inserting user: "+e.Message);
         }
     }
 
