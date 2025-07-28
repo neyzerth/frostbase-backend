@@ -8,22 +8,22 @@ public class OrderController : ControllerBase
     public ActionResult Get()
     {
         List<OrderDto> orders = OrderDto.FromModel(Order.Get());
-        return Ok(ListResponse<OrderDto>.GetResponse(orders, 1));
+        return Ok(ListResponse<OrderDto>.GetResponse(orders));
     }
     [HttpGet("{id}")]
     public ActionResult Get(string id)
     {
         OrderDto order = OrderDto.FromModel(Order.Get(id));
-        return Ok(Response<OrderDto>.GetResponse(order, 1));
+        return Ok(Response<OrderDto>.GetResponse(order));
     }
     [HttpPost]
     public ActionResult Post([FromBody] CreateOrderDto c)
     {
         Order insert = Order.Insert(c);
         if(insert != null)
-            return Ok(Response<OrderDto>.GetResponse(OrderDto.FromModel(insert), 1));
+            return Ok(Response<OrderDto>.GetResponse(OrderDto.FromModel(insert)));
         
-        return BadRequest(MessageResponse.GetResponse("Order not inserted", MessageType.Error));
+        return BadRequest(MessageResponse.GetResponse("Order not inserted", 1, MessageType.Error));
     }
     // [HttpPut("{id}")]
     // public ActionResult Put(int id /*, [FromPost] PostOrder p (??)*/)
@@ -40,13 +40,13 @@ public class OrderController : ControllerBase
     public ActionResult GetByRoute(string idRoute)
     {
         List<OrderDto> orders = OrderDto.FromModel(Order.GetByRoute(idRoute));
-        return Ok(ListResponse<OrderDto>.GetResponse(orders, 1));
+        return Ok(ListResponse<OrderDto>.GetResponse(orders));
     }
     
     [HttpGet("pending/")]
     public ActionResult GetPending()
     {
         List<OrderDto> orders = OrderDto.FromModel(Order.GetPending());
-        return Ok(ListResponse<OrderDto>.GetResponse(orders, 1));
+        return Ok(ListResponse<OrderDto>.GetResponse(orders));
     }
 }

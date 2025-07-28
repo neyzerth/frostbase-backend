@@ -8,7 +8,7 @@ public class ParameterController : ControllerBase
     public ActionResult Get()
     {
         List<Parameter> parameters = Parameter.Get();
-        return Ok(ListResponse<Parameter>.GetResponse(parameters, 1));
+        return Ok(ListResponse<Parameter>.GetResponse(parameters));
     }
     // [HttpGet("{id}")]
     // public ActionResult Get(int id)

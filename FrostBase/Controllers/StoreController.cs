@@ -47,8 +47,8 @@ public class StoreController : ControllerBase
     public ActionResult GetOrdered(string id)
     {
         if(Store.Ordered(id))
-            return Ok(MessageResponse.GetResponse( "Store "+ id +" has ordered", MessageType.Success));
+            return Ok(MessageResponse.GetResponse( "Store "+ id +" has ordered"));
         
-        return BadRequest(MessageResponse.GetResponse( "Store "+ id +" hasn't ordered", MessageType.Error, 1));
+        return BadRequest(MessageResponse.GetResponse( "Store "+ id +" hasn't ordered", 1, MessageType.Error));
     }
 }
