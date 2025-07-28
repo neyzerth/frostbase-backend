@@ -40,12 +40,12 @@ public class RouteController : ControllerBase
     {
         
         List<RouteDto> route = RouteDto.FromModel(Route.GetByDate(DateTime.Now));
-        return Ok(ListResponse<RouteDto>.GetResponse(route, 1));
+        return Ok(ListResponse<RouteDto>.GetResponse(route));
     }
     [HttpGet("days/{day}")]
     public ActionResult GetTodayRoutes(int day)
     {
         List<RouteDto> route = RouteDto.FromModel(Route.GetByDay(day));
-        return Ok(ListResponse<RouteDto>.GetResponse(route, 1));
+        return Ok(ListResponse<RouteDto>.GetResponse(route));
     }
 }

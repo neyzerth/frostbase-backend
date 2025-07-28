@@ -8,13 +8,13 @@ public class TruckController : ControllerBase
     public ActionResult Get()
     {
         List<TruckDto> trucks = TruckDto.FromModel(Truck.Get());
-        return Ok(ListResponse<TruckDto>.GetResponse(trucks, 1));
+        return Ok(ListResponse<TruckDto>.GetResponse(trucks));
     }
     [HttpGet("{id}")]
     public ActionResult Get(string id)
     {
         TruckDto truck = TruckDto.FromModel(Truck.Get(id));
-        return Ok(Response<TruckDto>.GetResponse(truck, 1));
+        return Ok(Response<TruckDto>.GetResponse(truck));
     }
 
     // [HttpPost]

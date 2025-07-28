@@ -23,7 +23,7 @@ public class OrderController : ControllerBase
         if(insert != null)
             return Ok(Response<OrderDto>.GetResponse(OrderDto.FromModel(insert), 1));
         
-        return BadRequest(MessageResponse.GetResponse(0, "Order not inserted", MessageType.Error));
+        return BadRequest(MessageResponse.GetResponse("Order not inserted", MessageType.Error));
     }
     // [HttpPut("{id}")]
     // public ActionResult Put(int id /*, [FromPost] PostOrder p (??)*/)

@@ -8,21 +8,21 @@ public class SimulatorController : ControllerBase
     public ActionResult GenerateOrder([FromBody] Simulate simulate)
     {
         OrderDto order = OrderDto.FromModel(Order.GenerateOrder(simulate.Date));
-        return Ok(Response<OrderDto>.GetResponse( order, 1));
+        return Ok(Response<OrderDto>.GetResponse( order));
     }
     
     [HttpPost("trip/generate")]
     public ActionResult GenerateTrip([FromBody] Simulate simulate)
     {
         TripDto trip = TripDto.FromModel(Trip.Simulate(simulate.Date));
-        return Ok(Response<TripDto>.GetResponse( trip, 1));
+        return Ok(Response<TripDto>.GetResponse( trip));
     }
     
     [HttpPost("trip/check/")]
     public ActionResult CheckSimulatedTrips([FromBody] Simulate simulate)
     {
         List<TripDto> sim = TripDto.FromModel(SimulationTrip.CheckSimulationsTrips(simulate.Date)); 
-        return Ok(ListResponse<TripDto>.GetResponse( sim, 1));
+        return Ok(ListResponse<TripDto>.GetResponse( sim));
     }
     
     [HttpPost("reading/generate")]

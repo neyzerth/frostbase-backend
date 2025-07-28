@@ -8,22 +8,22 @@ public class TripController : ControllerBase
     public ActionResult Get()
     {
         List<TripDto> trips = TripDto.FromModel(Trip.Get());
-        return Ok(ListResponse<TripDto>.GetResponse(trips, 1));
+        return Ok(ListResponse<TripDto>.GetResponse(trips));
     }
     [HttpGet("{id}")]
     public ActionResult Get(string id)
     {
         TripDto trip = TripDto.FromModel(Trip.Get(id));
-        return Ok(Response<TripDto>.GetResponse(trip, 1));
+        return Ok(Response<TripDto>.GetResponse(trip));
     }
     [HttpPost]
     public ActionResult Post([FromBody] CreateTripDto c)
     {
         Trip insertedTrip = Trip.Insert(c);
         if(insertedTrip != null) 
-            return Ok(Response<Trip>.GetResponse(insertedTrip, 1));
+            return Ok(Response<Trip>.GetResponse(insertedTrip));
             
-        return BadRequest(MessageResponse.GetResponse(0, "Trip not inserted", MessageType.Error));
+        return BadRequest(MessageResponse.GetResponse( "Trip not inserted", MessageType.Error, 1));
     }
     // [HttpPut("{id}")]
     // public ActionResult Put(int id, [FromForm] CreateUserDto t)
@@ -43,18 +43,18 @@ public class TripController : ControllerBase
         TripDto trip = TripDto.FromModel(Trip.Insert(t));
         
         if(trip != null) 
-            return Ok(Response<TripDto>.GetResponse(1, trip, MessageType.Success));
+            return Ok(Response<TripDto>.GetResponse( trip, MessageType.Success));
             
-        return BadRequest(MessageResponse.GetResponse(0, "Trip not inserted", MessageType.Error));
+        return BadRequest(MessageResponse.GetResponse("Trip not inserted", MessageType.Error, 1));
     }
     [HttpPost("[action]/{idTrip}/")]
     public ActionResult End(string idTrip)
     {
         TripDto trip = TripDto.FromModel(Trip.UpdateEndTime(idTrip));
         if(trip != null) 
-            return Ok(Response<TripDto>.GetResponse(1, trip, MessageType.Success));
+            return Ok(Response<TripDto>.GetResponse( trip, MessageType.Success));
             
-        return BadRequest(MessageResponse.GetResponse(0, "Failed to end trip", MessageType.Error));
+        return BadRequest(MessageResponse.GetResponse( "Failed to end trip", MessageType.Error, 1));
     }
     
     [HttpPost("{tripId}/[action]/{orderId}")]
@@ -62,9 +62,9 @@ public class TripController : ControllerBase
     {
         TripDto trip = TripDto.FromModel(Trip.StartOrder(tripId, orderId));
         if(trip != null)
-            return Ok(Response<TripDto>.GetResponse(1, trip, MessageType.Success));
+            return Ok(Response<TripDto>.GetResponse( trip, MessageType.Success));
             
-        return BadRequest(MessageResponse.GetResponse(0, "Failed to start order", MessageType.Error));
+        return BadRequest(MessageResponse.GetResponse( "Failed to start order", MessageType.Error, 1));
     }
     
     [HttpPost("{tripId}/[action]/{orderId}")]
@@ -72,8 +72,8 @@ public class TripController : ControllerBase
     {
         TripDto trip = TripDto.FromModel(Trip.EndOrder(tripId, orderId));
         if(trip != null)
-            return Ok(Response<TripDto>.GetResponse(1, trip, MessageType.Success));
+            return Ok(Response<TripDto>.GetResponse( trip, MessageType.Success));
             
-        return BadRequest(MessageResponse.GetResponse(0, "Failed to end order", MessageType.Error));
+        return BadRequest(MessageResponse.GetResponse( "Failed to end order", MessageType.Error, 1));
     }
 }
