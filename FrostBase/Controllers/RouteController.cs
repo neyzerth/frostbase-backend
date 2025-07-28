@@ -8,13 +8,13 @@ public class RouteController : ControllerBase
     public ActionResult Get()
     {
         List<RouteDto> routes = RouteDto.FromModel(Route.Get());
-        return Ok(ListResponse<RouteDto>.GetResponse(routes, 1));
+        return Ok(ListResponse<RouteDto>.GetResponse(routes));
     }
     [HttpGet("{id}")]
     public ActionResult Get(string id)
     {
         RouteDto route = RouteDto.FromModel(Route.Get(id));
-        return Ok(Response<RouteDto>.GetResponse(route, 1));
+        return Ok(Response<RouteDto>.GetResponse(route));
     }
     // [HttpPost]
     // public ActionResult Post([FromForm] Route r)

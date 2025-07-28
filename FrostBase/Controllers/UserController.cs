@@ -35,7 +35,7 @@ public class UserController : ControllerBase
         if(inserted != null )
             return Ok(Response<UserApp>.GetResponse(inserted));
             
-        return BadRequest(MessageResponse.GetResponse( "User not inserted", MessageType.Error, 1));
+        return BadRequest(MessageResponse.GetResponse( "User not inserted", 1, MessageType.Error));
     }
     // [HttpPut("{id}")]
     // public ActionResult Put(int id /*, [FromPost] PostUser p (??)*/)

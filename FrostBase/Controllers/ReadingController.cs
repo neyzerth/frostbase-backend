@@ -8,14 +8,14 @@ public class ReadingController : ControllerBase
     public ActionResult Get()
     {
         List<Reading> readings = Reading.Get();
-        return Ok(ListResponse<Reading>.GetResponse(readings, 1));
+        return Ok(ListResponse<Reading>.GetResponse(readings));
     }
 
     [HttpGet("{id}")]
     public ActionResult Get(string id)
     {
         Reading reading = Reading.Get(id);
-        return Ok(Response<Reading>.GetResponse(reading, 1));
+        return Ok(Response<Reading>.GetResponse(reading));
     }
 
     [HttpPost("Truck/{idTruck}")]
@@ -23,9 +23,9 @@ public class ReadingController : ControllerBase
     {   
         
         if(Reading.Insert(idTruck, c))
-            return Ok(MessageResponse.GetResponse("Reading inserted", MessageType.Success));
+            return Ok(MessageResponse.GetResponse("Reading inserted"));
         
-        return BadRequest(MessageResponse.GetResponse("Reading not inserted", MessageType.Error, 1));
+        return BadRequest(MessageResponse.GetResponse("Reading not inserted", 1, MessageType.Error));
     }
 
     // [HttpPut("{id}")]
