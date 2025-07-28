@@ -57,6 +57,7 @@ public class Store
                 { "foreignField", "IDStore" },
                 { "as", "orders" }
             }),
+            new BsonDocument("$unwind", "$orders"),
             new BsonDocument("$match", new BsonDocument
             {
                 { "orders.IDStateOrder", new BsonDocument("$ne", "PO") }

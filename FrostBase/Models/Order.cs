@@ -36,6 +36,30 @@ public class Order
     public string IDStateOrder { get; set; }
 
     #endregion
+
+    #region constructors
+
+    public Order()
+    {
+        Id = ObjectId.GenerateNewId().ToString();
+        Date = DateTime.Now;
+        DeliverDate = CalculateDeliverDate();
+        IDStateOrder = "PO";
+        IDStore = "";
+        IDUser = "";
+    }
+
+    public Order(OrderDto dto)
+    {
+        Id = dto.Id;
+        IDStore = dto.Store.Id;
+        IDUser = dto.CreatedBy.Id;
+        IDStateOrder = dto.State.Id;
+        DeliverDate = dto.DeliverDate.ToDateTime(TimeOnly.MinValue);
+        Date = dto.Date.ToDateTime(TimeOnly.MinValue);
+    }
+
+    #endregion
     
     #region database
 
@@ -54,7 +78,7 @@ public class Order
     }
     public static List<Order> GetByRoute(string idRoute) {
 
-        var routeId = ObjectId.Parse("674a6001000000000000001e");
+        var routeId = ObjectId.Parse(idRoute);
         var pipeline = new BsonDocument[]
         {
             new("$match", new BsonDocument("IDStateOrder", "PO")),
@@ -95,7 +119,7 @@ public class Order
 
     public static Order Insert(CreateOrderDto c)
     {
-        DateTime date = c.Date == null ? DateTime.Now : c.Date.Value;
+        DateTime date = c.Date ?? DateTime.Now;
         Order order = new Order
         {
             Date = date,
@@ -104,9 +128,10 @@ public class Order
             IDStateOrder = "PO",
         };
         
-        if(c.Date == null) order.Date = DateTime.Now;
         order.DeliverDate = order.CalculateDeliverDate();
         
+        
+        OrderLog.Insert(order, date);
         return Insert(order);
     }
 
@@ -119,8 +144,8 @@ public class Order
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            return null;
+            Console.WriteLine("Error inserting order: "+e);
+            throw new Exception("Error inserting order: "+e);
         }
     }
 
@@ -188,20 +213,27 @@ public class Order
     
     #region simulator
 
-    public static Order GenerateOrder()
+    public static Order GenerateOrder(DateTime? date)
     {
-        //get a random admin
+        date ??= DateTime.Now;
         Random rnd = new Random();
-        List<UserApp> users = UserApp.GetAdmin();
-        UserApp admin = users[rnd.Next(0, users.Count-1)];
         
-        //get a random store that not ordered yet
+        //get admins and store that not ordered yet
+        List<UserApp> users = UserApp.GetAdmin();
         List<Store> stores = Store.GetNotOrders();
+        
+        if(users.Count < 1)
+            throw new Exception("No hay administradores");
+        if(stores.Count < 1)
+            throw new Exception("No hay tiendas sin ordenar hoy");
+        
+        //get a random store and admin
+        UserApp admin = users[rnd.Next(0, users.Count-1)];
         Store store = stores[rnd.Next(0, stores.Count-1)];
 
         CreateOrderDto o = new CreateOrderDto
         {
-            Date = DateTime.Now,
+            Date = date,
             IDCreatedByUser = admin.Id,
             IDStore = store.Id
         };

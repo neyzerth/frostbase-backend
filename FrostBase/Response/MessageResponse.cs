@@ -3,7 +3,7 @@
     public object Data { get; set; }
     public string Type { get; set; }  
 
-    public static MessageResponse GetResponse(int status, object data, MessageType type)
+    public static MessageResponse GetResponse(object data, MessageType type, int status = 0)
     {
         MessageResponse r = new MessageResponse();
         r.Status = status;

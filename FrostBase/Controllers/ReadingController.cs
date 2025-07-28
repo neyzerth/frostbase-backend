@@ -23,9 +23,9 @@ public class ReadingController : ControllerBase
     {   
         
         if(Reading.Insert(idTruck, c))
-            return Ok(MessageResponse.GetResponse(1, "Reading inserted", MessageType.Success));
+            return Ok(MessageResponse.GetResponse("Reading inserted", MessageType.Success));
         
-        return BadRequest(MessageResponse.GetResponse(1, "Reading not inserted", MessageType.Error));
+        return BadRequest(MessageResponse.GetResponse("Reading not inserted", MessageType.Error, 1));
     }
 
     // [HttpPut("{id}")]

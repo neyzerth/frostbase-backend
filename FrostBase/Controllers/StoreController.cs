@@ -9,13 +9,13 @@ public class StoreController : ControllerBase
     public ActionResult Get()
     {
         List<StoreDto> stores = StoreDto.FromModel(Store.Get());
-        return Ok(ListResponse<StoreDto>.GetResponse(stores, 1));
+        return Ok(ListResponse<StoreDto>.GetResponse(stores));
     }
     [HttpGet("{id}")]
     public ActionResult Get(string id)
     {
         StoreDto store = StoreDto.FromModel(Store.Get(id));
-        return Ok(Response<StoreDto>.GetResponse(store, 1));
+        return Ok(Response<StoreDto>.GetResponse(store));
     }
     // [HttpPost]
     // public ActionResult Post([FromForm] Store s)
@@ -41,14 +41,14 @@ public class StoreController : ControllerBase
     public ActionResult GetNoOrdered()
     {
         List<StoreDto> stores = StoreDto.FromModel(Store.GetNotOrders());
-        return Ok(ListResponse<StoreDto>.GetResponse(stores, 1));
+        return Ok(ListResponse<StoreDto>.GetResponse(stores));
     }
     [HttpGet("ordered/{id}")]
     public ActionResult GetOrdered(string id)
     {
         if(Store.Ordered(id))
-            return Ok(MessageResponse.GetResponse(1, "Store "+ id +" has ordered", MessageType.Success));
+            return Ok(MessageResponse.GetResponse( "Store "+ id +" has ordered", MessageType.Success));
         
-        return Ok(MessageResponse.GetResponse(0, "Store "+ id +" hasn't ordered", MessageType.Success));
+        return BadRequest(MessageResponse.GetResponse( "Store "+ id +" hasn't ordered", MessageType.Error, 1));
     }
 }
