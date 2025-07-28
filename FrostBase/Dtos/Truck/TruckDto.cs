@@ -14,7 +14,8 @@ public class TruckDto
             Id = t.Id,
             Brand = t.Brand,
             Model = t.Model,
-            LicensePlate = t.LicensePlate
+            LicensePlate = t.LicensePlate,
+            State = StateDto.FromModel(global::StateTruck.Get(t.State))       
         };
     }
 
