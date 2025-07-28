@@ -130,6 +130,8 @@ public class Order
         
         order.DeliverDate = order.CalculateDeliverDate();
         
+        
+        OrderLog.Insert(order, date);
         return Insert(order);
     }
 
@@ -143,7 +145,7 @@ public class Order
         catch (Exception e)
         {
             Console.WriteLine("Error inserting order: "+e);
-            return null;
+            throw new Exception("Error inserting order: "+e);
         }
     }
 
