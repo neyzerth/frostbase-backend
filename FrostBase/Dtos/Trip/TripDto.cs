@@ -76,6 +76,18 @@ public class TripOrderDto
 
 public class Time
 {
+    public Time(DateTime startTime, DateTime endTime)
+    {
+        StartTime = startTime;
+        EndTime = endTime;
+    }
+
+    public Time()
+    {
+        StartTime = DateTime.Now;
+        EndTime = null;   
+    }
+
     public DateTime StartTime { get; set; }
     public DateTime? EndTime { get; set; }
     public TimeSpan? TotalTime => Total(); 
