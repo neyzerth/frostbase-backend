@@ -1,13 +1,9 @@
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
 public class SimulationTrip
 {
-    public SimulationTrip(Trip simulatedTrip)
-    {
-        SimulatedTrip = simulatedTrip;
-        Inserted = false;       
-    }
 
     //collection of the trips
     private static IMongoCollection<SimulationTrip> _simTripColl = 
@@ -25,12 +21,63 @@ public class SimulationTrip
     public bool OrdersInserted { get; set; }
 
     #endregion
+
+    #region constructors
+    
+    public SimulationTrip()
+    {
+        SimulatedTrip = new Trip();
+        Inserted = false;       
+        OrdersInserted = false;       
+    }
+    
+    public SimulationTrip(Trip simulatedTrip)
+    {
+        SimulatedTrip = simulatedTrip;
+        Inserted = false;
+        OrdersInserted = false;
+    }
+
+    #endregion
+
+    #region db methods
+
+    public static SimulationTrip Insert(SimulationTrip simTrip)
+    {
+        try
+        {
+            if(string.IsNullOrEmpty(simTrip.SimulatedTrip.Id))
+                simTrip.SimulatedTrip.Id = ObjectId.GenerateNewId().ToString();
+            _simTripColl.InsertOne(simTrip);
+            return simTrip;       
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public static SimulationTrip Insert(Trip simulatedTrip)
+    {
+        try
+        {
+            return Insert(new SimulationTrip(simulatedTrip));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    #endregion
     
     #region simulation
     
-    public static List<Trip> CheckSimulationsTrips(DateTime? dateTime)
+    public static List<Trip> CheckSimulationsTrips(DateTime? date)
     {  
-        DateTime date = dateTime ?? DateTime.Now;
+        date??= DateTime.Now;
         var simTrips =  _simTripColl.Find(t =>
             !t.OrdersInserted && t.SimulatedTrip.StartTime.Date <= date).ToList();
         
@@ -50,8 +97,8 @@ public class SimulationTrip
                 EndTime = trip.EndTime <= date ? trip.EndTime : null,
                 IDTruck = trip.IDTruck,
                 IDRoute = trip.IDRoute,
-                IDStateTrip = trip.EndTime <= date ? "CP" : "IP",
                 IDUser = trip.IDUser,
+                IDStateTrip = stateTrip,
                 Orders = newOrders,
             };
             

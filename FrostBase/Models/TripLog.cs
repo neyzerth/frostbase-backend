@@ -41,11 +41,30 @@ public class TripLog
         return _tripLogColl.Find(t => t.Id == id).FirstOrDefault();      
     }
 
+    public TripLog()
+    {
+        Id = ObjectId.GenerateNewId().ToString();
+        Date = DateTime.Now;
+        Orders = new List<TripOrder>();
+        IDTrip = "";
+        IDStateTrip = "";
+    }
+
+    public TripLog(Trip t, DateTime? date)
+    {
+        Id = ObjectId.GenerateNewId().ToString();
+        Date = date?? DateTime.Now;
+        Orders = t.Orders;
+        IDTrip = string.IsNullOrEmpty(t.Id)? ObjectId.GenerateNewId().ToString() : t.Id;
+        IDStateTrip = t.IDStateTrip;
+    }
+
     public static TripLog Insert(TripLog t)
     {
         try
         {
-            t.Id = ObjectId.GenerateNewId().ToString();
+            if(string.IsNullOrEmpty(t.Id))
+                t.Id = ObjectId.GenerateNewId().ToString();
             _tripLogColl.InsertOne(t);
             return t;
         }

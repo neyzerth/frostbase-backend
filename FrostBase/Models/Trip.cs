@@ -47,11 +47,35 @@ public class Trip
     public List<TripOrder> Orders { get; set; }
 
     #endregion
-    
-    #region class methods
-    
-    
 
+    #region constructors
+
+    public Trip()
+    {
+        Id = ObjectId.GenerateNewId().ToString();
+        StartTime = DateTime.Now;
+        IDTruck = "";
+        IDUser = "";
+        IDRoute = "";
+        IDStateTrip = "IP";
+        Orders = new List<TripOrder>();
+    }
+
+    public Trip(StartTripDto c)
+    {
+        Id = ObjectId.GenerateNewId().ToString();
+        StartTime = c.StartDate;
+        IDTruck = c.IDTruck;
+        IDUser = c.IDDriver;
+        IDRoute = c.IDRoute;
+        IDStateTrip = "IP";
+        Orders = new List<TripOrder>();
+    }
+
+    #endregion
+    
+    #region db methods
+    
     public static List<Trip> Get() 
     {
         return _tripColl.Find(t => true).ToList();
@@ -81,14 +105,14 @@ public class Trip
             if(Route.Get(t.IDRoute) == null)
                 throw new Exception("Route not founded with id "+ t.IDRoute);
             
-            
+            TripLog.Insert(t, t.StartTime);
             _tripColl.InsertOne(t);
             return t;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return null;
+            throw new Exception("Error inserting trip");
         }
     }
     public static Trip Insert(CreateTripDto c)
@@ -121,19 +145,9 @@ public class Trip
         return Insert(t);
     }
     
-    public static Trip InsertSimulate(Trip t)
-    {
-        try
-        {
-            _tripSimulation.InsertOne(t);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw new Exception("Error inserting simulation of trip");
-        }
-        return t;
-    }
+    #endregion
+    
+    #region class methods
     
     public static Trip UpdateEndTime(string idTrip)
     {
@@ -148,15 +162,19 @@ public class Trip
                 .Set(t => t.EndTime, endTime)
                 .Set(t => t.IDStateTrip, "compl");
                 
-            return _tripColl.FindOneAndUpdate(filter, update,
+            var newTrip =  _tripColl.FindOneAndUpdate(filter, update,
                     new FindOneAndUpdateOptions<Trip>
                     { ReturnDocument = ReturnDocument.After }
                 );
+            
+            TripLog.Insert(newTrip, endTime);
+            
+            return newTrip;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return null;
+            throw new Exception("Error updating trip");
         }
     }
     public static Trip StartOrder(string tripId, string orderId)
@@ -179,13 +197,15 @@ public class Trip
                 new FindOneAndUpdateOptions<Trip>
                     { ReturnDocument = ReturnDocument.After }
                 );
+            
+            TripLog.Insert(result, newOrder.StartTime);
 
             return result;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return null;
+            throw new Exception("Error starting order");
         }
     }
     
@@ -213,12 +233,14 @@ public class Trip
                 new FindOneAndUpdateOptions<Trip>
                     { ReturnDocument = ReturnDocument.After }
                 );
+            
+            TripLog.Insert(result, result.Orders[0].EndTime);
             return result;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return null;
+            throw new Exception("Error ending order");
         }
     }
     
@@ -229,19 +251,19 @@ public class Trip
 
     public static Trip Simulate(DateTime? date = null)
     {
+        date ??= DateTime.Now;
         Trip trip = GenerateStartTrip(date);
-        List<OrderDto> orders = OrderDto.FromModel(Order.GetByRoute(trip.IDRoute));
         
-        trip.Orders = TripOrder.GenerateOrders(trip.StartTime, orders);
+        trip.GenerateOrders();
         
         trip.GenerateEndTimeTrip();
 
-        return InsertSimulate(trip);
+        return SimulationTrip.Insert(trip).SimulatedTrip;
     }
 
     public static Trip GenerateStartTrip(DateTime? date = null)
     {
-        if (date == null) date = DateTime.Now;
+        date??= DateTime.Now;
         
         Random random = new Random();
         
@@ -262,10 +284,14 @@ public class Trip
         {
             IDTruck = truck.Id,
             IDDriver = route.IDUser,
-            IDRoute = route.Id
+            IDRoute = route.Id,
+            StartDate = date.Value,
         };
 
-        return Insert(t);
+        var newTrip = new Trip(t);
+        TripLog.Insert(newTrip, newTrip.StartTime);;
+
+        return new Trip(t);
     }
 
     public void GenerateEndTimeTrip()
@@ -288,6 +314,51 @@ public class Trip
         this.EndTime = lastOrderTime.AddSeconds(timeToReturn);
         
         this.IDStateTrip = "CP";
+        
+        TripLog.Insert(this, this.EndTime);
+        
+    }
+    
+    public void GenerateOrders()
+    {
+        Orders = new List<TripOrder>();
+        
+        //starter location (Grupo Lala / 32.45900929216648, -116.97966765227373 )
+        var startLocation = new Location
+            { Latitude = 32.45900929216648, Longitude = -116.97966765227373 };
+        
+        //the first order startTime is the same as the trip startTime
+        var orderStartTime =  StartTime;
+        
+        //use dto to get the store location in one request
+        List<OrderDto> orders = OrderDto.FromModel(Order.GetByRoute(IDRoute));
+        
+        Console.WriteLine("== GENERATE TIMES ===============");
+        foreach (OrderDto order in orders)
+        {
+            TripLog.Insert(this, orderStartTime);
+            //generate times
+            var times = TripOrder.GenerateOrderDeliverTime(startLocation, orderStartTime, order);
+            
+            //dto to model
+            var orderModel = new TripOrder
+            {
+                IDOrder = order.Id,
+                StartTime = times.StartTime,
+                EndTime = times.EndTime
+            };
+            Orders.Add(orderModel);
+            
+            //add to log
+            TripLog.Insert(this, times.EndTime.Value);
+            order.State.Id = "DO";
+            OrderLog.Insert(new Order(order), times.EndTime.Value);
+            //the next startTime and store is the previous endTime trip
+            startLocation = order.Store.Location;
+            orderStartTime = times.EndTime.Value;
+            
+        }
+        Console.WriteLine("== END GENERATE TIMES ===============");
         
     }
 

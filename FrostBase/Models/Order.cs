@@ -36,6 +36,30 @@ public class Order
     public string IDStateOrder { get; set; }
 
     #endregion
+
+    #region constructors
+
+    public Order()
+    {
+        Id = ObjectId.GenerateNewId().ToString();
+        Date = DateTime.Now;
+        DeliverDate = CalculateDeliverDate();
+        IDStateOrder = "PO";
+        IDStore = "";
+        IDUser = "";
+    }
+
+    public Order(OrderDto dto)
+    {
+        Id = dto.Id;
+        IDStore = dto.Store.Id;
+        IDUser = dto.CreatedBy.Id;
+        IDStateOrder = dto.State.Id;
+        DeliverDate = dto.DeliverDate.ToDateTime(TimeOnly.MinValue);
+        Date = dto.Date.ToDateTime(TimeOnly.MinValue);
+    }
+
+    #endregion
     
     #region database
 
@@ -54,7 +78,7 @@ public class Order
     }
     public static List<Order> GetByRoute(string idRoute) {
 
-        var routeId = ObjectId.Parse("674a6001000000000000001e");
+        var routeId = ObjectId.Parse(idRoute);
         var pipeline = new BsonDocument[]
         {
             new("$match", new BsonDocument("IDStateOrder", "PO")),
@@ -118,7 +142,7 @@ public class Order
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Error inserting order: "+e);
             return null;
         }
     }
