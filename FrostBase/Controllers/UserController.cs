@@ -41,26 +41,9 @@ public class UserController : ControllerBase
     [HttpPost("login")]
     public ActionResult Login([FromBody] LoginUserDto log)
     {
-        UserApp user = UserApp.Login(log.Email, log.Password);
+        UserDto user = UserDto.FromModel(UserApp.Login(log.Email, log.Password));
         
-        if (user == null)
-            return Unauthorized(MessageResponse.GetResponse("Email or password are wrong", 2, MessageType.Warning));
-       
-        UserApp response = new UserApp
-        {   
-            Id = user.Id,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            MiddleName = user.MiddleName,
-            IsAdmin = user.IsAdmin,
-            Email = user.Email,
-            Phone = user.Phone,
-            BirthDate = user.BirthDate,
-            Active = user.Active
-            
-        };
-        
-    return Ok(Response<UserApp>.GetResponse(response));
+        return Ok(Response<UserApp>.GetResponse(user));
     }
     
     
