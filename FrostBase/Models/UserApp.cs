@@ -44,17 +44,21 @@ public class UserApp
     
     [BsonElement("active")] 
     public bool Active { get; set; }
-    
+
+    [BsonElement("IDTruck")]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string IDTruck { get; set; }
+
     #endregion
 
     #region constructors
 
-    
+
 
     #endregion
 
     #region class methods
-    
+
     public static List<UserApp> Get() 
     {
         

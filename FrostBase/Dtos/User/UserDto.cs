@@ -4,8 +4,11 @@ public class UserDto
     public string Id { get; set; }
     public Name Name { get; set; }
     public string Email { get; set; }
+    public string Password { get; set; }
     public string Phone { get; set; }
     public DateOnly? BirthDate { get; set; }
+    public string IDTruck { get; set; }
+
 
     public static UserDto FromModel(UserApp u)
     {
@@ -19,8 +22,10 @@ public class UserDto
                 MiddleName = u.MiddleName
             },
             Email = u.Email,
+            Password = u.Password,
             Phone = u.Phone,
-            BirthDate = DateOnly.FromDateTime(u.BirthDate)
+            BirthDate = DateOnly.FromDateTime(u.BirthDate),
+            IDTruck = u.IDTruck
         };
     }
 
