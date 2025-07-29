@@ -110,7 +110,15 @@ public class UserApp
             throw new Exception("Error inserting user: "+e.Message);
         }
     }
-
+    
+    public static UserApp Login(string email, string password)
+    {
+        var user = _userColl.Find(u => u.Email == email && u.Password == password && u.Active).FirstOrDefault();
+        if (user != null) return user;
+        
+        throw new Exception("Email or Password incorrect");
+    }
+    
     #endregion
 }
 

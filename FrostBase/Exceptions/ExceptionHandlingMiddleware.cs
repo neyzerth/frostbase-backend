@@ -12,7 +12,7 @@ public class ExceptionHandlingMiddleware
         catch (Exception ex)
         {
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            await context.Response.WriteAsJsonAsync(new { error = "An error has occurred: "+ex.Message, type = MessageType.Error ,status = 1 });
+            await context.Response.WriteAsJsonAsync(new { error = ex.Message, type = MessageType.Error.ToString() ,status = 1 });
         }
     }
 }

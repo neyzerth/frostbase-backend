@@ -37,6 +37,16 @@ public class UserController : ControllerBase
             
         return BadRequest(MessageResponse.GetResponse( "User not inserted", 1, MessageType.Error));
     }
+    
+    [HttpPost("login")]
+    public ActionResult Login([FromBody] LoginUserDto log)
+    {
+        UserDto user = UserDto.FromModel(UserApp.Login(log.Email, log.Password));
+        
+        return Ok(Response<UserDto>.GetResponse(user));
+    }
+    
+    
     // [HttpPut("{id}")]
     // public ActionResult Put(int id /*, [FromPost] PostUser p (??)*/)
     // {
