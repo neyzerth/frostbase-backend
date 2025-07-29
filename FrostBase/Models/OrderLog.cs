@@ -18,7 +18,7 @@ public class OrderLog
     [BsonRepresentation(BsonType.ObjectId)]
     public string IDOrder { get; set; }
     
-    [BsonElement("IDStateOrer")]
+    [BsonElement("IDStateOrder")]
     public string IDStateOrder { get; set; }
     
     public static List<OrderLog> Get()
