@@ -43,7 +43,7 @@ public class UserController : ControllerBase
     {
         UserDto user = UserDto.FromModel(UserApp.Login(log.Email, log.Password));
         
-        return Ok(Response<UserApp>.GetResponse(user));
+        return Ok(Response<UserDto>.GetResponse(user));
     }
     
     
