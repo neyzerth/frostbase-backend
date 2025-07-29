@@ -307,7 +307,7 @@ public class Trip
             Longitude = -116.97966765227373
         };
 
-        double timeToReturn = Osrm.GetRoute(lastLocation, lalaBase).Result.Duration;
+        double timeToReturn = Osrm.Get(lastLocation, lalaBase).Duration;
         
         DateTime lastOrderTime = lastOrder.EndTime.Value;
         
