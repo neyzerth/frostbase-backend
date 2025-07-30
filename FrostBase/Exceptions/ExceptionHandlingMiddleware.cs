@@ -11,6 +11,7 @@ public class ExceptionHandlingMiddleware
         }
         catch (Exception ex)
         {
+            Console.WriteLine("ERROR: "+ex);
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             await context.Response.WriteAsJsonAsync(new { error = ex.Message, type = MessageType.Error.ToString() ,status = 1 });
         }
