@@ -50,7 +50,7 @@ public class Parameter
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Parameter insert: "+e);
             throw new Exception("Error inserting parameter: "+e.Message);
         }
     }

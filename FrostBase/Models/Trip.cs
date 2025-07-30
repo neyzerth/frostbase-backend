@@ -111,7 +111,7 @@ public class Trip
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Trip insert: "+e);
             throw new Exception("Error inserting trip "+t.Id+": "+e.Message);
         }
     }
@@ -122,18 +122,24 @@ public class Trip
             Id = c.Id, 
             StartTime = c.StartTime,
             EndTime = c.EndTime,
-            IDTruck = c.IdTruck,
-            IDUser = c.IdDriver,
-            IDRoute = c.IdRoute,
-            IDStateTrip = c.State,
+            IDTruck = c.IDTruck,
+            IDUser = c.IDDriver,
+            IDRoute = c.IDRoute,
+            IDStateTrip = c.IDState,
             
         };
+        
+        Truck truck = Truck.Get(t.IDTruck);
+        truck.IDStateTruck = "IR";
+        Truck.Update(truck);
+        
+        TruckLog.Insert(truck, t.StartTime);
         
         return Insert(t);
     }
     public static Trip Insert(StartTripDto c)
     {
-        Trip t = new Trip
+        Trip t = new Trip()
         {
             StartTime = DateTime.Now,
             IDTruck = c.IDTruck,
@@ -142,6 +148,8 @@ public class Trip
             IDStateTrip = "IP",
             Orders = new List<TripOrder>()
         };
+        
+        
         return Insert(t);
     }
     
@@ -173,7 +181,7 @@ public class Trip
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Trip insert: "+e);
             throw new Exception("Error updating trip endtime: "+e.Message);
         }
     }
@@ -204,7 +212,7 @@ public class Trip
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Trip insert: "+e);
             throw new Exception("Error starting order");
         }
     }
@@ -239,7 +247,7 @@ public class Trip
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Trip insert: "+e);
             throw new Exception("Error ending order");
         }
     }
@@ -331,7 +339,7 @@ public class Trip
         var orderStartTime =  StartTime;
         
         //use dto to get the store location in one request
-        List<OrderDto> orders = OrderDto.FromModel(Order.GetByRoute(IDRoute));
+        List<OrderDto> orders = OrderDto.FromModel(Order.GetByRoute(IDRoute, StartTime));
         
         Console.WriteLine("== GENERATE TIMES ===============");
         foreach (OrderDto order in orders)

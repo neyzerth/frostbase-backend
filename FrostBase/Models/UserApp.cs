@@ -111,7 +111,7 @@ public class UserApp
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("user insert: "+e);
             throw new Exception("Error inserting user: "+e.Message);
         }
     }
@@ -157,7 +157,7 @@ public class UserApp
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("user insert: "+e);
             throw new Exception("Error updating user: " + e.Message);
         }
     }
@@ -186,7 +186,7 @@ public class UserApp
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("user insert: "+e);
             throw new Exception("Error deleting (deactivating) user: " + e.Message);
         }
     }

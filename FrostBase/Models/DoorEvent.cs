@@ -43,7 +43,7 @@ public class DoorEvent
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("DoorEvent insert: "+e);
             throw new Exception("Error inserting door event: "+e.Message);
         }
     }

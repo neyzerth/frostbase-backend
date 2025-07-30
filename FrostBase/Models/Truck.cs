@@ -43,9 +43,16 @@ public class Truck
         return _truckColl.Find(t => 
             t.IDStateTruck == "AV").ToList();
     }
-    public static List<Truck> GetAvailableByDate(DateTime date) 
+    public static List<Truck> GetAvailable(DateTime date) 
     {
-        return _truckColl.Find(t => t.IDStateTruck == "AV").ToList();
+        var logs = TruckLog.GetByDate(date);
+        var trucks = new List<Truck>();
+        
+        foreach (var l in logs)
+        {
+            trucks.Add(Truck.Get(l.Id));
+        }
+        return trucks;
     }
     
     public static Truck Get(string id)
@@ -69,6 +76,20 @@ public class Truck
             IDStateTruck = "AV"
         };
         
+        TruckLog.Insert(t, DateTime.Now);
+        return Insert(t);   
+    }
+    public static Truck Insert(CreateTruckDto c, DateTime date)
+    {
+        Truck t = new Truck
+        {
+            Brand = c.Brand,
+            Model = c.Model,
+            LicensePlate = c.LicensePlate,
+            IDStateTruck = "AV"
+        };
+        
+        TruckLog.Insert(t, date);
         return Insert(t);   
     }
 
@@ -83,7 +104,7 @@ public class Truck
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Truck insert: "+e);
             throw new Exception("Error inserting truck: "+e.Message);
         }
     }
@@ -104,11 +125,12 @@ public class Truck
                 ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
             };
 
+            TruckLog.Insert(updatedTruck, DateTime.Now);;
             return _truckColl.FindOneAndUpdate(filter, update, options);
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Truck insert: "+e);
             throw new Exception("Error updating truck: " + e.Message);
         }
     }
@@ -143,7 +165,7 @@ public class Truck
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Truck insert: "+e);
             throw new Exception("Error deleting truck: " + e.Message);
         }
     }
