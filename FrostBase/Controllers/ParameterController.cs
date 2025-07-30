@@ -7,7 +7,7 @@ public class ParameterController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        ParameterDto parameter = ParameterDto.FromModel(Parameter.Get());
+        ParameterDto parameter = ParameterDto.FromModel(Parameter.Get()); //error(?
         return Ok(Response<ParameterDto>.GetResponse(parameter));
     }
     
@@ -19,7 +19,7 @@ public class ParameterController : ControllerBase
     //     if(insert != null) 
     //         return Ok(Response<ParameterDto>.GetResponse(ParameterDto.FromModel(insert)));
     //     return BadRequest(MessageResponse.GetResponse("Order not inserted", 1, MessageType.Error));
-    // }
+    // 
     
     
     

@@ -8,6 +8,7 @@ public class ParameterDto
     
     public int MinHumidity{ get; set; }
     
+    //parsing
     public static ParameterDto FromModel(Parameter p)
     {
         return new ParameterDto

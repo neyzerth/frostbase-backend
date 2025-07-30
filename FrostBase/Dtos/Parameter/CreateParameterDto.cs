@@ -7,5 +7,5 @@ public class CreateParameterDto
     public decimal MinTemperature{ get; set; }
     
     public int MinHumidity{ get; set; }
-    
+    //
 }
