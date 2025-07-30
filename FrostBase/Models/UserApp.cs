@@ -120,6 +120,7 @@ public class UserApp
             MiddleName = u.Name.MiddleName,
             LastName = u.Name.LastName,
             Email = u.Email,
+            Phone = u.Phone,
             BirthDate = u.BirthDate.Value.ToDateTime(TimeOnly.MinValue),
         };
         
@@ -138,6 +139,7 @@ public class UserApp
                 .Set(u => u.Phone, updatedUser.Phone)
                 .Set(u => u.BirthDate, updatedUser.BirthDate)
                 .Set(u => u.Active, updatedUser.Active);
+            
 
             var options = new FindOneAndUpdateOptions<UserApp>
             {
