@@ -16,7 +16,6 @@ public class MongoDbConnection
     #endregion
 
     #region class methods
-
     private static IMongoDatabase GetDatabase()
     {
         try
@@ -55,11 +54,6 @@ public class MongoDbConnection
     {
         // Use FilterDefinition<T>.Empty to get all documents
         return GetCollection<T>(collection).Find(FilterDefinition<T>.Empty).ToList();
-    }
-    public static List<T> FindOne<T>(string collection)
-    {
-        // Use FilterDefinition<T>.Empty to get all documents
-        return GetCollection<T>(collection).Find(_ => true).ToList();
     }
     public static List<BsonDocument> Find(string collection, BsonDocument? filter)
     {
