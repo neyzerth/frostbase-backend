@@ -46,10 +46,6 @@ db.createCollection("Users", {
           minLength: 8,
           description: 'Contraseña para acceder al sistema'
         },
-        IDTruckDefault: {
-          bsonType: ['objectId', null],
-          description: 'Camion asignado por defecto al conductor'
-        },
         is_admin: {
           bsonType: 'bool',
           description: 'Indica si el usuario es administrador (true) o conductor (false)'

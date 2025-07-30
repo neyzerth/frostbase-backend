@@ -5,5 +5,4 @@ public class UpdateUserDto
     public string Email { get; set; }
     public string Phone { get; set; }
     public DateOnly? BirthDate { get; set; }
-    public string IDTruckDefault { get; set; }
 }

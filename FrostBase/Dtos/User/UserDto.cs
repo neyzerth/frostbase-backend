@@ -6,14 +6,9 @@ public class UserDto
     public string Email { get; set; }
     public string Phone { get; set; }
     public DateOnly? BirthDate { get; set; }
-    public TruckDto? TruckDefault { get; set; }
 
     public static UserDto FromModel(UserApp u)
     {
-        TruckDto truck = null;
-        if(string.IsNullOrEmpty(u.IDTruckDefault))
-            truck = TruckDto.FromModel(Truck.Get(u.IDTruckDefault));
-        
         return new UserDto
         {
             Id = u.Id,
@@ -25,7 +20,6 @@ public class UserDto
             },
             Email = u.Email,
             Phone = u.Phone,
-            TruckDefault = truck,
             BirthDate = DateOnly.FromDateTime(u.BirthDate)
         };
     }
