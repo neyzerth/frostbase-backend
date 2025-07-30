@@ -44,6 +44,29 @@ public class Alert
     {
         return _alertColl.Find(a => a.Id == id).FirstOrDefault();
     }
+    
+    public static List<Alert> GetByTruck(string truckId)
+    {
+        var pipeline = new List<BsonDocument>()
+        {
+            new BsonDocument("$lookup",
+                new BsonDocument
+                {
+                    { "from", "Readings" },
+                    { "localField", "IDReading" },
+                    { "foreignField", "_id" },
+                    { "as", "reading" }
+                }),
+            new BsonDocument("$unwind", "$reading"),
+            new BsonDocument("$match",
+                new BsonDocument("reading.IDTruck",
+                    new ObjectId(truckId))),
+            new BsonDocument("$project",
+                new BsonDocument("reading", 0))
+        };
+        
+        return _alertColl.Aggregate<Alert>(pipeline).ToList();
+    }
 
     public static Alert Insert(Alert a)
     {

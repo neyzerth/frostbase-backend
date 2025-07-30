@@ -18,6 +18,13 @@ public class AlertController : ControllerBase
         return Ok(Response<Alert>.GetResponse(alert));
     }
     
+    [HttpGet("truck/{truckId}")]
+    public ActionResult GetByTruck(string truckId)
+    {
+        List<AlertDto> truck = AlertDto.FromModel(Alert.GetByTruck(truckId));
+        return Ok(ListResponse<AlertDto>.GetResponse(truck));
+    }
+    
     [HttpPost]
     public ActionResult Post([FromBody] CreateAlertDto a)
     {
