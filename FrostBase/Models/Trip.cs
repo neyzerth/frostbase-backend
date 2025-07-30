@@ -339,7 +339,7 @@ public class Trip
         var orderStartTime =  StartTime;
         
         //use dto to get the store location in one request
-        List<OrderDto> orders = OrderDto.FromModel(Order.GetByRoute(IDRoute));
+        List<OrderDto> orders = OrderDto.FromModel(Order.GetByRoute(IDRoute, StartTime));
         
         Console.WriteLine("== GENERATE TIMES ===============");
         foreach (OrderDto order in orders)

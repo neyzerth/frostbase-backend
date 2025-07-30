@@ -8,7 +8,7 @@ public class Order
     #region statement
     
     //Sql or mongo statements
-    private static IMongoCollection<Order> _orderColl = MongoDbConnection.GetCollection<Order>("Orders");
+    protected static IMongoCollection<Order> _orderColl = MongoDbConnection.GetCollection<Order>("Orders");
     private static IMongoCollection<Order> _orderLogColl = MongoDbConnection.GetCollection<Order>("ViewOrderLogs");
     
     #endregion
@@ -84,6 +84,22 @@ public class Order
     {
         return null;
     }
+
+    public static List<Order> GetByRoute(string idStore, DateTime date)
+    {
+        var orders = new List<Order>();
+        List<ViewOrder> viewOrders = ViewOrder.GetByDate(date)
+            .Where(o => o.IDStore == idStore)
+            .ToList();
+        
+        foreach (var viewOrder in viewOrders)
+        {
+            orders.Add(viewOrder);
+        }
+        
+        return orders;
+    }
+
     public static List<Order> GetByRoute(string idRoute) {
         return  ViewOrder.GetByRoute(idRoute);
     }
@@ -286,11 +302,13 @@ public class Order
 
 public class ViewOrder : Order
 {
-    private static IMongoCollection<ViewOrder> _viewOrderColl = MongoDbConnection.GetCollection<ViewOrder>("ViewOrders");
+    // private static IMongoCollection<ViewOrder> _orderColl = 
+    //     MongoDbConnection.GetCollection<ViewOrder>("Orders");
+    private static IMongoCollection<ViewOrder> _viewOrderColl = 
+        MongoDbConnection.GetCollection<ViewOrder>("ViewOrders");
     
-    [BsonElement("IDRoute")]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string IDRoute { get; set; }
+    [BsonElement("route")]
+    public Route Route { get; set; }
     public ViewOrder(){}
     public ViewOrder(Order o)
     {
@@ -301,15 +319,71 @@ public class ViewOrder : Order
         IDStore = o.IDStore;
         IDUser = o.IDUser;
     }
-    public static List<Order> GetByRoute(string routeId)
+    // public static List<Order> GetByRoute(string routeId)
+    // {
+    //     var viewOrders= _viewOrderColl.Find(o => o.IDRoute == routeId).ToList();
+    //     var orders = new List<Order>();
+    //     foreach (var viewOrder in viewOrders)
+    //     {
+    //         orders.Add(new Order(viewOrder));
+    //     }
+    //     return orders;
+    // }
+
+    public static List<ViewOrder> GetByDate(DateTime date)
     {
-        var viewOrders= _viewOrderColl.Find(o => o.IDRoute == routeId).ToList();
-        var orders = new List<Order>();
-        foreach (var viewOrder in viewOrders)
+        var pipeline = new List<BsonDocument>()
         {
-            orders.Add(new Order(viewOrder));
-        }
-        return orders;
+            new BsonDocument("$match",
+                new BsonDocument("date",
+                    new BsonDocument("$lte",
+                        date))),
+            new BsonDocument("$sort",
+                new BsonDocument("date", -1)),
+            new BsonDocument("$group",
+                new BsonDocument
+                {
+                    { "_id", "$IDOrder" },
+                    {
+                        "date",
+                        new BsonDocument("$first", "$date")
+                    },
+                    {
+                        "IDStateOrder",
+                        new BsonDocument("$first", "$IDStateOrder")
+                    }
+                }),
+            new BsonDocument("$lookup",
+                new BsonDocument
+                {
+                    { "from", "Orders" },
+                    { "localField", "_id" },
+                    { "foreignField", "_id" },
+                    { "as", "order" }
+                }),
+            new BsonDocument("$unwind", "$order"),
+            new BsonDocument("$lookup",
+                new BsonDocument
+                {
+                    { "from", "Routes" },
+                    { "localField", "order.IDStore" },
+                    { "foreignField", "stores.IDStore" },
+                    { "as", "route" }
+                }),
+            new BsonDocument("$unwind", "$route"),
+            new BsonDocument("$project",
+                new BsonDocument
+                {
+                    { "_id", 1 },
+                    { "date", 1 },
+                    { "delivered", "$order.delivered" },
+                    { "IDCreatedByUser", "$order.IDCreatedByUser" },
+                    { "IDStore", "$order.IDStore" },
+                    { "route", 1 }
+                })
+        };
+        
+        return _orderColl.Aggregate<ViewOrder>(pipeline).ToList();
     }
     
 }
