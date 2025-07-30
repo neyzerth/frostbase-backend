@@ -25,17 +25,22 @@ public class OrderController : ControllerBase
         
         return BadRequest(MessageResponse.GetResponse("Order not inserted", 1, MessageType.Error));
     }
-    // [HttpPut("{id}")]
-    // public ActionResult Put(int id /*, [FromPost] PostOrder p (??)*/)
-    // {
-    //     return Ok(MessageResponse.GetResponse(1, "Order "+ id +" updated", MessageType.Success));
-    // }
-    // [HttpDelete("{id}")]
-    // public ActionResult Delete(int id)
-    // {
-    //     return Ok(MessageResponse.GetResponse(1, "Order "+ id +" deleted", MessageType.Success));
-    // }
     
+    [HttpPut]
+    public ActionResult Put([FromBody] UpdateOrderDto o)
+    {
+        if (o == null)
+            return BadRequest("null or invalid body request.");
+
+        var updatedOrder = Order.Update(o);
+        
+        if (updatedOrder == null)
+            return NotFound("Order not found.");
+
+        var orderDto = OrderDto.FromModel(updatedOrder);
+        return Ok(Response<OrderDto>.GetResponse(orderDto));
+    }
+
     [HttpGet("route/{idRoute}/")]
     public ActionResult GetByRoute(string idRoute)
     {
@@ -49,4 +54,6 @@ public class OrderController : ControllerBase
         List<OrderDto> orders = OrderDto.FromModel(Order.GetPending());
         return Ok(ListResponse<OrderDto>.GetResponse(orders));
     }
+    
+    
 }
