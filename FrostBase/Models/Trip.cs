@@ -122,18 +122,24 @@ public class Trip
             Id = c.Id, 
             StartTime = c.StartTime,
             EndTime = c.EndTime,
-            IDTruck = c.IdTruck,
-            IDUser = c.IdDriver,
-            IDRoute = c.IdRoute,
-            IDStateTrip = c.State,
+            IDTruck = c.IDTruck,
+            IDUser = c.IDDriver,
+            IDRoute = c.IDRoute,
+            IDStateTrip = c.IDState,
             
         };
+        
+        Truck truck = Truck.Get(t.IDTruck);
+        truck.IDStateTruck = "IR";
+        Truck.Update(truck);
+        
+        TruckLog.Insert(truck, t.StartTime);
         
         return Insert(t);
     }
     public static Trip Insert(StartTripDto c)
     {
-        Trip t = new Trip
+        Trip t = new Trip()
         {
             StartTime = DateTime.Now,
             IDTruck = c.IDTruck,
@@ -142,6 +148,8 @@ public class Trip
             IDStateTrip = "IP",
             Orders = new List<TripOrder>()
         };
+        
+        
         return Insert(t);
     }
     

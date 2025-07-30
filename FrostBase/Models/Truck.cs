@@ -43,9 +43,16 @@ public class Truck
         return _truckColl.Find(t => 
             t.IDStateTruck == "AV").ToList();
     }
-    public static List<Truck> GetAvailableByDate(DateTime date) 
+    public static List<Truck> GetAvailable(DateTime date) 
     {
-        return _truckColl.Find(t => t.IDStateTruck == "AV").ToList();
+        var logs = TruckLog.GetByDate(date);
+        var trucks = new List<Truck>();
+        
+        foreach (var l in logs)
+        {
+            trucks.Add(Truck.Get(l.Id));
+        }
+        return trucks;
     }
     
     public static Truck Get(string id)
@@ -104,6 +111,7 @@ public class Truck
                 ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
             };
 
+            //TruckLog.Insert(updatedTruck)
             return _truckColl.FindOneAndUpdate(filter, update, options);
         }
         catch (Exception e)
