@@ -61,5 +61,20 @@ public class Alert
         }
     }
     
+    public static Alert Insert(CreateAlertDto a)
+    {
+        DateTime date = a.Date ?? DateTime.Now;
+
+        Alert alert = new Alert
+        {
+            State = a.State,
+            Date = date,
+            IDAlertType = a.AlertType,
+            IDReading = a.Reading
+        };
+
+        return Insert(alert);
+    }
+    
     #endregion
 }
