@@ -42,12 +42,6 @@ public class Order
 
     public Order()
     {
-        Id = ObjectId.GenerateNewId().ToString();
-        Date = DateTime.Now;
-        DeliverDate = CalculateDeliverDate();
-        IDStateOrder = "PO";
-        IDStore = "";
-        IDUser = "";
     }
 
     public Order(OrderDto dto)
