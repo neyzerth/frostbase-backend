@@ -59,6 +59,19 @@ public class Truck
             ).FirstOrDefault();
     }
 
+    public static Truck Insert(CreateTruckDto c)
+    {
+        Truck t = new Truck
+        {
+            Brand = c.Brand,
+            Model = c.Model,
+            LicensePlate = c.LicensePlate,
+            IDStateTruck = "AV"
+        };
+        
+        return Insert(t);   
+    }
+
     public static Truck Insert(Truck t)
     {
         try
@@ -100,6 +113,42 @@ public class Truck
         }
     }
 
-    
+    public static Truck Update(UpdateTruckDto updatedTruck)
+    {
+        var truck = new Truck
+        {
+            Id = updatedTruck.Id,
+            Brand = updatedTruck.Brand,
+            Model = updatedTruck.Model,
+            LicensePlate = updatedTruck.LicensePlate,
+            IDStateTruck = updatedTruck.IDStateTruck
+        };
+        return Update(truck);
+    }
+
+    public static Truck Delete(string id)
+    {
+        try
+        {
+            var filter = Builders<Truck>.Filter.Eq(t => t.Id, id);
+            var update = Builders<Truck>.Update
+                .Set(t => t.IDStateTruck, "OS");
+
+            var options = new FindOneAndUpdateOptions<Truck>
+            {
+                ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
+            };
+
+            return _truckColl.FindOneAndUpdate(filter, update, options);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Error deleting truck: " + e.Message);
+        }
+    }
+
+
+
     #endregion
 }
