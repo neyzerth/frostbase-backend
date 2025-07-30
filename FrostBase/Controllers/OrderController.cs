@@ -40,6 +40,13 @@ public class OrderController : ControllerBase
         var orderDto = OrderDto.FromModel(updatedOrder);
         return Ok(Response<OrderDto>.GetResponse(orderDto));
     }
+    
+    [HttpDelete("{id}")]
+    public ActionResult Delete(string id)
+    {
+        var orderDto = OrderDto.FromModel(Order.Delete(id));
+        return Ok(Response<OrderDto>.GetResponse(orderDto));
+    }
 
     [HttpGet("route/{idRoute}/")]
     public ActionResult GetByRoute(string idRoute)

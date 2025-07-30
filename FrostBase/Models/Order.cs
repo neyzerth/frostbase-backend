@@ -169,6 +169,31 @@ public class Order
         return Update(order);
     }
 
+    public static Order Delete(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+            throw new ArgumentException("El ID no puede ser null o vacío");
+
+        try
+        {
+            var filter = Builders<Order>.Filter.Eq(o => o.Id, id);
+            var update = Builders<Order>.Update
+                .Set(o => o.IDStateOrder, "CO");
+
+            var options = new FindOneAndUpdateOptions<Order>
+            {
+                ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
+            };
+
+            return _orderColl.FindOneAndUpdate(filter, update, options);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Error deleting order: " + e.Message);
+        }
+    }
+
     #endregion
 
     #region logic
