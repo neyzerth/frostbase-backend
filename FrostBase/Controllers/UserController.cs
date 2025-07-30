@@ -31,20 +31,19 @@ public class UserController : ControllerBase
     [HttpPost]
     public ActionResult Post([FromBody] CreateUserDto c)
     {
-        UserApp inserted = UserApp.Insert(c);
-        if(inserted != null )
-            return Ok(Response<UserApp>.GetResponse(inserted));
-            
-        return BadRequest(MessageResponse.GetResponse( "User not inserted", 1, MessageType.Error));
+        UserDto user = UserDto.FromModel(UserApp.Insert(c));
+        return Ok(Response<UserDto>.GetResponse(user));
     }
-    // [HttpPut("{id}")]
-    // public ActionResult Put(int id /*, [FromPost] PostUser p (??)*/)
-    // {
-    //     return Ok(MessageResponse.GetResponse(1, "User "+ id +" updated", MessageType.Success));
-    // }
-    // [HttpDelete("{id}")]
-    // public ActionResult Delete(int id)
-    // {
-    //     return Ok(MessageResponse.GetResponse(1, "User "+ id +" deleted", MessageType.Success));
-    // }
+    [HttpPut]
+    public ActionResult Put([FromBody] UpdateUserDto c)
+    {
+        UserDto user = UserDto.FromModel(UserApp.Update(c));
+        return Ok(Response<UserDto>.GetResponse(user));
+    }
+    [HttpDelete("{id}")]
+    public ActionResult Delete(string id)
+    {
+        UserDto user = UserDto.FromModel(UserApp.Delete(id));
+        return Ok(Response<UserDto>.GetResponse(user));
+    }
 }
