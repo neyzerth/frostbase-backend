@@ -630,7 +630,7 @@ db.createCollection("Parameters", {
 });
 
 // 16. TripLogs
-db.createCollection("TipLogs", {
+db.createCollection("TripLogs", {
   validator: {
     $jsonSchema: {
       bsonType: "object",
