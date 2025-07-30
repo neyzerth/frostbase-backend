@@ -41,6 +41,69 @@ db.Orders.insertMany([
         IDStateOrder: "DO"
     }
 ]);
+// Order logs
+db.OrderLogs.insertMany([
+  // Logs para Order 1a
+  {
+    date: new Date("2025-06-28"),
+    IDOrder: ObjectId("674a7001000000000000001a"),
+    IDStateOrder: "PO"
+  },
+  {
+    date: new Date("2025-06-29"),
+    IDOrder: ObjectId("674a7001000000000000001a"),
+    IDStateOrder: "PO"
+  },
+
+  // Logs para Order 1b
+  {
+    date: new Date("2025-06-28"),
+    IDOrder: ObjectId("674a7001000000000000001b"),
+    IDStateOrder: "PO"
+  },
+  {
+    date: new Date("2025-06-29"),
+    IDOrder: ObjectId("674a7001000000000000001b"),
+    IDStateOrder: "PO"
+  },
+
+  // Logs para Order 1c
+  {
+    date: new Date("2025-06-29"),
+    IDOrder: ObjectId("674a7001000000000000001c"),
+    IDStateOrder: "PO"
+  },
+  {
+    date: new Date("2025-06-29"),
+    IDOrder: ObjectId("674a7001000000000000001c"),
+    IDStateOrder: "PO"
+  },
+
+  // Logs para Order 1d
+  {
+    date: new Date("2025-06-29"),
+    IDOrder: ObjectId("674a7001000000000000001d"),
+    IDStateOrder: "PO"
+  },
+  {
+    date: new Date("2025-06-29"),
+    IDOrder: ObjectId("674a7001000000000000001d"),
+    IDStateOrder: "PO"
+  },
+
+  // Logs para Order 1e
+  {
+    date: new Date("2025-06-29"),
+    IDOrder: ObjectId("674a7001000000000000001e"),
+    IDStateOrder: "PO"
+  },
+  {
+    date: new Date("2025-06-29"),
+    IDOrder: ObjectId("674a7001000000000000001e"),
+    IDStateOrder: "PO"
+  }
+]);
+
 
 // ===== COLECCIÓN: Trips (viajes de ejemplo) =====
 db.Trips.insertMany([
@@ -82,6 +145,24 @@ db.Trips.insertMany([
         IDStateTrip: "CP"
     }
 ]);
+
+// Trip logs
+db.TripLogs.insertMany([
+  // Trip 1a
+  { date: new Date("2025-06-29T08:00:00Z"), IDTrip: ObjectId("674a8001000000000000001a"), IDStateTrip: "IR" },
+  { date: new Date("2025-06-29T14:30:00Z"), IDTrip: ObjectId("674a8001000000000000001a"), IDStateTrip: "CP" },
+  { date: new Date("2025-06-29T08:30:00Z"), IDTrip: ObjectId("674a8001000000000000001a"), IDStateTrip: "IR" },
+  { date: new Date("2025-06-29T09:00:00Z"), IDTrip: ObjectId("674a8001000000000000001a"), IDStateTrip: "IR" },
+  { date: new Date("2025-06-29T10:15:00Z"), IDTrip: ObjectId("674a8001000000000000001a"), IDStateTrip: "IR" },
+  { date: new Date("2025-06-29T10:45:00Z"), IDTrip: ObjectId("674a8001000000000000001a"), IDStateTrip: "IR" },
+
+  // Trip 1b
+  { date: new Date("2025-06-30T07:30:00Z"), IDTrip: ObjectId("674a8001000000000000001b"), IDStateTrip: "IR" },
+  { date: new Date("2025-06-30T12:00:00Z"), IDTrip: ObjectId("674a8001000000000000001b"), IDStateTrip: "CP" },
+  { date: new Date("2025-06-30T08:00:00Z"), IDTrip: ObjectId("674a8001000000000000001b"), IDStateTrip: "IR" },
+  { date: new Date("2025-06-30T08:30:00Z"), IDTrip: ObjectId("674a8001000000000000001b"), IDStateTrip: "IR" }
+]);
+
 
 // ===== COLECCIÓN: Readings (lecturas de sensores de ejemplo) =====
 db.Readings.insertMany([

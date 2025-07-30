@@ -131,6 +131,24 @@ db.Trucks.insertMany([
   { _id: ObjectId("674a4001000000000000003b"), brand: "International", model: "ProStar 2021", license_plate: "TIJ-012-RF", IDStateTruck: "OS" }
 ]);
 
+// Trucks logs
+db.TruckLogs.insertMany([
+  { date: new Date("2025-06-28T12:00:00Z"), IDTruck: ObjectId("674a4001000000000000001a"), IDStateTruck: "AV" },
+  { date: new Date("2025-06-28T12:00:00Z"), IDTruck: ObjectId("674a4001000000000000001b"), IDStateTruck: "AV" },
+  { date: new Date("2025-06-28T12:00:00Z"), IDTruck: ObjectId("674a4001000000000000001c"), IDStateTruck: "AV" },
+  { date: new Date("2025-06-28T12:00:00Z"), IDTruck: ObjectId("674a4001000000000000001d"), IDStateTruck: "AV" },
+  { date: new Date("2025-06-28T12:00:00Z"), IDTruck: ObjectId("674a4001000000000000001e"), IDStateTruck: "AV" },
+  { date: new Date("2025-06-28T12:00:00Z"), IDTruck: ObjectId("674a4001000000000000002a"), IDStateTruck: "AV" },
+  { date: new Date("2025-06-28T12:00:00Z"), IDTruck: ObjectId("674a4001000000000000002b"), IDStateTruck: "AV" },
+  { date: new Date("2025-06-28T12:00:00Z"), IDTruck: ObjectId("674a4001000000000000002c"), IDStateTruck: "AV" },
+  { date: new Date("2025-06-28T12:00:00Z"), IDTruck: ObjectId("674a4001000000000000002d"), IDStateTruck: "IM" },
+  { date: new Date("2025-06-28T12:00:00Z"), IDTruck: ObjectId("674a4001000000000000002e"), IDStateTruck: "AV" },
+  { date: new Date("2025-06-28T12:00:00Z"), IDTruck: ObjectId("674a4001000000000000003a"), IDStateTruck: "AV" },
+  { date: new Date("2025-06-28T12:00:00Z"), IDTruck: ObjectId("674a4001000000000000003b"), IDStateTruck: "AV" },
+  { date: new Date("2025-06-30T12:00:00Z"), IDTruck: ObjectId("674a4001000000000000003b"), IDStateTruck: "OS" }
+]);
+
+
 // ===== COLECCIÓN: Users =====
 // Administradores
 // Se agregan campos is_admin y active
@@ -396,5 +414,144 @@ db.Routes.insertMany([
       { IDStore: ObjectId("674a3001000000000000008e"), sequence: 5 }
     ],
     active: true
+  }
+]);
+
+//Osrm Routes
+db.OsrmRoutes.insertMany([
+  {
+    _id: ObjectId("688866db5925b815307305ec"),
+    startLatitude: 32.45900929216648,
+    startLongitude: -116.97966765227373,
+    endLatitude: 32.51,
+    endLongitude: -117.06,
+    distance: 13952.9,
+    duration: 878.2
+  },
+  {
+    _id: ObjectId("688866db5925b815307305f1"),
+    startLatitude: 32.51,
+    startLongitude: -117.06,
+    endLatitude: 32.528,
+    endLongitude: -117.01,
+    distance: 7255.3,
+    duration: 573.2
+  },
+  {
+    _id: ObjectId("688866dc5925b815307305f6"),
+    startLatitude: 32.528,
+    startLongitude: -117.01,
+    endLatitude: 32.53,
+    endLongitude: -117.045,
+    distance: 4949.9,
+    duration: 407.4
+  },
+  {
+    _id: ObjectId("688866dd5925b815307305fb"),
+    startLatitude: 32.53,
+    startLongitude: -117.045,
+    endLatitude: 32.52,
+    endLongitude: -117.042,
+    distance: 2083,
+    duration: 237.7
+  },
+  {
+    _id: ObjectId("688866de5925b81530730600"),
+    startLatitude: 32.52,
+    startLongitude: -117.042,
+    endLatitude: 32.525,
+    endLongitude: -117.05,
+    distance: 1646.7,
+    duration: 185.1
+  },
+  {
+    _id: ObjectId("688866df5925b81530730605"),
+    startLatitude: 32.525,
+    startLongitude: -117.05,
+    endLatitude: 32.52,
+    endLongitude: -117.042,
+    distance: 1646.7,
+    duration: 183
+  },
+  {
+    _id: ObjectId("688866e15925b8153073060a"),
+    startLatitude: 32.52,
+    startLongitude: -117.042,
+    endLatitude: 32.45900929216648,
+    endLongitude: -116.97966765227373,
+    distance: 15712.7,
+    duration: 986.7
+  },
+  {
+    _id: ObjectId("68886b58c34a05703966ac10"),
+    startLatitude: 32.45900929216648,
+    startLongitude: -116.97966765227373,
+    endLatitude: 32.5149,
+    endLongitude: -117.0382,
+    distance: 15040.7,
+    duration: 1053.2
+  },
+  {
+    _id: ObjectId("68886b59c34a05703966ac15"),
+    startLatitude: 32.5149,
+    startLongitude: -117.0382,
+    endLatitude: 32.518,
+    endLongitude: -117.035,
+    distance: 648.4,
+    duration: 89.7
+  },
+  {
+    _id: ObjectId("68886b5bc34a05703966ac1a"),
+    startLatitude: 32.518,
+    startLongitude: -117.035,
+    endLatitude: 32.515,
+    endLongitude: -117.038,
+    distance: 696.6,
+    duration: 91.1
+  },
+  {
+    _id: ObjectId("68886b5bc34a05703966ac1f"),
+    startLatitude: 32.515,
+    startLongitude: -117.038,
+    endLatitude: 32.508,
+    endLongitude: -117.04,
+    distance: 1486.8,
+    duration: 157.4
+  },
+  {
+    _id: ObjectId("68886b5cc34a05703966ac24"),
+    startLatitude: 32.508,
+    startLongitude: -117.04,
+    endLatitude: 32.512,
+    endLongitude: -117.045,
+    distance: 1178.9,
+    duration: 115
+  },
+  {
+    _id: ObjectId("68886b5dc34a05703966ac29"),
+    startLatitude: 32.512,
+    startLongitude: -117.045,
+    endLatitude: 32.518,
+    endLongitude: -117.035,
+    distance: 2053.2,
+    duration: 209.5
+  },
+  {
+    _id: ObjectId("68886b5ec34a05703966ac2e"),
+    startLatitude: 32.518,
+    startLongitude: -117.035,
+    endLatitude: 32.5149,
+    endLongitude: -117.0382,
+    distance: 717.6,
+    duration: 94.1
+  },
+  {
+    _id: ObjectId("68886b5fc34a05703966ac37"),
+    startLatitude: 32.518,
+    startLongitude: -117.035,
+    endLatitude: 32.45900929216648,
+    endLongitude: -116.97966765227373,
+    distance: 15210.6,
+    duration: 926.9
   }
 ]);

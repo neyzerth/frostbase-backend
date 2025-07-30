@@ -628,3 +628,112 @@ db.createCollection("Parameters", {
     }
   }
 });
+
+// 16. TripLogs
+db.createCollection("TipLogs", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["date", "IDStateTrip", "orders"],
+      properties: {
+        date: { bsonType: "date" },
+        IDTrip: { bsonType: ["objectId", "null"] },
+        IDStateTrip: { bsonType: "string" },
+        orders: {
+          bsonType: "array",
+          items: {
+            bsonType: "object",
+            required: ["IDOrder", "start_time", "end_time"],
+            properties: {
+              IDOrder: { bsonType: "objectId" },
+              start_time: { bsonType: "date" },
+              end_time: { bsonType: "date" }
+            }
+          }
+        }
+      }
+    }
+  }
+});
+
+// 17.OsrmRoutes
+db.createCollection("OsrmRoutes", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: [
+        "startLatitude", "startLongitude",
+        "endLatitude", "endLongitude",
+        "distance", "duration"
+      ],
+      properties: {
+        startLatitude: { bsonType: "double" },
+        startLongitude: { bsonType: "double" },
+        endLatitude: { bsonType: "double" },
+        endLongitude: { bsonType: "double" },
+        distance: { bsonType: "double" },
+        duration: { bsonType: "double" }
+      }
+    }
+  }
+});
+
+// 18. OrderLogs
+db.createCollection("OrderLogs", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["date", "IDOrder", "IDStateOrder"],
+      properties: {
+        date: { bsonType: "date" },
+        IDOrder: { bsonType: "objectId" },
+        IDStateOrder: { bsonType: "string" }
+      }
+    }
+  }
+});
+
+// 19. TripsSimulation
+db.createCollection("TripsSimulation", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["simulatedTrip", "ordersInserted"],
+      properties: {
+        simulatedTrip: {
+          bsonType: "object",
+          required: [
+            "_id", "start_time", "end_time",
+            "IDTruck", "IDUserDriver", "IDRoute",
+            "IDStateTrip", "orders"
+          ],
+          properties: {
+            _id: { bsonType: "objectId" },
+            start_time: { bsonType: "date" },
+            end_time: { bsonType: "date" },
+            IDTruck: { bsonType: "objectId" },
+            IDUserDriver: { bsonType: "objectId" },
+            IDRoute: { bsonType: "objectId" },
+            IDStateTrip: { bsonType: "string" },
+            orders: {
+              bsonType: "array",
+              items: {
+                bsonType: "object",
+                required: ["IDOrder", "start_time", "end_time"],
+                properties: {
+                  IDOrder: { bsonType: "objectId" },
+                  start_time: { bsonType: "date" },
+                  end_time: { bsonType: "date" }
+                }
+              }
+            }
+          }
+        },
+        inserted: { bsonType: "bool" },
+        ordersInserted: { bsonType: "bool" }
+      }
+    }
+  }
+});
+
+
