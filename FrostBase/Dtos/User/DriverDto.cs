@@ -1,21 +1,19 @@
-
-public class UserDto
+public class DriverDto
 {
     public string Id { get; set; }
     public Name Name { get; set; }
     public string Email { get; set; }
     public string Phone { get; set; }
     public DateOnly? BirthDate { get; set; }
-    public bool IsAdmin { get; set; }
-    public TruckDto? TruckDefault { get; set; }
+    public TruckDto TruckDefault { get; set; }
 
-    public static UserDto FromModel(UserApp u)
+    public static DriverDto FromModel(UserApp u)
     {
         TruckDto truck = null;
         if(!string.IsNullOrEmpty(u.IDTruckDefault))
             truck = TruckDto.FromModel(Truck.Get(u.IDTruckDefault));
         
-        return new UserDto
+        return new DriverDto
         {
             Id = u.Id,
             Name = new Name
@@ -26,27 +24,18 @@ public class UserDto
             },
             Email = u.Email,
             Phone = u.Phone,
-            IsAdmin = u.IsAdmin,
             TruckDefault = truck,
             BirthDate = DateOnly.FromDateTime(u.BirthDate)
         };
     }
 
-    public static List<UserDto> FromModel(List<UserApp> users)
+    public static List<DriverDto> FromModel(List<UserApp> drivers)
     {
-        List<UserDto> usersDto = new List<UserDto>();
-        foreach (UserApp u in users)
+        List<DriverDto> driversDto = new List<DriverDto>();
+        foreach (UserApp u in drivers)
         {
-            usersDto.Add(FromModel(u));
+            driversDto.Add(FromModel(u));
         }
-        return usersDto;   
+        return driversDto;   
     }
-}
-
-public class Name
-{
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string MiddleName { get; set; }
-    public string FullName => $"{FirstName} {LastName} {MiddleName}";
 }

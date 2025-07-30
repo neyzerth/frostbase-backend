@@ -42,6 +42,10 @@ public class UserApp
     [BsonElement("is_admin")] 
     public bool IsAdmin { get; set; }
     
+    [BsonElement("IDTruckDefault")] 
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string IDTruckDefault { get; set; }
+    
     [BsonElement("active")] 
     public bool Active { get; set; }
     
@@ -89,6 +93,7 @@ public class UserApp
             BirthDate = c.BirthDate,
             Password = c.Password,
             IsAdmin = c.IsAdmin,
+            IDTruckDefault = c.IDTruckDefault,
             Active = true
         };
         
@@ -121,6 +126,7 @@ public class UserApp
             LastName = u.Name.LastName,
             Email = u.Email,
             Phone = u.Phone,
+            IDTruckDefault = u.IDTruckDefault,
             BirthDate = u.BirthDate.Value.ToDateTime(TimeOnly.MinValue),
         };
         
@@ -138,6 +144,7 @@ public class UserApp
                 .Set(u => u.Email, updatedUser.Email)
                 .Set(u => u.Phone, updatedUser.Phone)
                 .Set(u => u.BirthDate, updatedUser.BirthDate)
+                .Set(u => u.IDTruckDefault, updatedUser.IDTruckDefault)
                 .Set(u => u.Active, updatedUser.Active);
             
 

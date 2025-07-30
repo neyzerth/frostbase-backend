@@ -125,6 +125,74 @@ public class Order
             throw new Exception("Error inserting order: "+e);
         }
     }
+    public static Order Update(Order updatedOrder)
+    {
+        if (string.IsNullOrEmpty(updatedOrder.Id))
+            throw new ArgumentException("El ID no puede ser null o vacío");
+
+        try
+        {
+            var filter = Builders<Order>.Filter.Eq(o => o.Id, updatedOrder.Id);
+            var update = Builders<Order>.Update
+                .Set(o => o.Date, updatedOrder.Date)
+                .Set(o => o.DeliverDate, updatedOrder.DeliverDate)
+                .Set(o => o.IDUser, updatedOrder.IDUser)
+                .Set(o => o.IDStore, updatedOrder.IDStore)
+                .Set(o => o.IDStateOrder, updatedOrder.IDStateOrder);
+
+            var options = new FindOneAndUpdateOptions<Order>
+            {
+                ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
+            };
+
+            return _orderColl.FindOneAndUpdate(filter, update, options);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Error updating order: " + e.Message);
+        }
+    }
+
+    public static Order Update(UpdateOrderDto updatedOrder)
+    {
+        var order = new Order
+        {
+            Id = updatedOrder.Id,
+            Date = updatedOrder.Date,
+            DeliverDate = updatedOrder.DeliverDate,
+            IDStateOrder = updatedOrder.IDStateOrder,
+            IDStore = updatedOrder.IDStore,
+            IDUser = updatedOrder.IDUser
+            
+        };
+        return Update(order);
+    }
+
+    public static Order Delete(string id)
+    {
+        if (string.IsNullOrEmpty(id))
+            throw new ArgumentException("El ID no puede ser null o vacío");
+
+        try
+        {
+            var filter = Builders<Order>.Filter.Eq(o => o.Id, id);
+            var update = Builders<Order>.Update
+                .Set(o => o.IDStateOrder, "CO");
+
+            var options = new FindOneAndUpdateOptions<Order>
+            {
+                ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
+            };
+
+            return _orderColl.FindOneAndUpdate(filter, update, options);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Error deleting order: " + e.Message);
+        }
+    }
 
     #endregion
 
@@ -220,49 +288,6 @@ public class Order
     
     #endregion
     
-    public static Order Update(Order updatedOrder)
-    {
-        if (string.IsNullOrEmpty(updatedOrder.Id))
-            throw new ArgumentException("El ID no puede ser null o vacío");
-
-        try
-        {
-            var filter = Builders<Order>.Filter.Eq(o => o.Id, updatedOrder.Id);
-            var update = Builders<Order>.Update
-                .Set(o => o.Date, updatedOrder.Date)
-                .Set(o => o.DeliverDate, updatedOrder.DeliverDate)
-                .Set(o => o.IDUser, updatedOrder.IDUser)
-                .Set(o => o.IDStore, updatedOrder.IDStore)
-                .Set(o => o.IDStateOrder, updatedOrder.IDStateOrder);
-
-            var options = new FindOneAndUpdateOptions<Order>
-            {
-                ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
-            };
-
-            return _orderColl.FindOneAndUpdate(filter, update, options);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Order update: "+e);
-            throw new Exception("Error updating order: " + e.Message);
-        }
-    }
-
-    public static Order Update(UpdateOrderDto updatedOrder)
-    {
-        var order = new Order
-        {
-            Id = updatedOrder.Id,
-            Date = updatedOrder.Date,
-            DeliverDate = updatedOrder.DeliverDate,
-            IDStateOrder = updatedOrder.IDStateOrder,
-            IDStore = updatedOrder.IDStore,
-            IDUser = updatedOrder.IDUser
-            
-        };
-        return Update(order);
-    }
 }
 
 public class ViewOrder : Order

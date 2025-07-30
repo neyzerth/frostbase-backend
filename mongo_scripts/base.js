@@ -186,6 +186,7 @@ db.Users.insertMany([
     birthdate: new Date("1982-05-10"),
     password: "driver001",
     is_admin: false,
+    IDTruckDefault: ObjectId("674a4001000000000000001a"),
     active: true
   },
   {
@@ -198,6 +199,7 @@ db.Users.insertMany([
     birthdate: new Date("1987-11-18"),
     password: "driver002",
     is_admin: false,
+    IDTruckDefault: ObjectId("674a4001000000000000001b"),
     active: true
   },
   {
@@ -210,6 +212,7 @@ db.Users.insertMany([
     birthdate: new Date("1979-02-28"),
     password: "driver003",
     is_admin: false,
+    IDTruckDefault: ObjectId("674a4001000000000000001c"),
     active: true
   },
   {
@@ -222,6 +225,7 @@ db.Users.insertMany([
     birthdate: new Date("1984-07-14"),
     password: "driver004",
     is_admin: false,
+    IDTruckDefault: ObjectId("674a4001000000000000001d"),
     active: true
   },
   {
@@ -234,6 +238,7 @@ db.Users.insertMany([
     birthdate: new Date("1981-09-03"),
     password: "driver005",
     is_admin: false,
+    IDTruckDefault: ObjectId("674a4001000000000000001e"),
     active: true
   },
   {
@@ -246,6 +251,7 @@ db.Users.insertMany([
     birthdate: new Date("1986-04-20"),
     password: "driver006",
     is_admin: false,
+    IDTruckDefault: ObjectId("674a4001000000000000002a"),
     active: true
   },
   {
@@ -258,6 +264,7 @@ db.Users.insertMany([
     birthdate: new Date("1983-12-30"),
     password: "driver007",
     is_admin: false,
+    IDTruckDefault: ObjectId("674a4001000000000000002b"),
     active: true
   },
   {
@@ -270,6 +277,7 @@ db.Users.insertMany([
     birthdate: new Date("1988-06-12"),
     password: "driver008",
     is_admin: false,
+    IDTruckDefault: ObjectId("674a4001000000000000002c"),
     active: true
   }
 ]);

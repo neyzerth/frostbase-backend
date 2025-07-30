@@ -3,12 +3,10 @@ public class OrderDto
     public string Id { get; set; }
     public DateOnly Date { get; set; }
     public DateOnly DeliverDate { get; set; }
-    public UserDto CreatedBy { get; set; }
+    public AdminDto CreatedBy { get; set; }
     public StoreDto Store { get; set; }
     public StateDto State { get; set; }
-
     
-
     public static OrderDto FromModel(Order o)
     {
         return new OrderDto
@@ -16,7 +14,7 @@ public class OrderDto
             Id = o.Id,
             Date = DateOnly.FromDateTime(o.Date),
             DeliverDate = DateOnly.FromDateTime(o.DeliverDate),
-            CreatedBy = UserDto.FromModel(UserApp.Get(o.IDUser)),
+            CreatedBy = AdminDto.FromModel(UserApp.Get(o.IDUser)),
             Store = StoreDto.FromModel(global::Store.Get(o.IDStore)),
             State = StateDto.FromModel(StateOrder.Get(o.IDStateOrder))
         };
