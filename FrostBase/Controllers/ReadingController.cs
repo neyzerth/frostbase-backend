@@ -21,8 +21,8 @@ public class ReadingController : ControllerBase
     [HttpPost("Truck/{idTruck}")]
     public ActionResult Post(string idTruck, [FromBody] CreateReadingDto c)
     {   
-        
-        return Ok(MessageResponse.GetResponse("Reading inserted"));
+        ReadingDto reading = ReadingDto.FromModel(Reading.Insert(idTruck, c));
+        return Ok(Response<ReadingDto>.GetResponse(reading));
     }
 
     // [HttpPut("{id}")]

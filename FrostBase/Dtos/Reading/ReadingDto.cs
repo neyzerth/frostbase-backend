@@ -21,7 +21,8 @@ public class ReadingDto
             {
                 Latitude = r.Latitude,
                 Longitude = r.Longitude
-            }
+            },
+            Truck = TruckDto.FromModel(global::Truck.Get(r.IDTruck)) 
             
         };
     }
