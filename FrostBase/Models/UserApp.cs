@@ -119,6 +119,27 @@ public class UserApp
         throw new Exception("Email or Password incorrect");
     }
     
+    public static UserApp Delete(string id)
+    {
+        try
+        {
+            var filter = Builders<UserApp>.Filter.Eq(u => u.Id, id);
+            var update = Builders<UserApp>.Update.Set(u => u.Active, false);
+
+            var options = new FindOneAndUpdateOptions<UserApp>
+            {
+                ReturnDocument = ReturnDocument.After
+            };
+
+            return _userColl.FindOneAndUpdate(filter, update, options);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Error deleting (deactivating) user: " + e.Message);
+        }
+    }
+    
     #endregion
 }
 

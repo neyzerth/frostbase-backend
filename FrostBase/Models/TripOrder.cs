@@ -20,8 +20,8 @@ public class TripOrder
         {
             Console.WriteLine("== Store "+ order.Store.Name +"==");
             var nextStore = order.Store.Location;
-            var routeApi = Osrm.GetRoute(startLocation, nextStore);
-            double traveledTime = GenerateRandomTime(routeApi.Result.Duration, .10, .20);
+            var routeApi = Osrm.Get(startLocation, nextStore);
+            double traveledTime = GenerateRandomTime(routeApi.Duration, .10, .20);
             double stayedTime = GenerateRandomTime(15 * 60, .30, 1.00);
             
             endTime = startTime.AddSeconds(traveledTime + stayedTime);

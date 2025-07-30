@@ -17,22 +17,22 @@ public class TruckController : ControllerBase
         return Ok(Response<TruckDto>.GetResponse(truck));
     }
 
-    // [HttpPost]
-    // public ActionResult Post([FromForm] Truck t)
-    // {
-    //     if(Truck.Insert(t))
-    //         return Ok(MessageResponse.GetResponse(1, "Truck inserted", MessageType.Success));
-    //     
-    //     return BadRequest(MessageResponse.GetResponse(0, "Truck not inserted", MessageType.Error));
-    // }
-    // [HttpPut("{id}")]
-    // public ActionResult Put(int id)
-    // {
-    //     return Ok(MessageResponse.GetResponse(1, "Truck "+ id +" updated", MessageType.Success));
-    // }
-    // [HttpDelete("{id}")]
-    // public ActionResult Delete(int id)
-    // {
-    //     return Ok(MessageResponse.GetResponse(1, "Truck "+ id +" deleted", MessageType.Success));
-    // }
+    [HttpPost]
+    public ActionResult Post([FromBody] CreateTruckDto t)
+    {
+        TruckDto truck = TruckDto.FromModel(Truck.Insert(t));
+        return Ok(Response<TruckDto>.GetResponse(truck));
+    }
+    [HttpPut]
+    public ActionResult Put([FromBody] UpdateTruckDto t)
+    {
+        TruckDto truck = TruckDto.FromModel(Truck.Update(t));
+        return Ok(Response<TruckDto>.GetResponse(truck));
+    }
+    [HttpDelete("{id}")]
+    public ActionResult Delete(string id)
+    {
+        TruckDto truck = TruckDto.FromModel(Truck.Delete(id));
+        return Ok(Response<TruckDto>.GetResponse(truck));
+    }
 }

@@ -9,6 +9,7 @@ public class Order
     
     //Sql or mongo statements
     private static IMongoCollection<Order> _orderColl = MongoDbConnection.GetCollection<Order>("Orders");
+    private static IMongoCollection<Order> _orderLogColl = MongoDbConnection.GetCollection<Order>("ViewOrderLogs");
     
     #endregion
     
@@ -58,6 +59,15 @@ public class Order
         DeliverDate = dto.DeliverDate.ToDateTime(TimeOnly.MinValue);
         Date = dto.Date.ToDateTime(TimeOnly.MinValue);
     }
+    public Order(ViewOrder v)
+    {
+        Id = v.Id;
+        IDStore = v.IDStore;
+        IDUser = v.IDUser;
+        IDStateOrder = v.IDStateOrder;
+        DeliverDate = v.DeliverDate.Date;
+        Date = v.Date;
+    }
 
     #endregion
     
@@ -76,45 +86,12 @@ public class Order
     {
         return _orderColl.Find(o => o.IDStateOrder == "PO" || o.IDStateOrder == "LO").ToList();;
     }
+    public static List<Order> GetPending(DateTime date)
+    {
+        return null;
+    }
     public static List<Order> GetByRoute(string idRoute) {
-
-        var routeId = ObjectId.Parse(idRoute);
-        var pipeline = new BsonDocument[]
-        {
-            new("$match", new BsonDocument("IDStateOrder", "PO")),
-    
-            new("$lookup", new BsonDocument
-            {
-                { "from", "Stores" },
-                { "localField", "IDStore" },
-                { "foreignField", "_id" },
-                { "as", "stores" }
-            }),
-
-            new("$lookup", new BsonDocument
-            {
-                { "from", "Routes" },
-                { "localField", "stores._id" },
-                { "foreignField", "stores.IDStore" },
-                { "as", "routes" }
-            }),
-
-            new("$unwind", "$routes"),
-
-            new("$match", new BsonDocument("routes._id", routeId)),
-
-            new("$project", new BsonDocument
-            {
-                { "_id", 1 },
-                { "date", 1 },
-                { "delivered", 1 },
-                { "IDCreatedByUser", 1 },
-                { "IDStore", 1 },
-                { "IDStateOrder", 1 }
-            })
-        };
-
-        return  _orderColl.Aggregate<Order>(pipeline).ToList();
+        return  ViewOrder.GetByRoute(idRoute);
     }
 
     public static Order Insert(CreateOrderDto c)
@@ -127,10 +104,7 @@ public class Order
             IDStore = c.IDStore,
             IDStateOrder = "PO",
         };
-        
         order.DeliverDate = order.CalculateDeliverDate();
-        
-        
         OrderLog.Insert(order, date);
         return Insert(order);
     }
@@ -139,6 +113,9 @@ public class Order
     {
         try
         {
+            if(string.IsNullOrEmpty(o.Id))
+                o.Id = ObjectId.GenerateNewId().ToString();
+            o.DeliverDate = o.DeliverDate.Date;
             _orderColl.InsertOne(o);
             return o;
         }
@@ -180,11 +157,11 @@ public class Order
         DayOfWeek closerDay = CloserDayOfWeek(deliverDays);
         
         //calcular la fecha de entrega
-        DateTime closerDate = this.Date;
+        DateTime closerDate = this.Date.Date;
         while (closerDate.DayOfWeek != closerDay)
             closerDate = closerDate.AddDays(1);
         
-        return closerDate;
+        return closerDate.Date;
     }
 
     private DayOfWeek CloserDayOfWeek(List<int> days)
@@ -242,4 +219,33 @@ public class Order
     }
     
     #endregion
+}
+
+public class ViewOrder : Order
+{
+    private static IMongoCollection<ViewOrder> _viewOrderColl = MongoDbConnection.GetCollection<ViewOrder>("ViewOrders");
+    
+    [BsonElement("IDRoute")]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string IDRoute { get; set; }
+    public ViewOrder(){}
+    public ViewOrder(Order o)
+    {
+        Id = o.Id;
+        Date = o.Date;
+        DeliverDate = o.DeliverDate;
+        IDStateOrder = o.IDStateOrder;
+        IDStore = o.IDStore;
+        IDUser = o.IDUser;
+    }
+    public static List<Order> GetByRoute(string routeId)
+    {
+        var viewOrders= _viewOrderColl.Find(o => o.IDRoute == routeId).ToList();
+        var orders = new List<Order>();
+        foreach (var viewOrder in viewOrders)
+        {
+            orders.Add(new Order(viewOrder));
+        }
+        return orders;
+    }
 }

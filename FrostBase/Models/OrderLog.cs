@@ -18,7 +18,7 @@ public class OrderLog
     [BsonRepresentation(BsonType.ObjectId)]
     public string IDOrder { get; set; }
     
-    [BsonElement("IDStateOrer")]
+    [BsonElement("IDStateOrder")]
     public string IDStateOrder { get; set; }
     
     public static List<OrderLog> Get()
@@ -70,4 +70,5 @@ public class OrderLog
             throw new Exception("Error inserting log of order "+ o.Id+": "+e.Message);
         }
     }
+    
 }

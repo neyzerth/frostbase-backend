@@ -5,7 +5,7 @@ public class TripDto
     public StateTrip State { get; set; }
     public TruckDto Truck { get; set; }
     public UserDto Driver { get; set; }
-    public RouteDto Route { get; set; }
+    public NoStoresRouteDto Route { get; set; }
     public List<TripOrderDto> Orders { get; set; }
 
     public static TripDto FromModel(Trip t)
@@ -23,7 +23,7 @@ public class TripDto
                 State = StateTrip.Get(t.IDStateTrip),
                 Truck = TruckDto.FromModel(global::Truck.Get(t.IDTruck)),
                 Driver = UserDto.FromModel(UserApp.Get(t.IDUser)),
-                Route = RouteDto.FromModel(global::Route.Get(t.IDRoute)),
+                Route = NoStoresRouteDto.FromModel(global::Route.Get(t.IDRoute)),
                 Orders = TripOrderDto.FromModel(t.Orders)
             };
         }
@@ -45,22 +45,34 @@ public class TripDto
     }
 }
 
-public class TripOrderDto
+public class TripOrderDto : OrderDto
 {
-    public OrderDto Order { get; set; }
     public Time OrderTime { get; set; }
+
+    public TripOrderDto()
+    { }
+
+    public TripOrderDto(OrderDto o)
+    {
+        Id = o.Id;
+        Date = o.Date;
+        DeliverDate = o.DeliverDate;
+        CreatedBy = o.CreatedBy;
+        Store = o.Store;
+        State = o.State;
+        OrderTime = new Time();
+    }
 
     public static TripOrderDto FromModel(TripOrder to)
     {
-        return new TripOrderDto
+        var tripOrder = new TripOrderDto(OrderDto.FromModel(global::Order.Get(to.IDOrder)));
+        tripOrder.OrderTime = new Time
         {
-            Order = OrderDto.FromModel(global::Order.Get(to.IDOrder)),
-            OrderTime = new Time
-            {
-                StartTime = to.StartTime,
-                EndTime = to.EndTime
-            }
+            StartTime = to.StartTime,
+            EndTime = to.EndTime
         };
+        
+        return tripOrder;       
     }
     
     public static List<TripOrderDto> FromModel(List<TripOrder> tos)

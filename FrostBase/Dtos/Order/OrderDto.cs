@@ -7,6 +7,8 @@ public class OrderDto
     public StoreDto Store { get; set; }
     public StateDto State { get; set; }
 
+    
+
     public static OrderDto FromModel(Order o)
     {
         return new OrderDto
