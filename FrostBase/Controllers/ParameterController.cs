@@ -7,28 +7,21 @@ public class ParameterController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        List<Parameter> parameters = Parameter.Get();
-        return Ok(ListResponse<Parameter>.GetResponse(parameters));
+        ParameterDto parameter = ParameterDto.FromModel(Parameter.Get()); //error(?
+        return Ok(Response<ParameterDto>.GetResponse(parameter));
     }
-    // [HttpGet("{id}")]
-    // public ActionResult Get(int id)
-    // {
-    //     Parameter parameter = Parameter.Get(id);
-    //     return Ok(Response<Parameter>.GetResponse(parameter, 1));
-    // }
+    
     // [HttpPost]
-    // public ActionResult Post()
-    // {
-    //     return Ok(MessageResponse.GetResponse(1, "Parameter inserted", MessageType.Success));
-    // }
-    // [HttpPut("{id}")]
-    // public ActionResult Put(int id)
-    // {
-    //     return Ok(MessageResponse.GetResponse(1, "Parameter "+ id +" updated", MessageType.Success));
-    // }
-    // [HttpDelete("{id}")]
-    // public ActionResult Delete(int id)
-    // {
-    //     return Ok(MessageResponse.GetResponse(1, "Parameter "+ id +" deleted", MessageType.Success));
-    // }
-}
+    // public ActionResult Post([FromBody] CreateParameterDto c)
+    // { 
+    //     Parameter insert = Parameter.Insert(c);
+    //     
+    //     if(insert != null) 
+    //         return Ok(Response<ParameterDto>.GetResponse(ParameterDto.FromModel(insert)));
+    //     return BadRequest(MessageResponse.GetResponse("Order not inserted", 1, MessageType.Error));
+    // 
+    
+    
+    
+    }
+    

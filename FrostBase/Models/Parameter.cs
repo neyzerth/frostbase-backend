@@ -31,9 +31,9 @@ public class Parameter
     
     #region class methods
 
-    public static List<Parameter> Get() 
+    public static Parameter Get() 
     {
-        return _parameterColl.Find(p => true).ToList();
+        return _parameterColl.Find(p => true).FirstOrDefault();
     }
 
     public static Parameter Get(int id)
@@ -55,5 +55,57 @@ public class Parameter
         }
     }
     
-    #endregion
+    public static Parameter Insert(CreateParameterDto p)
+    {
+        Parameter alert = new Parameter
+        {
+            MaxTemperature = p.MaxTemperature,
+            MinTemperature = p.MinTemperature,
+            MaxHumidity = p.MaxHumidity,
+            MinHumidity = p.MinHumidity
+        };
+
+        return Insert(alert);
+    }
+    
+    public static Parameter Update(Parameter updatedParameter)
+    {
+        try
+        {
+            var filter = Builders<Parameter>.Filter.Eq(p => p.Id, 1);
+            var update = Builders<Parameter>.Update
+                .Set(p => p.MaxTemperature, updatedParameter.MaxTemperature)
+                .Set(p => p.MinTemperature, updatedParameter.MinTemperature)
+                .Set(p => p.MaxHumidity, updatedParameter.MaxHumidity)
+                .Set(p => p.MaxHumidity, updatedParameter.MinHumidity);
+            
+            var options = new FindOneAndUpdateOptions<Parameter>
+            {
+                ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
+            };
+
+            return _parameterColl.FindOneAndUpdate(filter, update, options);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Error updating order: " + e.Message);
+        }
+    }
+
+    public static Parameter Update(UpdateParameterDto updatedParameter)
+    {
+        var param = new Parameter
+        {
+            MaxTemperature = updatedParameter.MaxTemperature,
+            MinTemperature = updatedParameter.MinTemperature,
+            MaxHumidity = updatedParameter.MaxHumidity,
+            MinHumidity = updatedParameter.MinHumidity
+            
+        };
+        return Update(param);
+    }
 }
+    
+    #endregion
+
