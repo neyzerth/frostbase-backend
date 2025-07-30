@@ -148,20 +148,134 @@ db.Trips.insertMany([
 
 // Trip logs
 db.TripLogs.insertMany([
-  // Trip 1a
-  { date: new Date("2025-06-29T08:00:00Z"), IDTrip: ObjectId("674a8001000000000000001a"), IDStateTrip: "IR" },
-  { date: new Date("2025-06-29T14:30:00Z"), IDTrip: ObjectId("674a8001000000000000001a"), IDStateTrip: "CP" },
-  { date: new Date("2025-06-29T08:30:00Z"), IDTrip: ObjectId("674a8001000000000000001a"), IDStateTrip: "IR" },
-  { date: new Date("2025-06-29T09:00:00Z"), IDTrip: ObjectId("674a8001000000000000001a"), IDStateTrip: "IR" },
-  { date: new Date("2025-06-29T10:15:00Z"), IDTrip: ObjectId("674a8001000000000000001a"), IDStateTrip: "IR" },
-  { date: new Date("2025-06-29T10:45:00Z"), IDTrip: ObjectId("674a8001000000000000001a"), IDStateTrip: "IR" },
+  // Viaje 1a
+  {
+    date: new Date("2025-06-29T08:00:00Z"),
+    IDTrip: ObjectId("674a8001000000000000001a"),
+    IDStateTrip: "IR",
+    orders: []
+  },
+  {
+    date: new Date("2025-06-29T08:30:00Z"),
+    IDTrip: ObjectId("674a8001000000000000001a"),
+    IDStateTrip: "IR",
+    orders: [
+      {
+        IDOrder: ObjectId("674a7001000000000000001a"),
+        start_time: new Date("2025-06-29T08:30:00Z"),
+        end_time: null
+      }
+    ]
+  },
+  {
+    date: new Date("2025-06-29T09:00:00Z"),
+    IDTrip: ObjectId("674a8001000000000000001a"),
+    IDStateTrip: "IR",
+    orders: [
+      {
+        IDOrder: ObjectId("674a7001000000000000001a"),
+        start_time: new Date("2025-06-29T08:30:00Z"),
+        end_time: new Date("2025-06-29T09:00:00Z")
+      }
+    ]
+  },
+  {
+    date: new Date("2025-06-29T10:15:00Z"),
+    IDTrip: ObjectId("674a8001000000000000001a"),
+    IDStateTrip: "IR",
+    orders: [
+      {
+        IDOrder: ObjectId("674a7001000000000000001a"),
+        start_time: new Date("2025-06-29T08:30:00Z"),
+        end_time: new Date("2025-06-29T09:00:00Z")
+      },
+      {
+        IDOrder: ObjectId("674a7001000000000000001b"),
+        start_time: new Date("2025-06-29T10:15:00Z"),
+        end_time: null
+      }
+    ]
+  },
+  {
+    date: new Date("2025-06-29T10:45:00Z"),
+    IDTrip: ObjectId("674a8001000000000000001a"),
+    IDStateTrip: "IR",
+    orders: [
+      {
+        IDOrder: ObjectId("674a7001000000000000001a"),
+        start_time: new Date("2025-06-29T08:30:00Z"),
+        end_time: new Date("2025-06-29T09:00:00Z")
+      },
+      {
+        IDOrder: ObjectId("674a7001000000000000001b"),
+        start_time: new Date("2025-06-29T10:15:00Z"),
+        end_time: new Date("2025-06-29T10:45:00Z")
+      }
+    ]
+  },
+  {
+    date: new Date("2025-06-29T14:30:00Z"),
+    IDTrip: ObjectId("674a8001000000000000001a"),
+    IDStateTrip: "CP",
+    orders: [
+      {
+        IDOrder: ObjectId("674a7001000000000000001a"),
+        start_time: new Date("2025-06-29T08:30:00Z"),
+        end_time: new Date("2025-06-29T09:00:00Z")
+      },
+      {
+        IDOrder: ObjectId("674a7001000000000000001b"),
+        start_time: new Date("2025-06-29T10:15:00Z"),
+        end_time: new Date("2025-06-29T10:45:00Z")
+      }
+    ]
+  },
 
-  // Trip 1b
-  { date: new Date("2025-06-30T07:30:00Z"), IDTrip: ObjectId("674a8001000000000000001b"), IDStateTrip: "IR" },
-  { date: new Date("2025-06-30T12:00:00Z"), IDTrip: ObjectId("674a8001000000000000001b"), IDStateTrip: "CP" },
-  { date: new Date("2025-06-30T08:00:00Z"), IDTrip: ObjectId("674a8001000000000000001b"), IDStateTrip: "IR" },
-  { date: new Date("2025-06-30T08:30:00Z"), IDTrip: ObjectId("674a8001000000000000001b"), IDStateTrip: "IR" }
+  // Viaje 1b
+  {
+    date: new Date("2025-06-30T07:30:00Z"),
+    IDTrip: ObjectId("674a8001000000000000001b"),
+    IDStateTrip: "IR",
+    orders: []
+  },
+  {
+    date: new Date("2025-06-30T08:00:00Z"),
+    IDTrip: ObjectId("674a8001000000000000001b"),
+    IDStateTrip: "IR",
+    orders: [
+      {
+        IDOrder: ObjectId("674a7001000000000000001c"),
+        start_time: new Date("2025-06-30T08:00:00Z"),
+        end_time: null
+      }
+    ]
+  },
+  {
+    date: new Date("2025-06-30T08:30:00Z"),
+    IDTrip: ObjectId("674a8001000000000000001b"),
+    IDStateTrip: "IR",
+    orders: [
+      {
+        IDOrder: ObjectId("674a7001000000000000001c"),
+        start_time: new Date("2025-06-30T08:00:00Z"),
+        end_time: new Date("2025-06-30T08:30:00Z")
+      }
+    ]
+  },
+  {
+    date: new Date("2025-06-30T12:00:00Z"),
+    IDTrip: ObjectId("674a8001000000000000001b"),
+    IDStateTrip: "CP",
+    orders: [
+      {
+        IDOrder: ObjectId("674a7001000000000000001c"),
+        start_time: new Date("2025-06-30T08:00:00Z"),
+        end_time: new Date("2025-06-30T08:30:00Z")
+      }
+    ]
+  }
 ]);
+
 
 
 // ===== COLECCIÓN: Readings (lecturas de sensores de ejemplo) =====
