@@ -46,4 +46,12 @@ public class UserController : ControllerBase
         UserDto user = UserDto.FromModel(UserApp.Delete(id));
         return Ok(Response<UserDto>.GetResponse(user));
     }
+    
+    [HttpPost("login")]
+    public ActionResult Login([FromBody] LoginUserDto log)
+    {
+        UserDto user = UserDto.FromModel(UserApp.Login(log.Email, log.Password));
+        
+        return Ok(Response<UserDto>.GetResponse(user));
+    }
 }

@@ -153,6 +153,14 @@ public class UserApp
         }
     }
     
+    public static UserApp Login(string email, string password)
+    {
+        var user = _userColl.Find(u => u.Email == email && u.Password == password && u.Active).FirstOrDefault();
+        if (user != null) return user;
+        
+        throw new Exception("Email or Password incorrect");
+    }
+    
     public static UserApp Delete(string id)
     {
         try
@@ -173,8 +181,7 @@ public class UserApp
             throw new Exception("Error deleting (deactivating) user: " + e.Message);
         }
     }
-
-
+    
     #endregion
 }
 

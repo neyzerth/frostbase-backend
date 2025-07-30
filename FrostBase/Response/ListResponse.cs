@@ -8,7 +8,7 @@ public class ListResponse<T> : MessageResponse
         {
             Status = status,
             Data = data,
-            Type = type
+            Type = type.ToString()
         };
     }
 }
