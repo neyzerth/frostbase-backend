@@ -19,12 +19,21 @@ public class TripController : ControllerBase
     [HttpPost]
     public ActionResult Post([FromBody] CreateTripDto c)
     {
-        Trip insertedTrip = Trip.Insert(c);
-        if(insertedTrip != null) 
-            return Ok(Response<Trip>.GetResponse(insertedTrip));
-            
-        return BadRequest(MessageResponse.GetResponse( "Trip not inserted", 1, MessageType.Error));
+        TripDto insertedTrip = TripDto.FromModel(Trip.Insert(c));
+        return Ok(Response<TripDto>.GetResponse(insertedTrip));
     }
+    
+    
+    [HttpGet("locations/{date}")]
+    public ActionResult GetLocations(DateTime? date)
+    {
+        DateTime newDate = date == null ? DateTime.Now : date.Value;
+        
+        List<TripLocationDto> insertedTrip = TripLocationDto.FromModel(TripLocation.GetTruckLocations(newDate));
+        return Ok(ListResponse<TripLocationDto>.GetResponse(insertedTrip));
+    }
+    
+    
     // [HttpPut("{id}")]
     // public ActionResult Put(int id, [FromForm] CreateUserDto t)
     // {
