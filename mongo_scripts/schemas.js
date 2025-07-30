@@ -667,12 +667,12 @@ db.createCollection("OsrmRoutes", {
         "distance", "duration"
       ],
       properties: {
-        startLatitude: { bsonType: "double" },
-        startLongitude: { bsonType: "double" },
-        endLatitude: { bsonType: "double" },
-        endLongitude: { bsonType: "double" },
-        distance: { bsonType: "double" },
-        duration: { bsonType: "double" }
+        startLatitude: { bsonType: "number" },
+        startLongitude: { bsonType: "number" },
+        endLatitude: { bsonType: "number" },
+        endLongitude: { bsonType: "number" },
+        distance: { bsonType: "number" },
+        duration: { bsonType: "number" }
       }
     }
   }
