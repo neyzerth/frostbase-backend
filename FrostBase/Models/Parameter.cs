@@ -31,9 +31,9 @@ public class Parameter
     
     #region class methods
 
-    public static List<Parameter> Get() 
+    public static Parameter Get() 
     {
-        return _parameterColl.Find(p => true).ToList();
+        return _parameterColl.Find(p => true).FirstOrDefault();
     }
 
     public static Parameter Get(int id)
@@ -70,13 +70,10 @@ public class Parameter
     
     public static Parameter Update(Parameter updatedParameter)
     {
-        if (string.IsNullOrEmpty(updatedParameter.Id))
-            throw new ArgumentException("Id cannot be null or empty");
-
         try
         {
-            var filter = Builders<Order>.Filter.Eq(p => p.Id, updatedParameter.Id);
-            var update = Builders<Order>.Update
+            var filter = Builders<Parameter>.Filter.Eq(p => p.Id, 1);
+            var update = Builders<Parameter>.Update
                 .Set(p => p.MaxTemperature, updatedParameter.MaxTemperature)
                 .Set(p => p.MinTemperature, updatedParameter.MinTemperature)
                 .Set(p => p.MaxHumidity, updatedParameter.MaxHumidity)
@@ -111,4 +108,4 @@ public class Parameter
 }
     
     #endregion
-}
+
