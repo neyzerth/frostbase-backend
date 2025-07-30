@@ -61,9 +61,13 @@ public class Osrm
                     Math.Abs(r.EndLatitude - end.Latitude) < tolerance && 
                     Math.Abs(r.EndLongitude - end.Longitude) < tolerance
                 );
-        if(route.CountDocuments() > 0)
+        if (route.CountDocuments() > 0)
+        {
+            Console.WriteLine("||| Ruta encontrada en la base de datos |||");
             return route.FirstOrDefault();
-        
+        }
+
+        Console.WriteLine("||| Insertando nueva ruta en la base de datos |||");
         return Insert(start, end);
     }
 

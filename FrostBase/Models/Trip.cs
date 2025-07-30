@@ -347,12 +347,14 @@ public class Trip
                 StartTime = times.StartTime,
                 EndTime = times.EndTime
             };
-            Orders.Add(orderModel);
             
             //add to log
-            TripLog.Insert(this, times.EndTime.Value);
+            OrderLog.Insert(new Order(order), times.StartTime);
             order.State.Id = "DO";
             OrderLog.Insert(new Order(order), times.EndTime.Value);
+            
+            Orders.Add(orderModel);
+            TripLog.Insert(this, times.EndTime.Value);
             //the next startTime and store is the previous endTime trip
             startLocation = order.Store.Location;
             orderStartTime = times.EndTime.Value;
