@@ -7,15 +7,21 @@ public class ReadingController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        List<Reading> readings = Reading.Get();
-        return Ok(ListResponse<Reading>.GetResponse(readings));
+        List<ReadingDto> readings = ReadingDto.FromModel(Reading.Get());
+        return Ok(ListResponse<ReadingDto>.GetResponse(readings));
     }
 
     [HttpGet("{id}")]
     public ActionResult Get(string id)
     {
-        Reading reading = Reading.Get(id);
-        return Ok(Response<Reading>.GetResponse(reading));
+        ReadingDto reading = ReadingDto.FromModel(Reading.Get(id));
+        return Ok(Response<ReadingDto>.GetResponse(reading));
+    }
+    [HttpGet("Truck/{id}")]
+    public ActionResult GetByTruck(string truckId)
+    {
+        List<ReadingDto> reading = ReadingDto.FromModel(Reading.GetByTruck(truckId));
+        return Ok(ListResponse<ReadingDto>.GetResponse(reading));
     }
 
     [HttpPost("Truck/{idTruck}")]
@@ -25,10 +31,10 @@ public class ReadingController : ControllerBase
         return Ok(Response<ReadingDto>.GetResponse(reading));
     }
 
-    // [HttpPut("{id}")]
-    // public ActionResult Put(int id /*, [FromForm] UpdateReadingDto u*/)
+    // [HttpPut]
+    // public ActionResult Put([FromBody] UpdateReadingDto r)
     // {
-    //     return Ok(MessageResponse.GetResponse(1, $"Reading {id} updated", MessageType.Success));
+    //     return Ok(MessageResponse.GetResponse();
     // }
     //
     // [HttpDelete("{id}")]

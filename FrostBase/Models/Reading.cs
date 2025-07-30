@@ -53,6 +53,10 @@ public class Reading
     {
         return _readingColl.Find(r => r.Id == id).FirstOrDefault();
     }
+    public static List<Reading> GetByTruck(string truckId)
+    {
+        return _readingColl.Find(r => r.IDTruck == truckId).ToList();
+    }
 
     public static Reading Insert(CreateReadingDto c, string truckId)
     {

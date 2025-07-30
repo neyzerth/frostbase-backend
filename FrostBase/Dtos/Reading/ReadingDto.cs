@@ -26,6 +26,16 @@ public class ReadingDto
             
         };
     }
+    
+    public static List<ReadingDto> FromModel(List<Reading> readings)
+    {
+        List<ReadingDto> readingsDto = new List<ReadingDto>();
+        foreach (Reading r in readings)
+        {
+            readingsDto.Add(FromModel(r));
+        }
+        return readingsDto;
+    }
 }
 
 public class _Location
