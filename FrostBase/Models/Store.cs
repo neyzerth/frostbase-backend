@@ -102,6 +102,86 @@ public class Store
             throw new Exception("Error inserting store: "+e.Message);
         }
     }
+
+    public static Store Insert(CreateStoreDto c)
+    {
+        var store = new Store
+        {
+            Name = c.Name,
+            Phone = c.Phone,
+            Location = c.Location.Address,
+            Latitude = c.Location.Latitude,
+            Longitude = c.Location.Latitude,
+            Active = true
+        };
+
+        return Insert(store);
+    }
+
+    public static Store Update(UpdateStoreDto u)
+    {
+        var store = new Store()
+        {
+            Id = u.Id,
+            Name = u.Name,
+            Phone = u.Phone,
+            Location = u.Location.Address,
+            Latitude = u.Location.Latitude,
+            Longitude = u.Location.Latitude,
+            Active = u.Active,
+        };
+        
+        return Update(u);
+    }
+
+    public static Store Update(Store s)
+    {
+        try
+        {
+            var filter = Builders<Store>.Filter.Eq(t => t.Id, s.Id);
+            var update = Builders<Store>.Update
+                .Set(t => t.Name, s.Name)
+                .Set(t => t.Phone, s.Phone)
+                .Set(t => t.Location, s.Location)
+                .Set(t => t.Latitude, s.Latitude)
+                .Set(t => t.Longitude, s.Longitude)
+                .Set(t => t.Active, s.Active);
+
+            var options = new FindOneAndUpdateOptions<Store>
+            {
+                ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
+            };
+
+            return _storeColl.FindOneAndUpdate(filter, update, options);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Error updating store: " + e.Message);
+        }
+    }
+
+    public static Store Delete(string id)
+    {
+        try
+        {
+            var filter = Builders<Store>.Filter.Eq(t => t.Id, id);
+            var update = Builders<Store>.Update
+                .Set(t => t.Active, false);
+
+            var options = new FindOneAndUpdateOptions<Store>
+            {
+                ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
+            };
+
+            return _storeColl.FindOneAndUpdate(filter, update, options);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Error updating store: " + e.Message);
+        }
+    }
     
     #endregion
 }
