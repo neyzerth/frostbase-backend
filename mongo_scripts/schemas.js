@@ -737,3 +737,20 @@ db.createCollection("TripsSimulation", {
 });
 
 
+// 20. TruckLogs
+db.createCollection("TruckLogs", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["date", "IDTruck", "IDStateTruck"],
+      properties: {
+        date: { bsonType: "date" },
+        IDTruck: { bsonType: "objectId" },
+        IDStateTruck: { bsonType: "string" }
+      }
+    }
+  }
+});
+
+
+
