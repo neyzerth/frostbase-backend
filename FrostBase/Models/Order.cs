@@ -109,6 +109,7 @@ public class Order
         DateTime date = c.Date ?? DateTime.Now;
         Order order = new Order
         {
+            Id = ObjectId.GenerateNewId().ToString(),
             Date = date,
             IDUser = c.IDCreatedByUser,
             IDStore = c.IDStore,
