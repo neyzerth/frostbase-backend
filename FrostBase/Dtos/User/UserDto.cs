@@ -6,6 +6,7 @@ public class UserDto
     public string Email { get; set; }
     public string Phone { get; set; }
     public DateOnly? BirthDate { get; set; }
+    public bool IsAdmin { get; set; }
     public TruckDto? TruckDefault { get; set; }
 
     public static UserDto FromModel(UserApp u)
@@ -25,6 +26,7 @@ public class UserDto
             },
             Email = u.Email,
             Phone = u.Phone,
+            IsAdmin = u.IsAdmin,
             TruckDefault = truck,
             BirthDate = DateOnly.FromDateTime(u.BirthDate)
         };
