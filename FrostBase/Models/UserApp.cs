@@ -110,6 +110,48 @@ public class UserApp
             throw new Exception("Error inserting user: "+e.Message);
         }
     }
+
+    public static UserApp Update(UpdateUserDto u)
+    {
+        var user = new UserApp()
+        {
+            Id = u.Id,
+            FirstName = u.Name.FirstName,
+            MiddleName = u.Name.MiddleName,
+            LastName = u.Name.LastName,
+            Email = u.Email,
+            BirthDate = u.BirthDate.Value.ToDateTime(TimeOnly.MinValue),
+        };
+        
+        return Update(user);
+    }
+    public static UserApp Update(UserApp updatedUser)
+    {
+        try
+        {
+            var filter = Builders<UserApp>.Filter.Eq(u => u.Id, updatedUser.Id);
+            var update = Builders<UserApp>.Update
+                .Set(u => u.FirstName, updatedUser.FirstName)
+                .Set(u => u.MiddleName, updatedUser.MiddleName)
+                .Set(u => u.LastName, updatedUser.LastName)
+                .Set(u => u.Email, updatedUser.Email)
+                .Set(u => u.Phone, updatedUser.Phone)
+                .Set(u => u.BirthDate, updatedUser.BirthDate)
+                .Set(u => u.Active, updatedUser.Active);
+
+            var options = new FindOneAndUpdateOptions<UserApp>
+            {
+                ReturnDocument = ReturnDocument.After
+            };
+
+            return _userColl.FindOneAndUpdate(filter, update, options);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Error updating user: " + e.Message);
+        }
+    }
     
     public static UserApp Login(string email, string password)
     {
