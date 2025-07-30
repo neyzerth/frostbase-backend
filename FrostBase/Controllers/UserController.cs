@@ -13,14 +13,14 @@ public class UserController : ControllerBase
     [HttpGet("Drivers")]
     public ActionResult GetDrivers()
     {
-        List<UserDto> users = UserDto.FromModel(UserApp.GetDriver());
-        return Ok(ListResponse<UserDto>.GetResponse(users));
+        List<DriverDto> drivers = DriverDto.FromModel(UserApp.GetDriver());
+        return Ok(ListResponse<DriverDto>.GetResponse(drivers));
     }
     [HttpGet("Admins")]
     public ActionResult GetAdmins()
     {
-        List<UserDto> users = UserDto.FromModel(UserApp.GetAdmin());
-        return Ok(ListResponse<UserDto>.GetResponse(users));
+        List<AdminDto> admins = AdminDto.FromModel(UserApp.GetAdmin());
+        return Ok(ListResponse<AdminDto>.GetResponse(admins));
     }
     [HttpGet("{id}")]
     public ActionResult Get(string id)
