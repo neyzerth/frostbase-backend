@@ -38,7 +38,7 @@ public class TruckLog
 
     public static List<TruckLog> GetAvalaible(DateTime date)
     {
-        return _truckLogColl.Find(t => t.IDStateTruck == "" && t.Date <= date).ToList();
+        return _truckLogColl.Find(t => t.IDStateTruck == "AV" && t.Date <= date).ToList();
     }
 
     public static TruckLog Insert(TruckLog t)

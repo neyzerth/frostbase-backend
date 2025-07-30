@@ -76,6 +76,20 @@ public class Truck
             IDStateTruck = "AV"
         };
         
+        TruckLog.Insert(t, DateTime.Now);
+        return Insert(t);   
+    }
+    public static Truck Insert(CreateTruckDto c, DateTime date)
+    {
+        Truck t = new Truck
+        {
+            Brand = c.Brand,
+            Model = c.Model,
+            LicensePlate = c.LicensePlate,
+            IDStateTruck = "AV"
+        };
+        
+        TruckLog.Insert(t, date);
         return Insert(t);   
     }
 
@@ -111,7 +125,7 @@ public class Truck
                 ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
             };
 
-            //TruckLog.Insert(updatedTruck)
+            TruckLog.Insert(updatedTruck, DateTime.Now);;
             return _truckColl.FindOneAndUpdate(filter, update, options);
         }
         catch (Exception e)

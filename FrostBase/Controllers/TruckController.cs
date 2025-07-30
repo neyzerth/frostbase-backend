@@ -23,6 +23,13 @@ public class TruckController : ControllerBase
         TruckDto truck = TruckDto.FromModel(Truck.Insert(t));
         return Ok(Response<TruckDto>.GetResponse(truck));
     }
+
+    [HttpPost("{date}")]
+    public ActionResult Post([FromBody] CreateTruckDto t, DateTime date)
+    {
+        TruckDto truck = TruckDto.FromModel(Truck.Insert(t, date));
+        return Ok(Response<TruckDto>.GetResponse(truck));
+    }
     [HttpPut]
     public ActionResult Put([FromBody] UpdateTruckDto t)
     {
