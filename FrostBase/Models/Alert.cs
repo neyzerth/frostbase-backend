@@ -60,6 +60,45 @@ public class Alert
             throw new Exception("Error inserting alert: "+e.Message);
         }
     }
+
+    public static Alert Update(UpdateAlertDto u)
+    {
+        var alert = new Alert
+        {
+            Id = u.Id,
+            State = u.State,
+            Date = u.Date,
+            IDAlertType = u.IDAlertType,
+            IDReading = u.IDReading
+        };
+        return Update(alert);
+    }
+
+    public static Alert Update(Alert updatedAlert)
+    {
+        try
+        {
+            var filter = Builders<Alert>.Filter.Eq(a => a.Id, updatedAlert.Id);
+            var update = Builders<Alert>.Update
+                .Set(a => a.State, updatedAlert.State)
+                .Set(a => a.Date, updatedAlert.Date)
+                .Set(a => a.IDAlertType, updatedAlert.IDAlertType)
+                .Set(a => a.IDReading, updatedAlert.IDReading);
+
+
+            var options = new FindOneAndUpdateOptions<Alert>
+            {
+                ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
+            };
+
+            return _alertColl.FindOneAndUpdate(filter, update, options);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Error updating alert: " + e.Message);
+        }
+    }
     
     public static Alert Insert(CreateAlertDto a)
     {

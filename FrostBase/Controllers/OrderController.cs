@@ -20,10 +20,7 @@ public class OrderController : ControllerBase
     public ActionResult Post([FromBody] CreateOrderDto c)
     {
         Order insert = Order.Insert(c);
-        if(insert != null)
-            return Ok(Response<OrderDto>.GetResponse(OrderDto.FromModel(insert)));
-        
-        return BadRequest(MessageResponse.GetResponse("Order not inserted", 1, MessageType.Error));
+        return Ok(Response<OrderDto>.GetResponse(OrderDto.FromModel(insert)));
     }
     
     [HttpPut]
@@ -38,6 +35,13 @@ public class OrderController : ControllerBase
             return NotFound("Order not found.");
 
         var orderDto = OrderDto.FromModel(updatedOrder);
+        return Ok(Response<OrderDto>.GetResponse(orderDto));
+    }
+    
+    [HttpDelete("{id}")]
+    public ActionResult Delete(string id)
+    {
+        var orderDto = OrderDto.FromModel(Order.Delete(id));
         return Ok(Response<OrderDto>.GetResponse(orderDto));
     }
 

@@ -27,11 +27,13 @@ public class AlertController : ControllerBase
         
         return BadRequest(MessageResponse.GetResponse("Alert not inserted", 1, MessageType.Error));
     }
-  
-    // public ActionResult Put(int id /*, [FromPost] PostAlert p (??)*/)
-    // {
-    //     return Ok(MessageResponse.GetResponse(1, "Alert "+ id +" updated", MessageType.Success));
-    // }
+    
+    [HttpPut]
+    public ActionResult Put([FromBody] UpdateAlertDto a)
+    {
+        AlertDto alert = AlertDto.FromModel(Alert.Update(a));
+        return Ok(Response<AlertDto>.GetResponse(alert));
+    }
     // [HttpDelete("{id}")]
     // public ActionResult Delete(int id)
     // {
