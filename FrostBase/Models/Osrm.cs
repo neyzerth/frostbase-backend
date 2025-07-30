@@ -81,7 +81,7 @@ public class Osrm
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("osrm insert: "+e);
             throw new Exception("Error inserting osrm: "+e.Message);
         }
     }

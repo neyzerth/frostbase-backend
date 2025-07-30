@@ -59,7 +59,7 @@ public class Route
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Route insert: "+e);
             throw new Exception("Error inserting route: "+e.Message);
         }
     }

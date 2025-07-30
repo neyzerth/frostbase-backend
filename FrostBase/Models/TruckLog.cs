@@ -52,7 +52,7 @@ public class TruckLog
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Truck log insert: "+e);
             throw new Exception("Error inserting truck log: "+e.Message);
         }
     }

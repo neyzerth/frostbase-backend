@@ -90,7 +90,7 @@ public class Truck
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Truck insert: "+e);
             throw new Exception("Error inserting truck: "+e.Message);
         }
     }
@@ -116,7 +116,7 @@ public class Truck
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Truck insert: "+e);
             throw new Exception("Error updating truck: " + e.Message);
         }
     }
@@ -151,7 +151,7 @@ public class Truck
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Truck insert: "+e);
             throw new Exception("Error deleting truck: " + e.Message);
         }
     }

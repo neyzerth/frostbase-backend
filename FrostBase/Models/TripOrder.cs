@@ -33,7 +33,7 @@ public class TripOrder
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Trip order insert: "+e);
             throw new Exception("Error generating order deliver time: "+e.Message);
         }
 

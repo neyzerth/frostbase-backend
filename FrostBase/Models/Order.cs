@@ -146,7 +146,7 @@ public class Order
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            Console.WriteLine("calculate deliver date: "+e);
             return Date.AddDays(1);
         }
     }
@@ -244,7 +244,7 @@ public class Order
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Order update: "+e);
             throw new Exception("Error updating order: " + e.Message);
         }
     }

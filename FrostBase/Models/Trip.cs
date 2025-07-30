@@ -111,7 +111,7 @@ public class Trip
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Trip insert: "+e);
             throw new Exception("Error inserting trip "+t.Id+": "+e.Message);
         }
     }
@@ -181,7 +181,7 @@ public class Trip
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Trip insert: "+e);
             throw new Exception("Error updating trip endtime: "+e.Message);
         }
     }
@@ -212,7 +212,7 @@ public class Trip
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Trip insert: "+e);
             throw new Exception("Error starting order");
         }
     }
@@ -247,7 +247,7 @@ public class Trip
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Trip insert: "+e);
             throw new Exception("Error ending order");
         }
     }

@@ -85,7 +85,7 @@ public class Reading
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Reading insert: "+e);
             throw new Exception("Error inserting reading: "+e.Message);
         }
     }

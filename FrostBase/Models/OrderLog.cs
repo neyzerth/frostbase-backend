@@ -47,7 +47,7 @@ public class OrderLog
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Order log insert: "+e);
             throw new Exception("Error inserting order log: "+e.Message);
         }
     }
@@ -66,7 +66,7 @@ public class OrderLog
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Order log insert: "+e);
             throw new Exception("Error inserting log of order "+ o.Id+": "+e.Message);
         }
     }

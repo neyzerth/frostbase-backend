@@ -56,7 +56,7 @@ public class Alert
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Alert insert: "+e);
             throw new Exception("Error inserting alert: "+e.Message);
         }
     }
