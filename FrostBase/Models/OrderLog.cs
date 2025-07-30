@@ -70,4 +70,5 @@ public class OrderLog
             throw new Exception("Error inserting log of order "+ o.Id+": "+e.Message);
         }
     }
+    
 }

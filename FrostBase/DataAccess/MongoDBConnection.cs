@@ -8,8 +8,8 @@ public class MongoDbConnection
     private static string _connectionString =
         Config.Configuration.MongoDB.ConnectionString;
 
-    private static string _localConnString =
-        "mongodb://" + Config.Configuration.MongoDB.Server + ":" + Config.Configuration.MongoDB.Port;
+    private static string _atlasConnectionString =
+        Config.Configuration.MongoDB.AtlasConnectionString;
 
     private static string _databaseName = Config.Configuration.MongoDB.Database;
 
@@ -47,7 +47,7 @@ public class MongoDbConnection
     {
         // connection
         IMongoDatabase db = GetDatabase();
-        //return the colecction
+        //return the collection
         return db.GetCollection<T>(collection);
     }
 
