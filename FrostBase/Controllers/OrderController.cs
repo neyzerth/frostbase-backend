@@ -20,10 +20,7 @@ public class OrderController : ControllerBase
     public ActionResult Post([FromBody] CreateOrderDto c)
     {
         Order insert = Order.Insert(c);
-        if(insert != null)
-            return Ok(Response<OrderDto>.GetResponse(OrderDto.FromModel(insert)));
-        
-        return BadRequest(MessageResponse.GetResponse("Order not inserted", 1, MessageType.Error));
+        return Ok(Response<OrderDto>.GetResponse(OrderDto.FromModel(insert)));
     }
     
     [HttpPut]
