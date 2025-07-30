@@ -20,7 +20,6 @@ public class TruckLog
     public string IDTruck { get; set; }
     
     [BsonElement("IDStateTruck")]
-    [BsonRepresentation(BsonType.ObjectId)]
     public string IDStateTruck { get; set; }
     
     public static List<TruckLog> Get()
