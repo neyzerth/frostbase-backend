@@ -17,11 +17,17 @@ public class AlertController : ControllerBase
         Alert alert = Alert.Get(id);
         return Ok(Response<Alert>.GetResponse(alert));
     }
-    // [HttpPost]
-    // public ActionResult Post(/*[FromPost] PostAlert p*/)
-    // {
-    //     return Ok(MessageResponse.GetResponse(1, "Alert inserted", MessageType.Success));
-    // }
+    
+    [HttpPost]
+    public ActionResult Post([FromBody] CreateAlertDto a)
+    {
+        Alert insert = Alert.Insert(a);
+        if(insert != null)
+            return Ok(Response<AlertDto>.GetResponse(AlertDto.FromModel(insert)));
+        
+        return BadRequest(MessageResponse.GetResponse("Alert not inserted", 1, MessageType.Error));
+    }
+    
     [HttpPut]
     public ActionResult Put([FromBody] UpdateAlertDto a)
     {
