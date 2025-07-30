@@ -53,6 +53,26 @@ public class Reading
     {
         return _readingColl.Find(r => r.Id == id).FirstOrDefault();
     }
+    public static List<Reading> GetByTruck(string truckId)
+    {
+        return _readingColl.Find(r => r.IDTruck == truckId).ToList();
+    }
+
+    public static Reading Insert(CreateReadingDto c, string truckId)
+    {
+        var reading = new Reading
+        {
+            Date = c.Date?? DateTime.Now,
+            DoorState = c.DoorState,
+            Latitude = c.Latitude,
+            Longitude = c.Longitude,
+            PercHumidity = c.Humidity,
+            Temperature = c.Temperature,
+            IDTruck = truckId,
+        };
+
+        return Insert(reading);
+    }
 
     public static Reading Insert(Reading r)
     {

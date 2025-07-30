@@ -21,9 +21,20 @@ public class ReadingDto
             {
                 Latitude = r.Latitude,
                 Longitude = r.Longitude
-            }
+            },
+            Truck = TruckDto.FromModel(global::Truck.Get(r.IDTruck)) 
             
         };
+    }
+    
+    public static List<ReadingDto> FromModel(List<Reading> readings)
+    {
+        List<ReadingDto> readingsDto = new List<ReadingDto>();
+        foreach (Reading r in readings)
+        {
+            readingsDto.Add(FromModel(r));
+        }
+        return readingsDto;
     }
 }
 
