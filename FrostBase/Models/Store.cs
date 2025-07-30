@@ -131,7 +131,7 @@ public class Store
             Active = u.Active,
         };
         
-        return Update(u);
+        return Update(store);
     }
 
     public static Store Update(Store s)
