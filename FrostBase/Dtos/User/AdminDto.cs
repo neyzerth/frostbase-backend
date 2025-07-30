@@ -8,6 +8,7 @@ public class AdminDto
 
     public static AdminDto FromModel(UserApp u)
     {
+        if (u == null) return new AdminDto();
         return new AdminDto
         {
             Id = u.Id,

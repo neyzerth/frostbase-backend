@@ -7,6 +7,7 @@ public class StoreDto
 
     public static StoreDto FromModel(Store s)
     {
+        if(s == null) return new StoreDto();
         return new StoreDto
         {
             Id = s.Id,
