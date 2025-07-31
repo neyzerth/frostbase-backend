@@ -30,5 +30,10 @@ public class SimulatorController : ControllerBase
     {
         return Ok("not implemented");
     }
+    [HttpPost("error")]
+    public ActionResult GenerateError()
+    {
+        throw new FrostbaseException("test", 1, 404);
+    }
     
 }

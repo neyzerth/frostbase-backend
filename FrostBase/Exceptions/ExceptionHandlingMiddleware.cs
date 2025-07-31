@@ -9,11 +9,17 @@ public class ExceptionHandlingMiddleware
         {
             await _next(context);
         }
+        catch (FrostbaseException ex)
+        {
+            Console.WriteLine("Frostbase error: "+ex);
+            context.Response.StatusCode = ex.HttpStatus;
+            await context.Response.WriteAsJsonAsync(new FrostbaseExceptionDto(ex));
+        }
         catch (Exception ex)
         {
             Console.WriteLine("ERROR: "+ex);
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            await context.Response.WriteAsJsonAsync(new { error = ex.Message, type = MessageType.Error.ToString() ,status = 1 });
+            await context.Response.WriteAsJsonAsync(new FrostbaseExceptionDto(ex));
         }
     }
 }

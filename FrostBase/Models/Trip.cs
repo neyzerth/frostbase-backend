@@ -305,6 +305,8 @@ public class Trip
     public void GenerateEndTimeTrip()
     {
         //get the last order
+        if(Orders.Count <= 0 )
+            throw new Exception("No orders in trip");
         TripOrder lastOrder = Orders.Last();
         StoreDto s = OrderDto.FromModel(Order.Get(lastOrder.IDOrder)).Store;
         Location lastLocation = s.Location;
