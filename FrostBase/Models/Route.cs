@@ -47,6 +47,11 @@ public class Route
     {
         return _routeColl.Find(r => r.Id == id).FirstOrDefault();
     }
+    
+    public static Route GetByDriver(string driverId)
+    {
+        return _routeColl.Find(r => r.IDUser == driverId).FirstOrDefault();
+    }
 
     public static Route Insert(Route r)
     {

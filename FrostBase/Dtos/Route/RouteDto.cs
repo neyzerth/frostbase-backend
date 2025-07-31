@@ -3,7 +3,7 @@ public class RouteDto
     public string Id { get; set; }
     public string Name { get; set; }
     public List<int> DeliverDays { get; set; }
-    public UserDto Driver { get; set; }
+    public DriverDto Driver { get; set; }
     public List<RouteStoreDto> Stores { get; set; }
 
     public static RouteDto FromModel(Route r)
@@ -13,7 +13,7 @@ public class RouteDto
             Id = r.Id,
             Name = r.Name,
             DeliverDays = r.DeliverDays,
-            Driver = UserDto.FromModel(UserApp.Get(r.IDUser)),
+            Driver = DriverDto.FromModel(UserApp.Get(r.IDUser)),
             Stores = RouteStoreDto.FromModel(r.Stores)
         };
     }

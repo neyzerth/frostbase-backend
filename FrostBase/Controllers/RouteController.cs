@@ -16,6 +16,12 @@ public class RouteController : ControllerBase
         RouteDto route = RouteDto.FromModel(Route.Get(id));
         return Ok(Response<RouteDto>.GetResponse(route));
     }
+    [HttpGet("driver/{driverId}")]
+    public ActionResult GetByDriver(string driverId)
+    {
+        RouteDto route = RouteDto.FromModel(Route.GetByDriver(driverId));
+        return Ok(Response<RouteDto>.GetResponse(route));
+    }
     [HttpPost]
     public ActionResult Post([FromBody] CreateRouteDto r)
     {
