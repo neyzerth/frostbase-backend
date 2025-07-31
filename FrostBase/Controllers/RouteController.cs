@@ -16,24 +16,25 @@ public class RouteController : ControllerBase
         RouteDto route = RouteDto.FromModel(Route.Get(id));
         return Ok(Response<RouteDto>.GetResponse(route));
     }
-    // [HttpPost]
-    // public ActionResult Post([FromForm] Route r)
-    // {
-    //     if(Route.Insert(r))
-    //         return Ok(MessageResponse.GetResponse(1, "Road inserted", MessageType.Success));
-    //     
-    //     return BadRequest(MessageResponse.GetResponse(1, "Road not inserted", MessageType.Error));
-    // }
-    // [HttpPut("{id}")]
-    // public ActionResult Put(int id /*, [FromPost] PostRoad p (??)*/)
-    // {
-    //     return Ok(MessageResponse.GetResponse(1, "Road "+ id +" updated", MessageType.Success));
-    // }
-    // [HttpDelete("{id}")]
-    // public ActionResult Delete(int id)
-    // {
-    //     return Ok(MessageResponse.GetResponse(1, "Road "+ id +" deleted", MessageType.Success));
-    // }
+    [HttpPost]
+    public ActionResult Post([FromBody] CreateRouteDto r)
+    {
+        var route = Route.Insert(r);
+        return Ok(Response<RouteDto>.GetResponse(RouteDto.FromModel(route)));
+        
+    }
+    [HttpPut]
+    public ActionResult Put([FromBody] UpdateRouteDto r)
+    {
+        var route = Route.Update(r);
+        return Ok(Response<RouteDto>.GetResponse(RouteDto.FromModel(route)));
+    }
+    [HttpDelete("{id}")]
+    public ActionResult Delete(string id)
+    {
+        var route = Route.Delete(id);
+        return Ok(Response<RouteDto>.GetResponse(RouteDto.FromModel(route)));
+    }
     
     [HttpGet("today/")]
     public ActionResult GetTodayRoutes()

@@ -63,7 +63,81 @@ public class Route
             throw new Exception("Error inserting route: "+e.Message);
         }
     }
-    
+
+    public static Route Insert(CreateRouteDto c)
+    {
+        var route = new Route
+        {
+            Id = ObjectId.GenerateNewId().ToString(),
+            DeliverDays = c.DeliverDays,
+            IDUser = c.IDCreatedBy,
+            Stores = c.stores,
+            Active = true,
+        };
+        
+        return Insert(route);
+    }
+    public static Route Update(UpdateRouteDto update)
+    {
+        var route = new Route()
+        {
+            Id = update.Id,
+            Name = update.Name,
+            DeliverDays = update.DeliverDays,
+            IDUser = update.IDCreatedBy,
+            Stores = update.Stores,
+            Active = true,
+        };
+
+        return Update(route);
+    }
+    public static Route Update(Route r)
+    {
+        try
+        {
+            var filter = Builders<Route>.Filter.Eq(o => o.Id, r.Id);
+            var update = Builders<Route>.Update
+                .Set(o => o.Name, r.Name)
+                .Set(o => o.DeliverDays, r.DeliverDays)
+                .Set(o => o.Active, r.Active)
+                .Set(o => o.Stores, r.Stores)
+                .Set(o => o.IDUser, r.IDUser);
+
+            var options = new FindOneAndUpdateOptions<Route>
+            {
+                ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
+            };
+
+            return _routeColl.FindOneAndUpdate(filter, update, options);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error updating route"+e);
+            throw new Exception("Error updating route: "+e.Message);
+        }
+    }
+
+    public static Route Delete(string id)
+    {
+        try
+        {
+            var filter = Builders<Route>.Filter.Eq(o => o.Id, id);
+            var update = Builders<Route>.Update
+                .Set(o => o.Active, false);
+
+            var options = new FindOneAndUpdateOptions<Route>
+            {
+                ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
+            };
+
+            return _routeColl.FindOneAndUpdate(filter, update, options);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error deleting route"+e);
+            throw new Exception("Error deleting route: "+e.Message);
+        }
+    }
     
     public static List<Route> GetByDate(DateTime date)
     {
@@ -77,5 +151,4 @@ public class Route
     }
     
     #endregion
-
 }
