@@ -168,7 +168,7 @@ public class Trip
             var filter = Builders<Trip>.Filter.Eq(t => t.Id, trip.Id);
             var update = Builders<Trip>.Update
                 .Set(t => t.EndTime, endTime)
-                .Set(t => t.IDStateTrip, "compl");
+                .Set(t => t.IDStateTrip, "CP");
                 
             var newTrip =  _tripColl.FindOneAndUpdate(filter, update,
                     new FindOneAndUpdateOptions<Trip>
