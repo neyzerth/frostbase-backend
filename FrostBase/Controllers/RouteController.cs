@@ -55,4 +55,12 @@ public class RouteController : ControllerBase
         List<RouteDto> route = RouteDto.FromModel(Route.GetByDay(day));
         return Ok(ListResponse<RouteDto>.GetResponse(route));
     }
+    
+    [HttpGet("pending/{routeId}&{date}")]
+    public ActionResult GetPending(string routeId, DateTime? date = null)
+    {
+        date??=DateTime.Now;
+        List<OrderDto> orders = OrderDto.FromModel(Route.PendingOrdersOrders(routeId, date.Value));
+        return Ok(ListResponse<OrderDto>.GetResponse(orders));
+    }
 }

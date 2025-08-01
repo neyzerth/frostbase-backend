@@ -50,7 +50,7 @@ public class Order
         IDStore = dto.Store.Id;
         IDUser = dto.CreatedBy.Id;
         IDStateOrder = dto.State.Id;
-        DeliverDate = dto.DeliverDate.ToDateTime(TimeOnly.MinValue);
+        DeliverDate = dto.DeliverDate.Value.ToDateTime(TimeOnly.MinValue);
         Date = dto.Date.ToDateTime(TimeOnly.MinValue);
     }
     public Order(ViewOrder v)
@@ -320,16 +320,6 @@ public class ViewOrder : Order
         IDStore = o.IDStore;
         IDUser = o.IDUser;
     }
-    // public static List<Order> GetByRoute(string routeId)
-    // {
-    //     var viewOrders= _viewOrderColl.Find(o => o.IDRoute == routeId).ToList();
-    //     var orders = new List<Order>();
-    //     foreach (var viewOrder in viewOrders)
-    //     {
-    //         orders.Add(new Order(viewOrder));
-    //     }
-    //     return orders;
-    // }
 
     public static List<ViewOrder> GetByDate(DateTime date)
     {
