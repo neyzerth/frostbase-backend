@@ -278,13 +278,13 @@ public class Trip
         //get random route (that its valid for today)
         List<Route> routes = Route.GetByDate(date.Value);
         
-        if (routes.Count == 0) throw new Exception("No routes for " + date.Value.Date);
+        if (routes.Count == 0) throw new FrostbaseException("No routes for " + date.Value.Date, 1, 404);
         
         Route route = routes[random.Next(0, routes.Count-1)];
         
-        //get a random truck
+        //get a random user
         List<Truck> trucks = Truck.GetAvailable();
-        if (trucks.Count == 0) throw new Exception("No trucks available");
+        if (trucks.Count == 0) throw new FrostbaseException("No trucks available",1,404);
         
         Truck truck = trucks[random.Next(0, trucks.Count-1)];
         

@@ -2,7 +2,7 @@ public class OrderDto
 {
     public string Id { get; set; }
     public DateOnly Date { get; set; }
-    public DateOnly DeliverDate { get; set; }
+    public DateOnly? DeliverDate { get; set; }
     public AdminDto CreatedBy { get; set; }
     public StoreDto Store { get; set; }
     public StateDto State { get; set; }
