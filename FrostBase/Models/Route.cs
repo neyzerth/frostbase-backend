@@ -74,6 +74,7 @@ public class Route
         var route = new Route
         {
             Id = ObjectId.GenerateNewId().ToString(),
+            Name = c.Name,
             DeliverDays = c.DeliverDays,
             IDUser = c.IDCreatedBy,
             Stores = c.stores,
