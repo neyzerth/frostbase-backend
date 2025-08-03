@@ -154,6 +154,97 @@ public class Route
     {
         return _routeColl.Find(r => r.DeliverDays.Contains(day)).ToList();
     }
+
+    public static List<Order> PendingOrdersOrders(string routeId, DateTime date)
+    {
+        var pipeline = new List<BsonDocument>()
+        {
+            new BsonDocument("$match",
+                new BsonDocument("_id",
+                    new ObjectId(routeId))),
+            new BsonDocument("$lookup",
+                new BsonDocument
+                {
+                    { "from", "Orders" },
+                    { "localField", "stores.IDStore" },
+                    { "foreignField", "IDStore" },
+                    { "as", "orders" }
+                }),
+            new BsonDocument("$lookup",
+                new BsonDocument
+                {
+                    { "from", "OrderLogs" },
+                    { "localField", "orders._id" },
+                    { "foreignField", "IDOrder" },
+                    { "as", "logs" },
+                    {
+                        "pipeline",
+                        new BsonArray
+                        {
+                            new BsonDocument("$sort",
+                                new BsonDocument("date", -1)),
+                            new BsonDocument("$match",
+                                new BsonDocument("date",
+                                    new BsonDocument("$lte",
+                                        date))),
+                            new BsonDocument("$match",
+                                new BsonDocument("IDStateOrder", "PO")),
+                            new BsonDocument("$group",
+                                new BsonDocument
+                                {
+                                    { "_id", "$IDOrder" },
+                                    {
+                                        "date",
+                                        new BsonDocument("$first", "$date")
+                                    },
+                                    {
+                                        "IDStateOrder",
+                                        new BsonDocument("$first", "$IDStateOrder")
+                                    }
+                                })
+                        }
+                    }
+                }),
+            new BsonDocument("$lookup",
+                new BsonDocument
+                {
+                    { "from", "Orders" },
+                    { "localField", "logs._id" },
+                    { "foreignField", "_id" },
+                    { "as", "pendingOrders" }
+                }),
+            new BsonDocument("$unwind", "$pendingOrders"),
+            new BsonDocument("$unwind", "$logs"),
+            new BsonDocument("$unwind", "$stores"),
+            new BsonDocument("$match",
+                new BsonDocument("$expr",
+                    new BsonDocument("$eq",
+                        new BsonArray
+                        {
+                            "$pendingOrders.IDStore",
+                            "$stores.IDStore"
+                        }))),
+            new BsonDocument("$match",
+                new BsonDocument("$expr",
+                    new BsonDocument("$eq",
+                        new BsonArray
+                        {
+                            "$logs._id",
+                            "$pendingOrders._id"
+                        }))),
+            new BsonDocument("$project",
+                new BsonDocument
+                {
+                    { "_id", "$pendingOrders._id" },
+                    { "date", "$logs.date" },
+                    { "IDCreatedByUser", "$pendingOrders.IDCreatedByUser" },
+                    { "IDStore", "$pendingOrders.IDStore" },
+                    { "IDStateOrder", "$logs.IDStateOrder" }
+                })
+        };
+        
+        return _routeColl.Aggregate<Order>(pipeline).ToList();
+    }
     
     #endregion
 }
