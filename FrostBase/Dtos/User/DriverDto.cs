@@ -4,6 +4,7 @@ public class DriverDto
     public Name Name { get; set; }
     public string Email { get; set; }
     public string Phone { get; set; }
+    public bool Active { get; set; }
     public DateOnly? BirthDate { get; set; }
     public TruckDto TruckDefault { get; set; }
 
@@ -25,7 +26,8 @@ public class DriverDto
             Email = u.Email,
             Phone = u.Phone,
             TruckDefault = truck,
-            BirthDate = DateOnly.FromDateTime(u.BirthDate)
+            BirthDate = DateOnly.FromDateTime(u.BirthDate),
+            Active = u.Active
         };
     }
 
