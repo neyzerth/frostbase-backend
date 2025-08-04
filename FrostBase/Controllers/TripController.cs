@@ -60,6 +60,7 @@ public class TripController : ControllerBase
     public ActionResult End(string idTrip)
     {
         TripDto trip = TripDto.FromModel(Trip.UpdateEndTime(idTrip));
+        
         if(trip != null) 
             return Ok(Response<TripDto>.GetResponse( trip));
             
