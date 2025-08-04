@@ -60,7 +60,7 @@ public class Store
                             { "storeId", "$_id" },
                             {
                                 "targetDate",
-                                new DateTime(2025, 9, 4, 0, 0, 0)
+                                datetime
                             }
                         }
                     },
