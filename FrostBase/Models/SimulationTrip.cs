@@ -10,6 +10,9 @@ public class SimulationTrip
         MongoDbConnection.GetCollection<SimulationTrip>("TripsSimulation");
 
     #region attributes
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
 
     [BsonElement("simulatedTrip")]
     public Trip SimulatedTrip { get; set; }
@@ -91,6 +94,31 @@ public class SimulationTrip
             throw new Exception("Error inserting simulation trip: "+e.Message);
         }
     }
+    
+    public static SimulationTrip Update(SimulationTrip updatedTrip)
+    {
+        try
+        {
+            var filter = Builders<SimulationTrip>.Filter.Eq(u => u.Id, updatedTrip.Id);
+            var update = Builders<SimulationTrip>.Update
+                .Set(u => u.Inserted, updatedTrip.Inserted)
+                .Set(u => u.OrdersInserted, updatedTrip.OrdersInserted);
+            
+
+            var options = new FindOneAndUpdateOptions<SimulationTrip>
+            {
+                ReturnDocument = ReturnDocument.After
+            };
+
+            return _simTripColl.FindOneAndUpdate(filter, update, options);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("user insert: "+e);
+            throw new Exception("Error updating user: " + e.Message);
+        }
+    }
+
 
     #endregion
     
@@ -148,6 +176,7 @@ public class SimulationTrip
         try
         {
             InsertMany(simulation);
+            CheckSimulationsTrips();
             return trips;
         }
         catch (Exception e)
@@ -167,12 +196,12 @@ public class SimulationTrip
     }
     
     
-    public static List<Trip> CheckSimulationsTrips(DateTime? date)
+    public static List<Trip> CheckSimulationsTrips()
     {  
-        date??= DateTime.Now;
+        DateTime date = DateTime.Now;
         //check trips simulated that isn't inserted yet
         var simTrips =  _simTripColl.Find(t =>
-            !t.OrdersInserted && t.SimulatedTrip.StartTime.Date <= date).ToList();
+            !t.Inserted && t.SimulatedTrip.StartTime.Date <= date).ToList();
         
         var newTrips = new List<Trip>();
 
@@ -180,6 +209,9 @@ public class SimulationTrip
         {
             var trip = sim.SimulatedTrip;
             var newOrders = new List<TripOrder>();
+
+            bool inserted = true;
+            bool ordersInserted = true;
 
             string stateTrip = trip.EndTime > date ? "IP" : "CP";
             
@@ -199,19 +231,30 @@ public class SimulationTrip
             foreach (var order in sim.SimulatedTrip.Orders)
             {
                 //if the order does not start yet, continue with the next
-                if (order.StartTime <= date) continue;
+                if (order.StartTime < date)
+                {
+                    ordersInserted = false;
+                    continue;
+                }
                 
                 var newOrd = new TripOrder
                 {
                     IDOrder = order.IDOrder,
                     StartTime = order.StartTime,
-                    EndTime = order.EndTime <= date ? order.EndTime : null,
+                    EndTime = order.EndTime < date ? order.EndTime : null,
                 };
+                ordersInserted = newOrd.EndTime == null ? false : true; 
                 newOrders.Add(newOrd);
             }
+            inserted = newTrip.EndTime == null ? false : true;
+            
+            sim.Inserted = inserted;
+            sim.OrdersInserted = ordersInserted;
+
+            Update(sim);
             newTrips.Add(newTrip);
         }
-        return newTrips;
+        return Trip.Upsert(newTrips);
     }    
 
     #endregion

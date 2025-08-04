@@ -33,10 +33,10 @@ public class SimulatorController : ControllerBase
     }
     
     [HttpPost("trip/check/")]
-    public ActionResult CheckSimulatedTrips([FromBody] Simulate simulate)
+    public ActionResult CheckSimulatedTrips()
     {
-        List<TripDto> sim = TripDto.FromModel(SimulationTrip.CheckSimulationsTrips(simulate.Date)); 
-        return Ok(ListResponse<TripDto>.GetResponse( sim));
+        List<TripDto> sim = TripDto.FromModel(SimulationTrip.CheckSimulationsTrips()); 
+        return Ok(ListResponse<TripDto>.GetResponse(sim));
     }
     
     [HttpPost("reading/generate")]
