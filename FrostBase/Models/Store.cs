@@ -111,7 +111,7 @@ public class Store
             Phone = c.Phone,
             Location = c.Location.Address,
             Latitude = c.Location.Latitude,
-            Longitude = c.Location.Latitude,
+            Longitude = c.Location.Longitude,
             Active = true
         };
 
