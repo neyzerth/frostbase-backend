@@ -7,9 +7,6 @@ using MongoDB.Driver;
 public class Osrm
 {
     private static readonly IMongoCollection<Osrm> _osrmColl = MongoDbConnection.GetCollection<Osrm>("OsrmRoutes");
-    
-    #region properties
-
     private static readonly HttpClient _httpClient = new HttpClient();
 
     [BsonId]
@@ -18,27 +15,27 @@ public class Osrm
 
     [BsonElement("startLatitude")]
     public double StartLatitude { get; set; }
-    
+
     [BsonElement("startLongitude")]
     public double StartLongitude { get; set; }
-    
+
     [BsonElement("endLatitude")]
     public double EndLatitude { get; set; }
-    
+
     [BsonElement("endLongitude")]
     public double EndLongitude { get; set; }
 
     [BsonElement("distance")]
     public double Distance { get; set; }
-    
+
     [BsonElement("duration")]
     public double Duration { get; set; }
-    
-    // [BsonElement("geometry")]
-    // public string Geometry { get; set; }
+
+    [BsonElement("geometry")]
+    public List<Location> Geometry { get; set; } = new List<Location>();
 
     public Osrm() { }
-    
+
     public Osrm(Location start, Location end)
     {
         StartLatitude = start.Latitude;
@@ -47,24 +44,24 @@ public class Osrm
         EndLongitude = end.Longitude;
     }
 
-    #endregion
-
-    #region class methods
-
     public static Osrm Get(Location start, Location end)
     {
-        double tolerance = 1e-5; // 0.00001
-        //calculate the difference because double can round values
-        var route = _osrmColl.Find(r => 
-                    Math.Abs(r.StartLatitude - start.Latitude) < tolerance && 
-                    Math.Abs(r.StartLongitude - start.Longitude) < tolerance && 
-                    Math.Abs(r.EndLatitude - end.Latitude) < tolerance && 
-                    Math.Abs(r.EndLongitude - end.Longitude) < tolerance
-                );
+        double tolerance = 1e-5;
+        var route = _osrmColl.Find(r =>
+            Math.Abs(r.StartLatitude - start.Latitude) < tolerance &&
+            Math.Abs(r.StartLongitude - start.Longitude) < tolerance &&
+            Math.Abs(r.EndLatitude - end.Latitude) < tolerance &&
+            Math.Abs(r.EndLongitude - end.Longitude) < tolerance
+        );
+
         if (route.CountDocuments() > 0)
         {
-            Console.WriteLine("||| Ruta encontrada en la base de datos |||");
-            return route.FirstOrDefault();
+            var dbRoute = route.FirstOrDefault();
+            if (dbRoute.Geometry.Count > 0)
+            {
+                Console.WriteLine("||| Ruta encontrada en la base de datos |||");
+                return dbRoute;
+            }
         }
 
         Console.WriteLine("||| Insertando nueva ruta en la base de datos |||");
@@ -76,14 +73,39 @@ public class Osrm
         try
         {
             var osrm = GetRoute(start, end).Result;
-            _osrmColl.InsertOne(osrm);
+
+            var filter = Builders<Osrm>.Filter.And(
+                Builders<Osrm>.Filter.Eq(r => r.StartLatitude, osrm.StartLatitude),
+                Builders<Osrm>.Filter.Eq(r => r.StartLongitude, osrm.StartLongitude),
+                Builders<Osrm>.Filter.Eq(r => r.EndLatitude, osrm.EndLatitude),
+                Builders<Osrm>.Filter.Eq(r => r.EndLongitude, osrm.EndLongitude)
+            );
+
+            var update = Builders<Osrm>.Update
+                .Set(r => r.Distance, osrm.Distance)
+                .Set(r => r.Duration, osrm.Duration)
+                .Set(r => r.Geometry, osrm.Geometry);
+
+            var options = new UpdateOptions { IsUpsert = true };
+
+            _osrmColl.UpdateOne(filter, update, options);
+
             return osrm;
         }
         catch (Exception e)
         {
-            Console.WriteLine("osrm insert: "+e);
-            throw new Exception("Error inserting osrm: "+e.Message);
+            Console.WriteLine("osrm upsert: " + e);
+            throw new Exception("Error upserting osrm: " + e.Message);
         }
+    }
+
+
+    public static Location MoveTowards(Location A, Location B, double step)
+    {
+        double newLat = A.Latitude + (B.Latitude - A.Latitude) * step;
+        double newLon = A.Longitude + (B.Longitude - A.Longitude) * step;
+
+        return new Location { Latitude = newLat, Longitude = newLon };
     }
 
     private static async Task<Osrm> GetRoute(Location start, Location end)
@@ -96,20 +118,19 @@ public class Osrm
         var osrmRoute = new Osrm
         {
             StartLatitude = startLat,
-            StartLongitude =   startLon,
+            StartLongitude = startLon,
             EndLatitude = endLat,
             EndLongitude = endLon,
-        }; 
-        var url = $"https://router.project-osrm.org/route/v1/driving/{startLon},{startLat};{endLon},{endLat}?overview=false";
-        
+        };
+
+        var url = $"https://router.project-osrm.org/route/v1/driving/{startLon},{startLat};{endLon},{endLat}?overview=full&geometries=geojson";
         Console.WriteLine("OSRM URL: " + url);
 
         var response = await _httpClient.GetAsync(url);
         response.EnsureSuccessStatusCode();
 
         var json = await response.Content.ReadAsStringAsync();
-        
-        // Deserialize into the OSRM API response model
+
         var osrmApiResponse = JsonSerializer.Deserialize<OsrmApiResponse>(json);
 
         var route = osrmApiResponse?.Routes?.FirstOrDefault();
@@ -117,24 +138,38 @@ public class Osrm
         if (route == null)
         {
             Console.WriteLine("Respuesta OSRM sin rutas:");
-            Console.WriteLine(json); // Imprime el JSON para debug
-            throw new Exception("No se encontro una ruta valida");
+            Console.WriteLine(json);
+            throw new Exception("No se encontró una ruta válida");
         }
 
         osrmRoute.Distance = route.Distance;
         osrmRoute.Duration = route.Duration;
-        
+
+        if (route.Geometry?.Coordinates != null)
+        {
+            foreach (var coord in route.Geometry.Coordinates)
+            {
+                if (coord.Count >= 2)
+                {
+                    osrmRoute.Geometry.Add(new Location
+                    {
+                        Longitude = coord[0],
+                        Latitude = coord[1]
+                    });
+                }
+            }
+        }
+
         return osrmRoute;
     }
-
-    #endregion
 }
 
-// Define classes that match the OSRM API response structure
+// Clases de deserialización del API OSRM
 public class OsrmApiResponse
 {
     [JsonPropertyName("code")]
     public string Code { get; set; }
+
     [JsonPropertyName("routes")]
     public List<OsrmRoute> Routes { get; set; }
 }
@@ -148,5 +183,14 @@ public class OsrmRoute
     public double Duration { get; set; }
 
     [JsonPropertyName("geometry")]
-    public string Geometry { get; set; }
+    public Geometry Geometry { get; set; }
+}
+
+public class Geometry
+{
+    [JsonPropertyName("coordinates")]
+    public List<List<double>> Coordinates { get; set; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; set; }
 }
