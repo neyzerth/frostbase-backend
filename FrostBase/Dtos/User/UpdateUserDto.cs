@@ -6,4 +6,5 @@ public class UpdateUserDto
     public string Phone { get; set; }
     public DateOnly? BirthDate { get; set; }
     public string IDTruckDefault { get; set; }
+    public bool Active { get; set; } //agregado
 }
