@@ -122,15 +122,16 @@ public class Order
         return Insert(order);
     }
 
-    public static Order Insert(Order o)
+    public static Order Insert(Order order)
     {
         try
         {
-            if(string.IsNullOrEmpty(o.Id))
-                o.Id = ObjectId.GenerateNewId().ToString();
-            o.DeliverDate = o.DeliverDate.Date;
-            _orderColl.InsertOne(o);
-            return o;
+            if(string.IsNullOrEmpty(order.Id))
+                order.Id = ObjectId.GenerateNewId().ToString();
+            
+            order.DeliverDate = order.DeliverDate.Date;
+            _orderColl.InsertOne(order);
+            return order;
         }
         catch (Exception e)
         {
@@ -243,13 +244,28 @@ public class Order
             Route matchRoute = MongoDbConnection.GetCollection<Route>("Routes").
                 Find(filter).FirstOrDefault();
             
-            return CalculateCloserDate(matchRoute.DeliverDays);
+            var date = CalculateCloserDate(matchRoute.DeliverDays);
+            CheckDeliverDate(this, date);
+            return date;
         }
         catch (Exception e)
         {
             Console.WriteLine("calculate deliver date: "+e);
-            return Date.AddDays(1).Date;
+            var date = Date.AddDays(1).Date;
+            
+            CheckDeliverDate(this, date);
+            return date;
         }
+    }
+
+    private static void CheckDeliverDate(Order order, DateTime date)
+    {
+        var documents = _orderColl.Find(
+            o => o.DeliverDate.Date == date.Date
+        ).CountDocuments();
+            
+        if(documents > 0)
+            throw new DuplicateOrderDeliverDateException(order);
     }
 
     private DateTime CalculateCloserDate(List<int> deliverDays)
