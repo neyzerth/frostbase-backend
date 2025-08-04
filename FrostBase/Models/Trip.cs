@@ -119,6 +119,82 @@ public class Trip
             throw new Exception("Error inserting trip "+t.Id+": "+e.Message);
         }
     }
+    
+    public static Trip Upsert(Trip t)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(t.Id))
+                t.Id = ObjectId.GenerateNewId().ToString();
+
+            if (t.Orders == null)
+                t.Orders = new List<TripOrder>();
+
+            if (Truck.Get(t.IDTruck) == null)
+                throw new FrostbaseException("Truck not found with id " + t.IDTruck);
+
+            if (UserApp.Get(t.IDUser) == null)
+                throw new FrostbaseException("User not found with id " + t.IDUser);
+
+            if (Route.Get(t.IDRoute) == null)
+                throw new FrostbaseException("Route not found with id " + t.IDRoute);
+
+            TripLog.Insert(t, t.StartTime);
+
+            var filter = Builders<Trip>.Filter.Eq(x => x.Id, t.Id);
+
+            var options = new ReplaceOptions { IsUpsert = true };
+
+            _tripColl.ReplaceOne(filter, t, options);
+
+            return t;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Trip upsert: " + e);
+            throw new Exception("Error upserting trip " + t.Id + ": " + e.Message);
+        }
+    }
+    
+    public static List<Trip> Upsert(List<Trip> trips)
+    {
+        try
+        {
+            foreach (var t in trips)
+            {
+                if (string.IsNullOrEmpty(t.Id))
+                    t.Id = ObjectId.GenerateNewId().ToString();
+
+                if (t.Orders == null)
+                    t.Orders = new List<TripOrder>();
+
+                if (Truck.Get(t.IDTruck) == null)
+                    throw new FrostbaseException("Truck not found with id " + t.IDTruck);
+
+                if (UserApp.Get(t.IDUser) == null)
+                    throw new FrostbaseException("User not found with id " + t.IDUser);
+
+                if (Route.Get(t.IDRoute) == null)
+                    throw new FrostbaseException("Route not found with id " + t.IDRoute);
+
+                TripLog.Insert(t, t.StartTime);
+
+                var filter = Builders<Trip>.Filter.Eq(x => x.Id, t.Id);
+
+                var options = new ReplaceOptions { IsUpsert = true };
+
+                _tripColl.ReplaceOne(filter, t, options);
+            }
+
+            return trips;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Trip upsert: " + e);
+            throw new Exception("Error upserting trips  " + e.Message);
+        }
+    }
+
     public static Trip Insert(CreateTripDto c)
     {
         Trip t = new Trip
