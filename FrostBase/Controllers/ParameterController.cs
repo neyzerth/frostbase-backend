@@ -10,18 +10,16 @@ public class ParameterController : ControllerBase
         ParameterDto parameter = ParameterDto.FromModel(Parameter.Get()); //error(?
         return Ok(Response<ParameterDto>.GetResponse(parameter));
     }
-    
-    // [HttpPost]
-    // public ActionResult Post([FromBody] CreateParameterDto c)
-    // { 
-    //     Parameter insert = Parameter.Insert(c);
-    //     
-    //     if(insert != null) 
-    //         return Ok(Response<ParameterDto>.GetResponse(ParameterDto.FromModel(insert)));
-    //     return BadRequest(MessageResponse.GetResponse("Order not inserted", 1, MessageType.Error));
-    // 
-    
-    
-    
+
+    [HttpPut]
+    public ActionResult Put([FromBody] UpdateParameterDto p)
+    {
+        Parameter updatedParam = Parameter.Update(p);
+
+        if (updatedParam != null)
+            return Ok(Response<ParameterDto>.GetResponse(ParameterDto.FromModel(updatedParam)));
+        return BadRequest(MessageResponse.GetResponse("Error updating parameters. Parameters were not updated", 1,
+            MessageType.Error));
+
     }
-    
+}

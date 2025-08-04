@@ -32,7 +32,7 @@ public class Parameter
     #region class methods
 
     public static Parameter Get() 
-    {
+    { 
         return _parameterColl.Find(p => true).FirstOrDefault();
     }
 
@@ -77,7 +77,13 @@ public class Parameter
                 .Set(p => p.MaxTemperature, updatedParameter.MaxTemperature)
                 .Set(p => p.MinTemperature, updatedParameter.MinTemperature)
                 .Set(p => p.MaxHumidity, updatedParameter.MaxHumidity)
-                .Set(p => p.MaxHumidity, updatedParameter.MinHumidity);
+                .Set(p => p.MinHumidity, updatedParameter.MinHumidity);
+            
+            if (updatedParameter.MinHumidity < 0 || updatedParameter.MinHumidity > 100 ||
+                updatedParameter.MaxHumidity < 0 || updatedParameter.MaxHumidity > 100)
+            {
+                throw new ArgumentException("Humidity values must be between 0 and 100.");
+            }
             
             var options = new FindOneAndUpdateOptions<Parameter>
             {
@@ -89,7 +95,7 @@ public class Parameter
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw new Exception("Error updating order: " + e.Message);
+            throw new Exception("Error updating parameters: " + e.Message);
         }
     }
 
