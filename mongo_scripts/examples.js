@@ -418,5 +418,208 @@ db.Alerts.insertMany([
         state: true,
         IDReading: ObjectId("674a9001000000000000001e"),
         IDAlertTypes: "OD",
-    }
+    }  
 ]);
+
+// READINGS - PRUEBAS A FALTA DE SIMULADOR XD - SEMANA DEL 20 AL 30 DE AGOSTO
+db.Readings.insertMany([{
+    "_id": {"$oid": "674a9001000000000000002f"},
+    "date": {"$date": "2025-07-20T10:00:00.000Z"},
+    "door_state": false,
+    "temp": 2.7,
+    "perc_humidity": 76,
+    "latitude": 32.5148,
+    "longitude": -117.0383,
+    "IDTruck": {"$oid": "674a4001000000000000002d"}
+  },
+  {
+    "_id": {"$oid": "674a90010000000000000030"},
+    "date": {"$date": "2025-07-21T14:30:00.000Z"},
+    "door_state": true,
+    "temp": 3.1,
+    "perc_humidity": 72,
+    "latitude": 32.5152,
+    "longitude": -117.0379,
+    "IDTruck": {"$oid": "674a4001000000000000003a"}
+  },
+  {
+    "_id": {"$oid": "674a90010000000000000031"},
+    "date": {"$date": "2025-07-22T08:45:00.000Z"},
+    "door_state": false,
+    "temp": 1.9,
+    "perc_humidity": 85,
+    "latitude": 32.5145,
+    "longitude": -117.0386,
+    "IDTruck": {"$oid": "674a4001000000000000001b"}
+  },
+  {
+    "_id": {"$oid": "674a90010000000000000032"},
+    "date": {"$date": "2025-07-23T16:20:00.000Z"},
+    "door_state": true,
+    "temp": 4.0,
+    "perc_humidity": 68,
+    "latitude": 32.5158,
+    "longitude": -117.0373,
+    "IDTruck": {"$oid": "674a4001000000000000003b"}
+  },
+  {
+    "_id": {"$oid": "674a90010000000000000033"},
+    "date": {"$date": "2025-07-24T11:15:00.000Z"},
+    "door_state": false,
+    "temp": 2.3,
+    "perc_humidity": 79,
+    "latitude": 32.5149,
+    "longitude": -117.0382,
+    "IDTruck": {"$oid": "674a4001000000000000002e"}
+  },
+  {
+    "_id": {"$oid": "674a90010000000000000034"},
+    "date": {"$date": "2025-07-25T09:30:00.000Z"},
+    "door_state": true,
+    "temp": 2.9,
+    "perc_humidity": 74,
+    "latitude": 32.5151,
+    "longitude": -117.0380,
+    "IDTruck": {"$oid": "674a4001000000000000001c"}
+  },
+  {
+    "_id": {"$oid": "674a90010000000000000035"},
+    "date": {"$date": "2025-07-26T13:45:00.000Z"},
+    "door_state": false,
+    "temp": 3.5,
+    "perc_humidity": 71,
+    "latitude": 32.5143,
+    "longitude": -117.0388,
+    "IDTruck": {"$oid": "674a4001000000000000002a"}
+  },
+  {
+    "_id": {"$oid": "674a90010000000000000036"},
+    "date": {"$date": "2025-07-27T07:00:00.000Z"},
+    "door_state": true,
+    "temp": 1.5,
+    "perc_humidity": 88,
+    "latitude": 32.5155,
+    "longitude": -117.0376,
+    "IDTruck": {"$oid": "674a4001000000000000001d"}
+  },
+  {
+    "_id": {"$oid": "674a90010000000000000037"},
+    "date": {"$date": "2025-07-28T15:10:00.000Z"},
+    "door_state": false,
+    "temp": 4.2,
+    "perc_humidity": 65,
+    "latitude": 32.5140,
+    "longitude": -117.0391,
+    "IDTruck": {"$oid": "674a4001000000000000003a"}
+  },
+  {
+    "_id": {"$oid": "674a90010000000000000038"},
+    "date": {"$date": "2025-07-29T12:25:00.000Z"},
+    "door_state": true,
+    "temp": 2.0,
+    "perc_humidity": 82,
+    "latitude": 32.5157,
+    "longitude": -117.0374,
+    "IDTruck": {"$oid": "674a4001000000000000002b"}
+  },
+  {
+    "_id": {"$oid": "674a90010000000000000039"},
+    "date": {"$date": "2025-07-20T17:50:00.000Z"},
+    "door_state": false,
+    "temp": 3.8,
+    "perc_humidity": 69,
+    "latitude": 32.5142,
+    "longitude": -117.0389,
+    "IDTruck": {"$oid": "674a4001000000000000001e"}
+  },
+  {
+    "_id": {"$oid": "674a9001000000000000003a"},
+    "date": {"$date": "2025-07-21T06:15:00.000Z"},
+    "door_state": true,
+    "temp": 1.2,
+    "perc_humidity": 90,
+    "latitude": 32.5159,
+    "longitude": -117.0372,
+    "IDTruck": {"$oid": "674a4001000000000000002c"}
+  },
+  {
+    "_id": {"$oid": "674a9001000000000000003b"},
+    "date": {"$date": "2025-07-30T19:30:00.000Z"},
+    "door_state": false,
+    "temp": 4.5,
+    "perc_humidity": 63,
+    "latitude": 32.5141,
+    "longitude": -117.0390,
+    "IDTruck": {"$oid": "674a4001000000000000003b"}
+  },
+  {
+    "_id": {"$oid": "674a9001000000000000003c"},
+    "date": {"$date": "2025-07-22T10:40:00.000Z"},
+    "door_state": true,
+    "temp": 2.4,
+    "perc_humidity": 77,
+    "latitude": 32.5150,
+    "longitude": -117.0381,
+    "IDTruck": {"$oid": "674a4001000000000000001a"}
+  },
+  {
+    "_id": {"$oid": "674a9001000000000000003d"},
+    "date": {"$date": "2025-07-23T08:05:00.000Z"},
+    "door_state": false,
+    "temp": 1.8,
+    "perc_humidity": 86,
+    "latitude": 32.5146,
+    "longitude": -117.0385,
+    "IDTruck": {"$oid": "674a4001000000000000002d"}
+  },
+  {
+    "_id": {"$oid": "674a9001000000000000003e"},
+    "date": {"$date": "2025-07-31T14:15:00.000Z"},
+    "door_state": true,
+    "temp": 3.9,
+    "perc_humidity": 67,
+    "latitude": 32.5153,
+    "longitude": -117.0378,
+    "IDTruck": {"$oid": "674a4001000000000000001b"}
+  },
+  {
+    "_id": {"$oid": "674a9001000000000000003f"},
+    "date": {"$date": "2025-07-25T18:20:00.000Z"},
+    "door_state": false,
+    "temp": 4.1,
+    "perc_humidity": 66,
+    "latitude": 32.5144,
+    "longitude": -117.0387,
+    "IDTruck": {"$oid": "674a4001000000000000003a"}
+  },
+  {
+    "_id": {"$oid": "674a90010000000000000040"},
+    "date": {"$date": "2025-07-26T09:55:00.000Z"},
+    "door_state": true,
+    "temp": 2.1,
+    "perc_humidity": 81,
+    "latitude": 32.5156,
+    "longitude": -117.0375,
+    "IDTruck": {"$oid": "674a4001000000000000002e"}
+  },
+  {
+    "_id": {"$oid": "674a90010000000000000041"},
+    "date": {"$date": "2025-07-27T16:30:00.000Z"},
+    "door_state": false,
+    "temp": 3.6,
+    "perc_humidity": 70,
+    "latitude": 32.5147,
+    "longitude": -117.0384,
+    "IDTruck": {"$oid": "674a4001000000000000001c"}
+  },
+  {
+    "_id": {"$oid": "674a90010000000000000042"},
+    "date": {"$date": "2025-07-28T07:45:00.000Z"},
+    "door_state": true,
+    "temp": 1.3,
+    "perc_humidity": 89,
+    "latitude": 32.5154,
+    "longitude": -117.0377,
+    "IDTruck": {"$oid": "674a4001000000000000002a"}
+  }
+)];
