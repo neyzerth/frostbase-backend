@@ -361,7 +361,7 @@ public class Order
                 IDStore = store.Id
             };
 
-            order.CalculateDeliverDate();
+            order.DeliverDate = order.CalculateDeliverDate();
             
             orders.Add(order);
         }

@@ -55,7 +55,14 @@ public class Store
                     { "from", "Orders" },
                     {
                         "let",
-                        new BsonDocument("storeId", "$_id")
+                        new BsonDocument
+                        {
+                            { "storeId", "$_id" },
+                            {
+                                "targetDate",
+                                new DateTime(2025, 9, 4, 0, 0, 0)
+                            }
+                        }
                     },
                     {
                         "pipeline",
@@ -75,26 +82,33 @@ public class Store
                                             new BsonDocument("$lte",
                                                 new BsonArray
                                                 {
-                                                    "$delivered",
-                                                    datetime
+                                                    new BsonDocument("$dateTrunc",
+                                                        new BsonDocument
+                                                        {
+                                                            { "date", "$date" },
+                                                            { "unit", "day" }
+                                                        }),
+                                                    new BsonDocument("$dateTrunc",
+                                                        new BsonDocument
+                                                        {
+                                                            { "date", "$$targetDate" },
+                                                            { "unit", "day" }
+                                                        })
                                                 }),
-                                            new BsonDocument("$eq",
+                                            new BsonDocument("$gte",
                                                 new BsonArray
                                                 {
-                                                    new BsonDocument("$dateToString",
+                                                    new BsonDocument("$dateTrunc",
                                                         new BsonDocument
                                                         {
-                                                            { "format", "%Y-%m-%d" },
-                                                            { "date", "$delivered" }
+                                                            { "date", "$delivered" },
+                                                            { "unit", "day" }
                                                         }),
-                                                    new BsonDocument("$dateToString",
+                                                    new BsonDocument("$dateTrunc",
                                                         new BsonDocument
                                                         {
-                                                            { "format", "%Y-%m-%d" },
-                                                            {
-                                                                "date",
-                                                                datetime
-                                                            }
+                                                            { "date", "$$targetDate" },
+                                                            { "unit", "day" }
                                                         })
                                                 })
                                         })))
