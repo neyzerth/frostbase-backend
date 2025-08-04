@@ -1,7 +1,7 @@
 public class OrderDto
 {
     public string Id { get; set; }
-    public DateOnly Date { get; set; }
+    public DateTime Date { get; set; }
     public DateOnly? DeliverDate { get; set; }
     public AdminDto CreatedBy { get; set; }
     public StoreDto Store { get; set; }
@@ -12,7 +12,7 @@ public class OrderDto
         return new OrderDto
         {
             Id = o.Id,
-            Date = DateOnly.FromDateTime(o.Date),
+            Date = o.Date,
             DeliverDate = DateOnly.FromDateTime(o.DeliverDate),
             CreatedBy = AdminDto.FromModel(UserApp.Get(o.IDUser)),
             Store = StoreDto.FromModel(global::Store.Get(o.IDStore)),
