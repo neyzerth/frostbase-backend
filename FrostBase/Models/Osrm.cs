@@ -123,7 +123,7 @@ public class Osrm
             EndLongitude = endLon,
         };
 
-        var url = $"https://router.project-osrm.org/route/v1/driving/{startLon},{startLat};{endLon},{endLat}?overview=full&geometries=geojson";
+        var url = $"https://router.project-osrm.org/route/v1/driving/{startLon},{startLat};{endLon},{endLat}?overview=simplified&geometries=geojson";
         Console.WriteLine("OSRM URL: " + url);
 
         var response = await _httpClient.GetAsync(url);
@@ -162,6 +162,77 @@ public class Osrm
 
         return osrmRoute;
     }
+    
+    public static Location MoveTowardsMeters(Location A, Location B, double stepMeters)
+{
+    const double EarthRadius = 6371000; // Radio de la Tierra en metros
+
+    double latA = DegreeToRadian(A.Latitude);
+    double lonA = DegreeToRadian(A.Longitude);
+    double latB = DegreeToRadian(B.Latitude);
+    double lonB = DegreeToRadian(B.Longitude);
+
+    // Calcular la distancia entre A y B (Haversine)
+    double distance = HaversineDistance(latA, lonA, latB, lonB);
+
+    if (stepMeters >= distance || distance == 0)
+    {
+        return new Location { Latitude = B.Latitude, Longitude = B.Longitude };
+    }
+
+    // Calcular el bearing
+    double bearing = CalculateBearingRadians(latA, lonA, latB, lonB);
+
+    // Fracción de la distancia
+    double fraction = stepMeters / distance;
+
+    // Fórmulas para encontrar el nuevo punto
+    double newLat = Math.Asin(Math.Sin(latA) * Math.Cos(fraction * distance / EarthRadius) +
+                              Math.Cos(latA) * Math.Sin(fraction * distance / EarthRadius) * Math.Cos(bearing));
+
+    double newLon = lonA + Math.Atan2(Math.Sin(bearing) * Math.Sin(fraction * distance / EarthRadius) * Math.Cos(latA),
+                                      Math.Cos(fraction * distance / EarthRadius) - Math.Sin(latA) * Math.Sin(newLat));
+
+    return new Location
+    {
+        Latitude = RadianToDegree(newLat),
+        Longitude = RadianToDegree(newLon)
+    };
+}
+
+    private static double DegreeToRadian(double degree) => degree * Math.PI / 180.0;
+    private static double RadianToDegree(double radian) => radian * 180.0 / Math.PI;
+
+    private static double HaversineDistance(double lat1, double lon1, double lat2, double lon2)
+    {
+        const double EarthRadius = 6371000; // Radio de la Tierra en metros
+
+        double dLat = lat2 - lat1;
+        double dLon = lon2 - lon1;
+
+        double a = Math.Pow(Math.Sin(dLat / 2), 2) +
+                   Math.Cos(lat1) * Math.Cos(lat2) * Math.Pow(Math.Sin(dLon / 2), 2);
+
+        double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+
+        return EarthRadius * c;
+    }
+
+    public static double HaversineDistance(Location A, Location B)
+    {
+        return HaversineDistance(A.Latitude, A.Longitude, B.Latitude, B.Longitude);;
+    }
+
+    private static double CalculateBearingRadians(double latA, double lonA, double latB, double lonB)
+    {
+        double dLon = lonB - lonA;
+        double y = Math.Sin(dLon) * Math.Cos(latB);
+        double x = Math.Cos(latA) * Math.Sin(latB) -
+                   Math.Sin(latA) * Math.Cos(latB) * Math.Cos(dLon);
+
+        return Math.Atan2(y, x);
+    }
+
 }
 
 // Clases de deserialización del API OSRM

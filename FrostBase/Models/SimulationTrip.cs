@@ -158,6 +158,16 @@ public class SimulationTrip
     public static List<Trip> SimulateByDate(DateTime? date = null)
     {
         date ??= DateTime.Now;
+
+        var simulations = _simTripColl.Find(
+                    s => s.SimulatedTrip.StartTime.Date == date.Value.Date
+                );
+
+        if (simulations.Count() > 0)
+        {
+            Console.WriteLine($"{date.Value.Date} already simulated, returning {simulations.Count()} trips");
+            return simulations.ToList().ConvertAll(s => s.SimulatedTrip);
+        }
         
         //get random route (that its valid for today)
         List<Route> routes = Route.GetWithOrders(date.Value);
