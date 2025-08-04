@@ -44,33 +44,83 @@ public class Store
     {
         return _storeColl.Find(s => s.Active == true).ToList();       
     }
-    public static List<Store> GetNotOrders() 
+    public static List<Store> GetNotOrders(DateTime? date = null)
     {
-        var ordersCollection = MongoDbConnection.GetCollection<Order>("Orders");
-
-        var pipeline = new[]
+        DateTime datetime = date ?? DateTime.Now;
+        var pipeline = new List<BsonDocument>()
         {
-            new BsonDocument("$lookup", new BsonDocument
-            {
-                { "from", "Orders" },
-                { "localField", "_id" },
-                { "foreignField", "IDStore" },
-                { "as", "orders" }
-            }),
-            new BsonDocument("$unwind", "$orders"),
-            new BsonDocument("$match", new BsonDocument
-            {
-                { "orders.IDStateOrder", new BsonDocument("$ne", "PO") }
-            }),
-            new BsonDocument("$project", new BsonDocument
-            {
-                { "name", 1 },
-                { "phone", 1 },
-                { "location", 1 },
-                { "latitude", 1 },
-                { "longitude", 1 },
-                { "active", 1 }
-            })
+            new BsonDocument("$lookup",
+                new BsonDocument
+                {
+                    { "from", "Orders" },
+                    {
+                        "let",
+                        new BsonDocument
+                        {
+                            { "storeId", "$_id" },
+                            {
+                                "targetDate",
+                                datetime
+                            }
+                        }
+                    },
+                    {
+                        "pipeline",
+                        new BsonArray
+                        {
+                            new BsonDocument("$match",
+                                new BsonDocument("$expr",
+                                    new BsonDocument("$and",
+                                        new BsonArray
+                                        {
+                                            new BsonDocument("$eq",
+                                                new BsonArray
+                                                {
+                                                    "$IDStore",
+                                                    "$$storeId"
+                                                }),
+                                            new BsonDocument("$lte",
+                                                new BsonArray
+                                                {
+                                                    new BsonDocument("$dateTrunc",
+                                                        new BsonDocument
+                                                        {
+                                                            { "date", "$date" },
+                                                            { "unit", "day" }
+                                                        }),
+                                                    new BsonDocument("$dateTrunc",
+                                                        new BsonDocument
+                                                        {
+                                                            { "date", "$$targetDate" },
+                                                            { "unit", "day" }
+                                                        })
+                                                }),
+                                            new BsonDocument("$gte",
+                                                new BsonArray
+                                                {
+                                                    new BsonDocument("$dateTrunc",
+                                                        new BsonDocument
+                                                        {
+                                                            { "date", "$delivered" },
+                                                            { "unit", "day" }
+                                                        }),
+                                                    new BsonDocument("$dateTrunc",
+                                                        new BsonDocument
+                                                        {
+                                                            { "date", "$$targetDate" },
+                                                            { "unit", "day" }
+                                                        })
+                                                })
+                                        })))
+                        }
+                    },
+                    { "as", "ordersMatch" }
+                }),
+            new BsonDocument("$match",
+                new BsonDocument("ordersMatch",
+                    new BsonDocument("$size", 0))),
+            new BsonDocument("$project",
+                new BsonDocument("ordersMatch", 0))
         };
 
         return _storeColl.Aggregate<Store>(pipeline).ToList();
@@ -78,7 +128,66 @@ public class Store
     public static Store Get(string id)
     {
         return _storeColl.Find(s => s.Id == id).FirstOrDefault();       
-    } 
+    }
+
+    public static Order GetDeliverOrder(string store, DateTime date)
+    {
+        var pipeline = new List<BsonDocument>
+        {
+            new BsonDocument("$match",
+                new BsonDocument("_id",
+                    new ObjectId(store))),
+            new BsonDocument("$lookup",
+                new BsonDocument
+                {
+                    { "from", "Orders" },
+                    { "localField", "_id" },
+                    { "foreignField", "IDStore" },
+                    { "as", "orders" },
+                    {
+                        "let",
+                        new BsonDocument("targetDate",
+                            date)
+                    },
+                    {
+                        "pipeline",
+                        new BsonArray
+                        {
+                            new BsonDocument("$match",
+                                new BsonDocument("$expr",
+                                    new BsonDocument("$eq",
+                                        new BsonArray
+                                        {
+                                            new BsonDocument("$dateTrunc",
+                                                new BsonDocument
+                                                {
+                                                    { "date", "$delivered" },
+                                                    { "unit", "day" }
+                                                }),
+                                            new BsonDocument("$dateTrunc",
+                                                new BsonDocument
+                                                {
+                                                    { "date", "$$targetDate" },
+                                                    { "unit", "day" }
+                                                })
+                                        })))
+                        }
+                    }
+                }),
+            new BsonDocument("$unwind", "$orders"),
+            new BsonDocument("$project",
+                new BsonDocument
+                {
+                    { "_id", "$orders._id" },
+                    { "date", "$orders.date" },
+                    { "delivered", "$orders.delivered" },
+                    { "IDCreatedByUser", "$orders.IDCreatedByUser" },
+                    { "IDStore", "$orders.IDStore" },
+                    { "IDStateOrder", "$orders.IDStateOrder" }
+                })
+        };
+        return _storeColl.Aggregate<Order>(pipeline).FirstOrDefault();;
+    }
     public static bool Ordered(string id)
     {
         var ordersCollection = MongoDbConnection.GetCollection<Order>("Orders");

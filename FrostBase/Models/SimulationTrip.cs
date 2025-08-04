@@ -70,10 +70,102 @@ public class SimulationTrip
             throw new Exception("Error inserting simulation trip of "+simulatedTrip.Id+": "+e.Message);
         }
     }
+    
+    
+    public static List<SimulationTrip> InsertMany(List<SimulationTrip> simTrips)
+    {
+        try
+        {
+            foreach (var simTrip in simTrips)
+            {
+                if(string.IsNullOrEmpty(simTrip.SimulatedTrip.Id))
+                    simTrip.SimulatedTrip.Id = ObjectId.GenerateNewId().ToString();
+            }
+            
+            _simTripColl.InsertMany(simTrips);
+            return simTrips;       
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Simulation trip insert: "+e);
+            throw new Exception("Error inserting simulation trip: "+e.Message);
+        }
+    }
 
     #endregion
     
     #region simulation
+    
+    
+    public static Trip Simulate(DateTime? date = null)
+    {
+        Random random = new Random();
+        
+        //get random route (that its valid for today)
+        List<Route> routes = Route.GetByDate(date.Value);
+        
+        if (routes.Count == 0) throw new FrostbaseException("No routes for " + date.Value.Date, 1, 404);
+        
+        Route route = routes[random.Next(0, routes.Count-1)];
+        
+        return Simulate(route, date);
+    }
+    public static Trip Simulate(Route route, DateTime? date = null)
+    {
+        date ??= DateTime.Now;
+        
+        //the same date but set at 7am
+        DateTime newDate = date.Value.Date.AddHours(7);
+        //trip starts between 7am and 8am
+        var simulatedTime = CalculateRandomMinutes(newDate, 0, 60);
+        
+        Trip trip = Trip.GenerateStartTrip(route, simulatedTime);
+        
+        trip.GenerateOrders();
+        
+        trip.GenerateEndTimeTrip();
+
+        return trip;
+    }
+    public static List<Trip> SimulateByDate(DateTime? date = null)
+    {
+        date ??= DateTime.Now;
+        
+        //get random route (that its valid for today)
+        List<Route> routes = Route.GetWithOrders(date.Value);
+        
+        if (routes.Count == 0) throw new FrostbaseException("No routes with orders for " + date.Value.Date, 1, 404);
+
+        var trips = new List<Trip>();
+        var simulation = new List<SimulationTrip>();
+        foreach (var route in routes)
+        {
+            var trip = Simulate(route, date);
+            trips.Add(trip);
+            simulation.Add(new SimulationTrip(trip));
+        }
+
+        try
+        {
+            InsertMany(simulation);
+            return trips;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new FrostbaseException("Error inserting simulation trips");
+        }
+    }
+
+    public static DateTime CalculateRandomMinutes(DateTime date, int minMin, int maxMin)
+    {
+        Random rnd = new Random();
+        DateTime newDate = date.Date;
+        var random = rnd.NextDouble() * (maxMin - minMin) + minMin;
+        
+        return newDate.AddMinutes(random);
+    }
+    
     
     public static List<Trip> CheckSimulationsTrips(DateTime? date)
     {  

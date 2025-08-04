@@ -145,6 +145,60 @@ public class Route
         }
     }
     
+    public static List<Route> GetWithOrders(DateTime date)
+    {
+        var pipeline = new List<BsonDocument>()
+        {
+            new BsonDocument("$lookup",
+                new BsonDocument
+                {
+                    { "from", "Orders" },
+                    { "localField", "stores.IDStore" },
+                    { "foreignField", "IDStore" },
+                    { "as", "orders" },
+                    {
+                        "let",
+                        new BsonDocument("targetDate",
+                            date)
+                    },
+                    {
+                        "pipeline",
+                        new BsonArray
+                        {
+                            new BsonDocument("$match",
+                                new BsonDocument("$expr",
+                                    new BsonDocument("$eq",
+                                        new BsonArray
+                                        {
+                                            new BsonDocument("$dateTrunc",
+                                                new BsonDocument
+                                                {
+                                                    { "date", "$delivered" },
+                                                    { "unit", "day" }
+                                                }),
+                                            new BsonDocument("$dateTrunc",
+                                                new BsonDocument
+                                                {
+                                                    { "date", "$$targetDate" },
+                                                    { "unit", "day" }
+                                                })
+                                        })))
+                        }
+                    }
+                }),
+            new BsonDocument("$match",
+                new BsonDocument("$expr",
+                    new BsonDocument("$gte",
+                        new BsonArray
+                        {
+                            new BsonDocument("$size", "$orders"),
+                            1
+                        }))),
+            new BsonDocument("$project",
+                new BsonDocument("orders", 0))
+        };
+        return _routeColl.Aggregate<Route>(pipeline).ToList();
+    }
     public static List<Route> GetByDate(DateTime date)
     {
         int day = (int)date.DayOfWeek;

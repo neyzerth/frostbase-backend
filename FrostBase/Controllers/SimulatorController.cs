@@ -10,12 +10,26 @@ public class SimulatorController : ControllerBase
         OrderDto order = OrderDto.FromModel(Order.GenerateOrder(simulate.Date));
         return Ok(Response<OrderDto>.GetResponse( order));
     }
+    [HttpPost("order/generate-by-date")]
+    public ActionResult GenerateManyOrders([FromBody] Simulate simulate)
+    {
+        List<OrderDto> orders = OrderDto.FromModel(Order.GenerateOrders(simulate.Date));
+        Console.WriteLine("Inserted orders: " + orders.Count);;
+        return Ok(ListResponse<OrderDto>.GetResponse(orders));
+    }
     
     [HttpPost("trip/generate")]
     public ActionResult GenerateTrip([FromBody] Simulate simulate)
     {
-        TripDto trip = TripDto.FromModel(Trip.Simulate(simulate.Date));
+        TripDto trip = TripDto.FromModel(SimulationTrip.Simulate(simulate.Date));
         return Ok(Response<TripDto>.GetResponse( trip));
+    }
+    
+    [HttpPost("trip/generate-by-date")]
+    public ActionResult GenerateTripByDate([FromBody] Simulate simulate)
+    {
+        List<TripDto> trip = TripDto.FromModel(SimulationTrip.SimulateByDate(simulate.Date));
+        return Ok(ListResponse<TripDto>.GetResponse( trip));
     }
     
     [HttpPost("trip/check/")]

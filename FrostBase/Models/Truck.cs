@@ -70,6 +70,7 @@ public class Truck
     {
         Truck t = new Truck
         {
+            Id = ObjectId.GenerateNewId().ToString(),
             Brand = c.Brand,
             Model = c.Model,
             LicensePlate = c.LicensePlate,

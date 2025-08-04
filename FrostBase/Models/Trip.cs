@@ -257,40 +257,16 @@ public class Trip
     
     #region simulator
 
-    public static Trip Simulate(DateTime? date = null)
-    {
-        date ??= DateTime.Now;
-        Trip trip = GenerateStartTrip(date);
-        
-        trip.GenerateOrders();
-        
-        trip.GenerateEndTimeTrip();
-
-        return SimulationTrip.Insert(trip).SimulatedTrip;
-    }
-
-    public static Trip GenerateStartTrip(DateTime? date = null)
+    public static Trip GenerateStartTrip(Route route, DateTime? date = null)
     {
         date??= DateTime.Now;
         
-        Random random = new Random();
-        
-        //get random route (that its valid for today)
-        List<Route> routes = Route.GetByDate(date.Value);
-        
-        if (routes.Count == 0) throw new FrostbaseException("No routes for " + date.Value.Date, 1, 404);
-        
-        Route route = routes[random.Next(0, routes.Count-1)];
-        
-        //get a random user
-        List<Truck> trucks = Truck.GetAvailable();
-        if (trucks.Count == 0) throw new FrostbaseException("No trucks available",1,404);
-        
-        Truck truck = trucks[random.Next(0, trucks.Count-1)];
+        //get a driver info
+        var driver = UserApp.Get(route.IDUser);
         
         StartTripDto t = new StartTripDto
         {
-            IDTruck = truck.Id,
+            IDTruck = driver.IDTruckDefault,
             IDDriver = route.IDUser,
             IDRoute = route.Id,
             StartDate = date.Value,
@@ -299,7 +275,7 @@ public class Trip
         var newTrip = new Trip(t);
         TripLog.Insert(newTrip, newTrip.StartTime);;
 
-        return new Trip(t);
+        return newTrip;
     }
 
     public void GenerateEndTimeTrip()
@@ -340,12 +316,19 @@ public class Trip
         //the first order startTime is the same as the trip startTime
         var orderStartTime =  StartTime;
         
-        //use dto to get the store location in one request
-        List<OrderDto> orders = OrderDto.FromModel(Order.GetByRoute(IDRoute, StartTime));
+        var route  = Route.Get(IDRoute);
+        
+        //order by te secuence
+        route.Stores = route.Stores.OrderBy(r => r.Sequence).ToList();
         
         Console.WriteLine("== GENERATE TIMES ===============");
-        foreach (OrderDto order in orders)
+    
+        foreach (var store in route.Stores)
         {
+            var deliverOrder = Store.GetDeliverOrder(store.IDStore, StartTime);
+            if (deliverOrder == null)
+                continue;
+            var order = OrderDto.FromModel(deliverOrder);
             TripLog.Insert(this, orderStartTime);
             //generate times
             var times = TripOrder.GenerateOrderDeliverTime(startLocation, orderStartTime, order);
@@ -370,6 +353,10 @@ public class Trip
             orderStartTime = times.EndTime.Value;
             
         }
+
+        if (Orders.Count <= 0)
+            throw new FrostbaseException("No orders for stores founded");
+        
         Console.WriteLine("== END GENERATE TIMES ===============");
         
     }

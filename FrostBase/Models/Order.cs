@@ -42,6 +42,12 @@ public class Order
 
     public Order()
     {
+        Id = ObjectId.GenerateNewId().ToString();
+        Date = DateTime.Now;
+        DeliverDate = DateTime.Now;
+        IDStateOrder = "PO";
+        IDStore = "";
+        IDUser = "";
     }
 
     public Order(OrderDto dto)
@@ -51,7 +57,7 @@ public class Order
         IDUser = dto.CreatedBy.Id;
         IDStateOrder = dto.State.Id;
         DeliverDate = dto.DeliverDate.Value.ToDateTime(TimeOnly.MinValue);
-        Date = dto.Date.ToDateTime(TimeOnly.MinValue);
+        Date = dto.Date;
     }
     public Order(ViewOrder v)
     {
@@ -80,16 +86,12 @@ public class Order
     {
         return _orderColl.Find(o => o.IDStateOrder == "PO" || o.IDStateOrder == "LO").ToList();;
     }
-    public static List<Order> GetPending(DateTime date)
-    {
-        return null;
-    }
 
-    public static List<Order> GetByRoute(string idStore, DateTime date)
+    public static List<Order> GetByRoute(string routeId, DateTime date)
     {
         var orders = new List<Order>();
         List<ViewOrder> viewOrders = ViewOrder.GetByDate(date)
-            .Where(o => o.IDStore == idStore)
+            .Where(o => o.Route.Id == routeId)
             .ToList();
         
         foreach (var viewOrder in viewOrders)
@@ -120,20 +122,41 @@ public class Order
         return Insert(order);
     }
 
-    public static Order Insert(Order o)
+    public static Order Insert(Order order)
     {
         try
         {
-            if(string.IsNullOrEmpty(o.Id))
-                o.Id = ObjectId.GenerateNewId().ToString();
-            o.DeliverDate = o.DeliverDate.Date;
-            _orderColl.InsertOne(o);
-            return o;
+            if(string.IsNullOrEmpty(order.Id))
+                order.Id = ObjectId.GenerateNewId().ToString();
+            
+            order.DeliverDate = order.DeliverDate.Date;
+            _orderColl.InsertOne(order);
+            return order;
         }
         catch (Exception e)
         {
             Console.WriteLine("Error inserting order: "+e);
             throw new Exception("Error inserting order: "+e);
+        }
+    }
+
+    public static List<Order> InsertMany(List<Order> orders)
+    {
+        try
+        {
+            foreach (var order in orders)
+            {
+                if(string.IsNullOrEmpty(order.Id))
+                    order.Id = ObjectId.GenerateNewId().ToString();
+            }
+            
+            _orderColl.InsertMany(orders);
+            return orders;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error inserting orders: "+e);
+            throw new FrostbaseException("Error inserting orders: "+e);
         }
     }
     public static Order Update(Order updatedOrder)
@@ -215,19 +238,34 @@ public class Order
         {
             //filtro para encontrar rutas con la tienda de la orden
             var filter = Builders<Route>.Filter.And(
-                Builders<Route>.Filter.Eq("stores.IDStore", IDStore),
+                Builders<Route>.Filter.Eq("stores.IDStore", ObjectId.Parse(IDStore)),
                 Builders<Route>.Filter.Eq(r => r.Active, true)
             );
             Route matchRoute = MongoDbConnection.GetCollection<Route>("Routes").
                 Find(filter).FirstOrDefault();
             
-            return CalculateCloserDate(matchRoute.DeliverDays);
+            var date = CalculateCloserDate(matchRoute.DeliverDays);
+            CheckDeliverDate(this, date);
+            return date;
         }
         catch (Exception e)
         {
             Console.WriteLine("calculate deliver date: "+e);
-            return Date.AddDays(1);
+            var date = Date.AddDays(1).Date;
+            
+            CheckDeliverDate(this, date);
+            return date;
         }
+    }
+
+    private static void CheckDeliverDate(Order order, DateTime date)
+    {
+        var documents = _orderColl.Find(
+            o => o.DeliverDate.Date == date.Date
+        ).CountDocuments();
+            
+        if(documents > 0)
+            throw new DuplicateOrderDeliverDateException(order);
     }
 
     private DateTime CalculateCloserDate(List<int> deliverDays)
@@ -236,9 +274,21 @@ public class Order
         DayOfWeek closerDay = CloserDayOfWeek(deliverDays);
         
         //calcular la fecha de entrega
-        DateTime closerDate = this.Date.Date;
-        while (closerDate.DayOfWeek != closerDay)
-            closerDate = closerDate.AddDays(1);
+        DateTime closerDate = this.Date;
+        try
+        {
+            int i = 0;
+            while (closerDate.DayOfWeek != closerDay)
+            {
+                closerDate = closerDate.AddDays(1);
+                //Console.Write($"{i++}\t");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new FrostbaseException("Error calculating closer date in "+closerDate);
+        }
         
         return closerDate.Date;
     }
@@ -259,7 +309,7 @@ public class Order
         }
 
         //si no paso niguna validacion, que agarre el menor dia
-        if (closerDay < 0)
+        if (closerDay == 8)
             closerDay = days.Min();
 
         return (DayOfWeek)closerDay;
@@ -276,12 +326,12 @@ public class Order
         
         //get admins and store that not ordered yet
         List<UserApp> users = UserApp.GetAdmin();
-        List<Store> stores = Store.GetNotOrders();
+        List<Store> stores = Store.GetNotOrders(date);
         
         if(users.Count < 1)
-            throw new Exception("No hay administradores");
+            throw new FrostbaseException("There is no admins users");
         if(stores.Count < 1)
-            throw new Exception("No hay tiendas sin ordenar hoy");
+            throw new FrostbaseException("All stores ordered yet");
         
         //get a random store and admin
         UserApp admin = users[rnd.Next(0, users.Count-1)];
@@ -295,6 +345,71 @@ public class Order
         };
         
         return Order.Insert(o);
+    }
+    
+    //TODO
+    public static List<Order> GenerateOrders(DateTime? date)
+    {
+        date ??= DateTime.Now;
+        Random rnd = new Random();
+        
+        //get admins and store that not ordered yet
+        List<UserApp> users = UserApp.GetAdmin();
+        List<Store> stores = Store.GetNotOrders(date);
+        
+        if(users.Count < 1)
+            throw new FrostbaseException("There is no admins users", 1, 404);
+        if(stores.Count < 1)
+            throw new FrostbaseException("All stores ordered yet", 2, 404, MessageType.Warning);
+        
+        //get a random store and admin
+        UserApp admin = users[rnd.Next(0, users.Count-1)];
+
+        var orders = new List<Order>();
+
+        foreach (var store in stores)
+        {
+            Order order = new Order
+            {
+                Id = ObjectId.GenerateNewId().ToString(),
+                Date = CalculateRandomDateTime(date.Value),
+                IDUser = admin.Id,
+                IDStore = store.Id
+            };
+
+            order.DeliverDate = order.CalculateDeliverDate();
+            
+            orders.Add(order);
+        }
+
+        OrderLog.InsertMany(orders);
+        
+        return InsertMany(orders);
+    }
+
+    public static DateTime CalculateRandomDateTime(DateTime date)
+    {
+        Random rnd = new Random();
+        var random = rnd.NextDouble();
+        if(random < 0.01)
+            return CalculateRandomTimeSpan(date, 0, 6);
+        if(random < 0.3)
+            return CalculateRandomTimeSpan(date, 18, 24);
+        if(random < 0.5)
+            return CalculateRandomTimeSpan(date, 6, 10);
+        if(random < 0.8)
+            return CalculateRandomTimeSpan(date, 14, 18);
+        
+        return CalculateRandomTimeSpan(date, 10, 12);
+    }
+
+    public static DateTime CalculateRandomTimeSpan(DateTime date, int minHour, int maxHour)
+    {
+        Random rnd = new Random();
+        DateTime newDate = date.Date;
+        var random = rnd.NextDouble() * (maxHour - minHour) + minHour;
+        
+        return newDate.AddHours(random);
     }
     
     #endregion

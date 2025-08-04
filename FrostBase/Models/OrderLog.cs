@@ -12,7 +12,7 @@ public class OrderLog
     public string Id { get; set; }
     
     [BsonElement("date")]
-    public DateTime date { get; set; }
+    public DateTime Date { get; set; }
     
     [BsonElement("IDOrder")]
     [BsonRepresentation(BsonType.ObjectId)]
@@ -29,6 +29,17 @@ public class OrderLog
     public static OrderLog Get(string id)
     {
         return _orderLogColl.Find(o => o.Id == id).FirstOrDefault();
+    }
+
+    public OrderLog()
+    { }
+
+    public OrderLog(Order o, DateTime date)
+    {
+        Id = ObjectId.GenerateNewId().ToString();
+        Date = date;
+        IDOrder = o.Id;
+        IDStateOrder = o.IDStateOrder;
     }
 
     public static List<OrderLog> GetByOrder(string id)
@@ -52,6 +63,31 @@ public class OrderLog
         }
     }
 
+    public static List<OrderLog> InsertMany(List<Order> orders)
+    {
+        var logs = new List<OrderLog>();
+        foreach (var order in orders)
+        {
+            logs.Add(new OrderLog(order, order.Date));
+        }
+        
+        return InsertMany(logs);
+    }
+
+    public static List<OrderLog> InsertMany(List<OrderLog> logs)
+    {
+        try
+        {
+            _orderLogColl.InsertMany(logs);
+            return logs;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Order log insert: "+e);
+            throw new Exception("Error inserting many order log: "+e.Message);
+        }       
+    }
+
     public static OrderLog Insert(Order o, DateTime? date)
     {
         try
@@ -60,7 +96,7 @@ public class OrderLog
             {
                 IDOrder = o.Id,
                 IDStateOrder = o.IDStateOrder,
-                date = date ?? DateTime.Now
+                Date = date ?? DateTime.Now
             };
             return Insert(log);       
         }
