@@ -127,7 +127,7 @@ public class Store
             Phone = u.Phone,
             Location = u.Location.Address,
             Latitude = u.Location.Latitude,
-            Longitude = u.Location.Latitude,
+            Longitude = u.Location.Longitude,
             Active = u.Active,
         };
         
