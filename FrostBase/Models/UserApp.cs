@@ -128,7 +128,7 @@ public class UserApp
             Phone = u.Phone,
             IDTruckDefault = u.IDTruckDefault,
             BirthDate = u.BirthDate.Value.ToDateTime(TimeOnly.MinValue),
-            Active = u.Active
+            Active = u.Active //agregado
         };
         
         return Update(user);
