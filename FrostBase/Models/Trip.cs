@@ -14,6 +14,10 @@ public class Trip
     private static IMongoCollection<Trip> _tripSimulation = 
         MongoDbConnection.GetCollection<Trip>("TripsSimulation");
     
+    private static readonly IMongoCollection<Order> _orderColl =
+        MongoDbConnection.GetCollection<Order>("Orders");
+
+    
     #endregion
 
     #region properties
@@ -161,30 +165,48 @@ public class Trip
     {
         try
         {
+            // Buscar el viaje
             Trip trip = _tripColl.Find(t => t.Id == idTrip).FirstOrDefault();
-            
+            if (trip == null) throw new Exception("Trip not found");
+
+            // Calcular hora de finalización
             DateTime endTime = DateTime.Now;
             TimeSpan totalTime = endTime.TimeOfDay.Subtract(trip.StartTime.TimeOfDay);
+
+            // Actualizar el viaje
             var filter = Builders<Trip>.Filter.Eq(t => t.Id, trip.Id);
             var update = Builders<Trip>.Update
                 .Set(t => t.EndTime, endTime)
-                .Set(t => t.IDStateTrip, "CP");
-                
-            var newTrip =  _tripColl.FindOneAndUpdate(filter, update,
-                    new FindOneAndUpdateOptions<Trip>
-                    { ReturnDocument = ReturnDocument.After }
-                );
-            
-            TripLog.Insert(newTrip, endTime);
-            
-            return newTrip;
+                .Set(t => t.IDStateTrip, "CP"); // Estado cambiado a Completado
+
+            var updatedTrip = _tripColl.FindOneAndUpdate(filter, update,
+                new FindOneAndUpdateOptions<Trip> { ReturnDocument = ReturnDocument.After });
+
+            // Registrar en log
+            TripLog.Insert(updatedTrip, endTime);
+
+            // Cambiar órdenes asociadas a estado "DO"
+            if (updatedTrip != null && updatedTrip.Orders?.Any() == true)
+            {
+                var orderIds = updatedTrip.Orders.Select(o => o.IDOrder).ToList();
+
+                var orderFilter = Builders<Order>.Filter.In(o => o.Id, orderIds);
+                var orderUpdate = Builders<Order>.Update
+                    .Set(o => o.IDStateOrder, "DO")
+                    .Set(o => o.DeliverDate, DateTime.UtcNow);
+
+                _orderColl.UpdateMany(orderFilter, orderUpdate);
+            }
+
+            return updatedTrip;
         }
         catch (Exception e)
         {
-            Console.WriteLine("Trip insert: "+e);
-            throw new Exception("Error updating trip endtime: "+e.Message);
+            Console.WriteLine("Trip update error: " + e);
+            throw new Exception("Error updating trip endtime: " + e.Message);
         }
     }
+
     public static Trip StartOrder(string tripId, string orderId)
     {
         try
