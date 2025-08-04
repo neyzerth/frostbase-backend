@@ -10,7 +10,7 @@ public class SimulatorController : ControllerBase
         OrderDto order = OrderDto.FromModel(Order.GenerateOrder(simulate.Date));
         return Ok(Response<OrderDto>.GetResponse( order));
     }
-    [HttpPost("order/generate-many")]
+    [HttpPost("order/generate-by-date")]
     public ActionResult GenerateManyOrders([FromBody] Simulate simulate)
     {
         List<OrderDto> orders = OrderDto.FromModel(Order.GenerateOrders(simulate.Date));
