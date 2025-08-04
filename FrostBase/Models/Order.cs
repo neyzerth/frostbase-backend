@@ -87,11 +87,11 @@ public class Order
         return _orderColl.Find(o => o.IDStateOrder == "PO" || o.IDStateOrder == "LO").ToList();;
     }
 
-    public static List<Order> GetByRoute(string idStore, DateTime date)
+    public static List<Order> GetByRoute(string routeId, DateTime date)
     {
         var orders = new List<Order>();
         List<ViewOrder> viewOrders = ViewOrder.GetByDate(date)
-            .Where(o => o.IDStore == idStore)
+            .Where(o => o.Route.Id == routeId)
             .ToList();
         
         foreach (var viewOrder in viewOrders)
