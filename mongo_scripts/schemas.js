@@ -172,11 +172,11 @@ db.createCollection("Trips", {
                 description: 'Referencia de la orden'
               },
               start_time: {
-                bsonType: ['date','null'],
+                bsonType: 'date',
                 description: 'Fecha y hora de inicio de entrega de la orden'
               },
               end_time: {
-                bsonType: 'date',
+                bsonType: ['date','null'],
                 description: 'Hora de finalización de la orden'
               }
             }
