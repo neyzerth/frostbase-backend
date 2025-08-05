@@ -216,7 +216,7 @@ public class SimulationTrip
         DateTime date = DateTime.Now;
         //check trips simulated that isn't inserted yet
         var simTrips =  _simTripColl.Find(t =>
-            !t.Inserted && t.SimulatedTrip.StartTime <= date).ToList();
+            !t.OrdersInserted && t.SimulatedTrip.StartTime <= date).ToList();
         
         var newTrips = new List<Trip>();
 
@@ -246,7 +246,7 @@ public class SimulationTrip
             foreach (var order in sim.SimulatedTrip.Orders)
             {
                 //if the order does not start yet, continue with the next
-                if (order.StartTime < date)
+                if (order.StartTime > date)
                 {
                     ordersInserted = false;
                     continue;
