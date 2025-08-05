@@ -310,7 +310,7 @@ public class Trip
         }
         catch (Exception e)
         {
-            Console.WriteLine("Trip insert: "+e);
+            Console.WriteLine("Trip update: "+e);
             throw new Exception("Error starting order");
         }
     }
@@ -324,8 +324,8 @@ public class Trip
             if (trip == null)
                 return null; // El viaje no existe
             
-            if (trip.Orders == null || trip.Orders.All(o => o.IDOrder != orderId))
-                return null; // La orden específica no existe
+            // if (trip.Orders == null || trip.Orders.All(o => o.IDOrder != orderId))
+            //     return null; // La orden específica no existe
             
             var filter = Builders<Trip>.Filter.And(
                 Builders<Trip>.Filter.Eq(t => t.Id, trip.Id),
@@ -333,8 +333,8 @@ public class Trip
             );
             
             var update = Builders<Trip>.Update
-                .Set(t => t.Orders[0].EndTime, DateTime.Now);
-                
+                .Set("orders.$.end_time", DateTime.Now);
+
             var result = _tripColl.FindOneAndUpdate(filter, update,
                 new FindOneAndUpdateOptions<Trip>
                     { ReturnDocument = ReturnDocument.After }
