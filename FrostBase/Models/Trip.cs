@@ -391,14 +391,16 @@ public class Trip
             Longitude = -116.97966765227373
         };
 
-        double timeToReturn = Osrm.Get(lastLocation, lalaBase).Duration;
+        var returnRoute = Osrm.Get(lastLocation, lalaBase);
         
         DateTime lastOrderTime = lastOrder.EndTime.Value;
         
-        this.EndTime = lastOrderTime.AddSeconds(timeToReturn);
+        this.EndTime = lastOrderTime.AddSeconds(returnRoute.Duration);
         
         this.IDStateTrip = "CP";
-        
+
+        var baseReading = Reading.BaseReading(lastLocation, lastOrderTime, IDTruck);
+        Reading.GenerateTripReadings(baseReading, lastOrderTime, EndTime.Value, lalaBase, 10 );
         TripLog.Insert(this, this.EndTime);
         
     }
@@ -429,7 +431,7 @@ public class Trip
             var order = OrderDto.FromModel(deliverOrder);
             TripLog.Insert(this, orderStartTime);
             //generate times
-            var times = TripOrder.GenerateOrderDeliverTime(startLocation, orderStartTime, order);
+            var times = TripOrder.GenerateOrderDeliverTime(startLocation, orderStartTime, order, IDTruck);
             
             //dto to model
             var orderModel = new TripOrder

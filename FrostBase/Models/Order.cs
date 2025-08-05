@@ -44,9 +44,12 @@ public class Order
     {
         Id = ObjectId.GenerateNewId().ToString();
         Date = DateTime.Now;
-        DeliverDate = DateTime.Now;
-        IDStateOrder = "PO";
         IDStore = "";
+        if(!string.IsNullOrEmpty(IDStore))
+            DeliverDate = CalculateDeliverDate();
+        else
+            DeliverDate = DateTime.Now;
+        IDStateOrder = "PO";
         IDUser = "";
     }
 
@@ -241,12 +244,16 @@ public class Order
                 Builders<Route>.Filter.Eq("stores.IDStore", ObjectId.Parse(IDStore)),
                 Builders<Route>.Filter.Eq(r => r.Active, true)
             );
-            Route matchRoute = MongoDbConnection.GetCollection<Route>("Routes").
-                Find(filter).FirstOrDefault();
-            
+            Route matchRoute = MongoDbConnection.GetCollection<Route>("Routes").Find(filter).FirstOrDefault();
+
             var date = CalculateCloserDate(matchRoute.DeliverDays);
             CheckDeliverDate(this, date);
             return date;
+        }
+        catch (DuplicateOrderDeliverDateException e)
+        {
+            Console.WriteLine("Calculate deliver date: duplicate date");
+            throw e;
         }
         catch (Exception e)
         {
@@ -278,6 +285,7 @@ public class Order
         try
         {
             int i = 0;
+            closerDate = closerDate.AddDays(1);
             while (closerDate.DayOfWeek != closerDay)
             {
                 closerDate = closerDate.AddDays(1);
@@ -369,19 +377,34 @@ public class Order
 
         foreach (var store in stores)
         {
-            Order order = new Order
+            try
             {
-                Id = ObjectId.GenerateNewId().ToString(),
-                Date = CalculateRandomDateTime(date.Value),
-                IDUser = admin.Id,
-                IDStore = store.Id
-            };
+                Order order = new Order
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    Date = CalculateRandomDateTime(date.Value),
+                    IDUser = admin.Id,
+                    IDStore = store.Id
+                };
 
-            order.DeliverDate = order.CalculateDeliverDate();
-            
-            orders.Add(order);
+                order.DeliverDate = order.CalculateDeliverDate();
+
+                orders.Add(order);
+            }
+            catch (DuplicateOrderDeliverDateException e)
+            {
+                Console.WriteLine($"error generating order for store {store.Name}:{store.Id}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"error generating order for store {store.Name}:{store.Id}" + e);
+                throw new FrostbaseException($"error generating order for store {store.Name}:{store.Id}");
+            }
         }
-
+        
+        if(orders.Count < 1)
+            throw new FrostbaseException("All stores has delivered dates", 2, 404, MessageType.Warning);
+        
         OrderLog.InsertMany(orders);
         
         return InsertMany(orders);
@@ -394,7 +417,7 @@ public class Order
         if(random < 0.01)
             return CalculateRandomTimeSpan(date, 0, 6);
         if(random < 0.3)
-            return CalculateRandomTimeSpan(date, 18, 24);
+            return CalculateRandomTimeSpan(date, 18, 23);
         if(random < 0.5)
             return CalculateRandomTimeSpan(date, 6, 10);
         if(random < 0.8)

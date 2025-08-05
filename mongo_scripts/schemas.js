@@ -145,7 +145,7 @@ db.createCollection("Trips", {
           description: 'Fecha y hora de inicio del viaje'
         },
         end_time: {
-          bsonType: 'date',
+          bsonType: ['date', 'null'],
           description: 'Fecha y hora de finalización del viaje'
         },
         IDTruck: {
@@ -172,7 +172,7 @@ db.createCollection("Trips", {
                 description: 'Referencia de la orden'
               },
               start_time: {
-                bsonType: 'date',
+                bsonType: ['date','null'],
                 description: 'Fecha y hora de inicio de entrega de la orden'
               },
               end_time: {
@@ -647,7 +647,7 @@ db.createCollection("TripLogs", {
             properties: {
               IDOrder: { bsonType: "objectId" },
               start_time: { bsonType: "date" },
-              end_time: { bsonType: "date" }
+              end_time: { bsonType: ["date","null"] }
             }
           }
         }

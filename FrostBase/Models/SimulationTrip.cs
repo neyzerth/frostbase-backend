@@ -138,7 +138,8 @@ public class SimulationTrip
         
         return Simulate(route, date);
     }
-    public static Trip Simulate(Route route, DateTime? date = null)
+
+    private static Trip Simulate(Route route, DateTime? date = null)
     {
         date ??= DateTime.Now;
         
@@ -158,8 +159,22 @@ public class SimulationTrip
     public static List<Trip> SimulateByDate(DateTime? date = null)
     {
         date ??= DateTime.Now;
+
+        var startOfDay = date.Value.Date;
+        var endOfDay = startOfDay.AddDays(1).AddTicks(-1);
+
+        var simulations = _simTripColl.Find(
+            s => s.SimulatedTrip.StartTime >= startOfDay && s.SimulatedTrip.StartTime <= endOfDay
+        ).ToList();
+
+
+        if (simulations.Count > 0)
+        {
+            Console.WriteLine($"{date.Value.Date} already simulated, returning {simulations.Count} trips");
+            return simulations.ToList().ConvertAll(s => s.SimulatedTrip);
+        }
         
-        //get random route (that its valid for today)
+        //get a random route (that it's valid for today)
         List<Route> routes = Route.GetWithOrders(date.Value);
         
         if (routes.Count == 0) throw new FrostbaseException("No routes with orders for " + date.Value.Date, 1, 404);
@@ -189,8 +204,8 @@ public class SimulationTrip
     public static DateTime CalculateRandomMinutes(DateTime date, int minMin, int maxMin)
     {
         Random rnd = new Random();
-        DateTime newDate = date.Date;
-        var random = rnd.NextDouble() * (maxMin - minMin) + minMin;
+        DateTime newDate = date;
+        var random = rnd.NextDouble() * (maxMin - minMin);
         
         return newDate.AddMinutes(random);
     }
@@ -201,7 +216,7 @@ public class SimulationTrip
         DateTime date = DateTime.Now;
         //check trips simulated that isn't inserted yet
         var simTrips =  _simTripColl.Find(t =>
-            !t.Inserted && t.SimulatedTrip.StartTime.Date <= date).ToList();
+            !t.OrdersInserted && t.SimulatedTrip.StartTime <= date).ToList();
         
         var newTrips = new List<Trip>();
 
@@ -231,7 +246,7 @@ public class SimulationTrip
             foreach (var order in sim.SimulatedTrip.Orders)
             {
                 //if the order does not start yet, continue with the next
-                if (order.StartTime < date)
+                if (order.StartTime > date)
                 {
                     ordersInserted = false;
                     continue;
@@ -243,10 +258,10 @@ public class SimulationTrip
                     StartTime = order.StartTime,
                     EndTime = order.EndTime < date ? order.EndTime : null,
                 };
-                ordersInserted = newOrd.EndTime == null ? false : true; 
+                ordersInserted = newOrd.EndTime != null; 
                 newOrders.Add(newOrd);
             }
-            inserted = newTrip.EndTime == null ? false : true;
+            inserted = newTrip.EndTime != null;
             
             sim.Inserted = inserted;
             sim.OrdersInserted = ordersInserted;
