@@ -39,10 +39,10 @@ public class StoreController : ControllerBase
     }
     
     
-    [HttpGet("no-ordered/")]
-    public ActionResult GetNoOrdered()
+    [HttpGet("no-ordered/{date}")]
+    public ActionResult GetNoOrdered(DateTime date)
     {
-        List<StoreDto> stores = StoreDto.FromModel(Store.GetNotOrders());
+        List<StoreDto> stores = StoreDto.FromModel(Store.GetNotOrders(date));
         return Ok(ListResponse<StoreDto>.GetResponse(stores));
     }
     [HttpGet("ordered/{id}")]
