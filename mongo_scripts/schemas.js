@@ -647,7 +647,7 @@ db.createCollection("TripLogs", {
             properties: {
               IDOrder: { bsonType: "objectId" },
               start_time: { bsonType: "date" },
-              end_time: { bsonType: "date" }
+              end_time: { bsonType: ["date","null"] }
             }
           }
         }
