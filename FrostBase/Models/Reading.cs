@@ -57,6 +57,14 @@ public class Reading
     {
         return _readingColl.Find(r => r.IDTruck == truckId).ToList();
     }
+    
+    public static Reading GetLatestByTruck(string truckId)
+    {
+        return _readingColl
+            .Find(r => r.IDTruck == truckId && r.Date <= DateTime.Now)
+            .SortByDescending(r => r.Date) 
+            .FirstOrDefault();
+    }
 
     public static Reading Insert(CreateReadingDto c, string truckId)
     {
