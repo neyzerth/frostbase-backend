@@ -23,6 +23,18 @@ public class ReadingController : ControllerBase
         List<ReadingDto> reading = ReadingDto.FromModel(Reading.GetByTruck(truckId));
         return Ok(ListResponse<ReadingDto>.GetResponse(reading));
     }
+    
+    [HttpGet("Latest/Truck/{idTruck}")]
+    public ActionResult GetLatestByTrcuk(string idTruck)
+    {
+        var reading = Reading.GetLatestByTruck(idTruck);
+    
+        if (reading == null)
+            return NotFound($"No reading found for truck with ID {idTruck}");
+
+        var dto = ReadingDto.FromModel(reading);
+        return Ok(dto);
+    }
 
     [HttpPost("Truck/{idTruck}")]
     public ActionResult Post(string idTruck, [FromBody] CreateReadingDto c)

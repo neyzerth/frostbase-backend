@@ -118,6 +118,13 @@ public class UserApp
 
     public static UserApp Update(UpdateUserDto u)
     {
+        // Obtener el usuario existente para preservar campos que no se están actualizando
+        var existingUser = Get(u.Id);
+        if (existingUser == null)
+        {
+            throw new Exception("User not found");
+        }
+
         var user = new UserApp()
         {
             Id = u.Id,
@@ -128,11 +135,14 @@ public class UserApp
             Phone = u.Phone,
             IDTruckDefault = u.IDTruckDefault,
             BirthDate = u.BirthDate.Value.ToDateTime(TimeOnly.MinValue),
-            Active = u.Active //agregado
+            Password = existingUser.Password,
+            IsAdmin = existingUser.IsAdmin,
+            Active = existingUser.Active 
         };
-        
+    
         return Update(user);
     }
+
     public static UserApp Update(UserApp updatedUser)
     {
         try
@@ -145,8 +155,7 @@ public class UserApp
                 .Set(u => u.Email, updatedUser.Email)
                 .Set(u => u.Phone, updatedUser.Phone)
                 .Set(u => u.BirthDate, updatedUser.BirthDate)
-                .Set(u => u.IDTruckDefault, updatedUser.IDTruckDefault)
-                .Set(u => u.Active, updatedUser.Active);
+                .Set(u => u.IDTruckDefault, updatedUser.IDTruckDefault);
             
 
             var options = new FindOneAndUpdateOptions<UserApp>
