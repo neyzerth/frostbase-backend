@@ -211,7 +211,7 @@ public class SimulationTrip
         DateTime date = DateTime.Now;
         //check trips simulated that isn't inserted yet
         var simTrips =  _simTripColl.Find(t =>
-            !t.Inserted && t.SimulatedTrip.StartTime.Date <= date).ToList();
+            !t.Inserted && t.SimulatedTrip.StartTime <= date).ToList();
         
         var newTrips = new List<Trip>();
 
@@ -253,10 +253,10 @@ public class SimulationTrip
                     StartTime = order.StartTime,
                     EndTime = order.EndTime < date ? order.EndTime : null,
                 };
-                ordersInserted = newOrd.EndTime == null ? false : true; 
+                ordersInserted = newOrd.EndTime != null; 
                 newOrders.Add(newOrd);
             }
-            inserted = newTrip.EndTime == null ? false : true;
+            inserted = newTrip.EndTime != null;
             
             sim.Inserted = inserted;
             sim.OrdersInserted = ordersInserted;
