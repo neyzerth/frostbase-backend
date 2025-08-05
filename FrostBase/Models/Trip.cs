@@ -445,6 +445,7 @@ public class Trip
             OrderLog.Insert(new Order(order), times.StartTime);
             order.State.Id = "DO";
             OrderLog.Insert(new Order(order), times.EndTime.Value);
+            Order.Update(new Order(order));
             
             Orders.Add(orderModel);
             TripLog.Insert(this, times.EndTime.Value);

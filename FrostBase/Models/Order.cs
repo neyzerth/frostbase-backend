@@ -78,7 +78,7 @@ public class Order
 
     public static List<Order> Get() 
     {
-        return _orderColl.Find(_ => true).ToList();
+        return _orderColl.Find(r => r.Date <= DateTime.Now).ToList();
     }
     
     public static Order Get(string id)
@@ -384,7 +384,8 @@ public class Order
                     Id = ObjectId.GenerateNewId().ToString(),
                     Date = CalculateRandomDateTime(date.Value),
                     IDUser = admin.Id,
-                    IDStore = store.Id
+                    IDStore = store.Id,
+                    IDStateOrder = "PO"
                 };
 
                 order.DeliverDate = order.CalculateDeliverDate();
