@@ -54,7 +54,7 @@ public class Reading
 
     public static List<Reading> Get() 
     {
-        return _readingColl.Find(r => true).ToList();
+        return _readingColl.Find(r => r.Date <= DateTime.Now).ToList();
     }
 
     public static Reading Get(string id)
@@ -63,7 +63,7 @@ public class Reading
     }
     public static List<Reading> GetByTruck(string truckId)
     {
-        return _readingColl.Find(r => r.IDTruck == truckId).ToList();
+        return _readingColl.Find(r => r.IDTruck == truckId && r.Date <= DateTime.Now).ToList();
     }
 
     public static Reading Insert(CreateReadingDto c, string truckId)
