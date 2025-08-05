@@ -366,9 +366,9 @@ public class Order
         List<Store> stores = Store.GetNotOrders(date);
         
         if(users.Count < 1)
-            throw new FrostbaseException("There is no admins users", 1, 404);
+            throw new AdminNotFoundException();
         if(stores.Count < 1)
-            throw new FrostbaseException("All stores ordered yet", 2, 404, MessageType.Warning);
+            throw new StoresWithNoOrdersNotFoundException(date.Value);
         
         //get a random store and admin
         UserApp admin = users[rnd.Next(0, users.Count-1)];

@@ -110,8 +110,9 @@ public class Truck
         }
     }
     
-    public static Truck Update(Truck updatedTruck)
+    public static Truck Update(Truck updatedTruck, DateTime? date = null)
     {
+        date??= DateTime.Now;
         try
         {
             var filter = Builders<Truck>.Filter.Eq(t => t.Id, updatedTruck.Id);
@@ -126,7 +127,7 @@ public class Truck
                 ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
             };
 
-            TruckLog.Insert(updatedTruck, DateTime.Now);;
+            TruckLog.Insert(updatedTruck, date);
             return _truckColl.FindOneAndUpdate(filter, update, options);
         }
         catch (Exception e)

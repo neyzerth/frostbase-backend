@@ -123,6 +123,41 @@ public class SimulationTrip
     #endregion
     
     #region simulation
+
+    public static List<Simulation> SimulateByRange(DateTime start, DateTime end)
+    {
+        DateTime date = start.Date;
+        DateTime endDate = end.Date;
+        var simulations = new List<Simulation>();
+        while (date <= endDate)
+        {
+            try
+            {
+                var simulation = new Simulation(date);
+                Console.WriteLine($">>>>>>> SIMULATING {simulation.Date}");
+
+                simulation.Orders = Order.GenerateOrders(date);
+                simulation.Trips = SimulationTrip.SimulateByDate(date);
+                simulations.Add(simulation);
+            }
+            catch (RouteWithOrdersNotFoundException e)
+            {
+                Console.WriteLine($"No orders for {date} found");
+            }
+            catch (StoresWithNoOrdersNotFoundException e)
+            {
+                Console.WriteLine($"No stores with orders for {date} found");
+            }
+            catch (FrostbaseException e)
+            {
+                Console.WriteLine($"Error simulating {date}: {e.Message}");
+            }
+            
+            date = date.AddDays(1);
+        }
+
+        return simulations;
+    }
     
     
     public static Trip Simulate(DateTime? date = null)
@@ -132,7 +167,7 @@ public class SimulationTrip
         //get random route (that its valid for today)
         List<Route> routes = Route.GetByDate(date.Value);
         
-        if (routes.Count == 0) throw new FrostbaseException("No routes for " + date.Value.Date, 1, 404);
+        if (routes.Count == 0) throw new RouteWithOrdersNotFoundException(date.Value);
         
         Route route = routes[random.Next(0, routes.Count-1)];
         
@@ -149,10 +184,15 @@ public class SimulationTrip
         var simulatedTime = CalculateRandomMinutes(newDate, 0, 60);
         
         Trip trip = Trip.GenerateStartTrip(route, simulatedTime);
+        var truck = Truck.Get(trip.IDTruck);
+        truck.IDStateTruck = "IR";
+        Truck.Update(truck,trip.StartTime);
         
         trip.GenerateOrders();
         
         trip.GenerateEndTimeTrip();
+        truck.IDStateTruck = "AV";
+        Truck.Update(truck, trip.EndTime.Value);
 
         return trip;
     }
@@ -177,7 +217,7 @@ public class SimulationTrip
         //get a random route (that it's valid for today)
         List<Route> routes = Route.GetWithOrders(date.Value);
         
-        if (routes.Count == 0) throw new FrostbaseException("No routes with orders for " + date.Value.Date, 1, 404);
+        if (routes.Count == 0) throw new RouteWithOrdersNotFoundException(date.Value);
 
         var trips = new List<Trip>();
         var simulation = new List<SimulationTrip>();
@@ -273,4 +313,23 @@ public class SimulationTrip
     }    
 
     #endregion
+}
+
+public class Simulation
+{
+    public DateOnly Date { get; set; }
+    public List<Trip> Trips { get; set; }
+    public List<Order> Orders { get; set; }
+
+    public Simulation(DateTime date)
+    {
+        Date = new DateOnly(date.Year, date.Month, date.Day);
+        Trips = new List<Trip>();
+        Orders = new List<Order>();
+    }
+    public Simulation()
+    {
+        Trips = new List<Trip>();
+        Orders = new List<Order>();
+    }
 }

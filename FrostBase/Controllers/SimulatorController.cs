@@ -4,11 +4,17 @@ using Microsoft.AspNetCore.Mvc;
 [ApiController]
 public class SimulatorController : ControllerBase
 {
-    [HttpPost("order/generate")]
-    public ActionResult GenerateOrder([FromBody] Simulate simulate)
+    // [HttpPost("order/generate")]
+    // public ActionResult GenerateOrder([FromBody] Simulate simulate)
+    // {
+    //     OrderDto order = OrderDto.FromModel(Order.GenerateOrder(simulate.Date));
+    //     return Ok(Response<OrderDto>.GetResponse( order));
+    // }
+    [HttpPost("generate/{startDate}&{endDate}")]
+    public ActionResult SimulateByRangeDate(DateTime startDate, DateTime endDate)
     {
-        OrderDto order = OrderDto.FromModel(Order.GenerateOrder(simulate.Date));
-        return Ok(Response<OrderDto>.GetResponse( order));
+        List<Simulation> simulations = SimulationTrip.SimulateByRange(startDate, endDate);
+        return Ok(ListResponse<Simulation>.GetResponse(simulations));
     }
     [HttpPost("order/generate-by-date")]
     public ActionResult GenerateManyOrders([FromBody] Simulate simulate)
@@ -18,12 +24,12 @@ public class SimulatorController : ControllerBase
         return Ok(ListResponse<OrderDto>.GetResponse(orders));
     }
     
-    [HttpPost("trip/generate")]
-    public ActionResult GenerateTrip([FromBody] Simulate simulate)
-    {
-        TripDto trip = TripDto.FromModel(SimulationTrip.Simulate(simulate.Date));
-        return Ok(Response<TripDto>.GetResponse( trip));
-    }
+    // [HttpPost("trip/generate")]
+    // public ActionResult GenerateTrip([FromBody] Simulate simulate)
+    // {
+    //     TripDto trip = TripDto.FromModel(SimulationTrip.Simulate(simulate.Date));
+    //     return Ok(Response<TripDto>.GetResponse( trip));
+    // }
     
     [HttpPost("trip/generate-by-date")]
     public ActionResult GenerateTripByDate([FromBody] Simulate simulate)
@@ -39,11 +45,6 @@ public class SimulatorController : ControllerBase
         return Ok(ListResponse<TripDto>.GetResponse(sim));
     }
     
-    [HttpPost("reading/generate")]
-    public ActionResult GenerateReading()
-    {
-        return Ok("not implemented");
-    }
     [HttpPost("error")]
     public ActionResult GenerateError()
     {
