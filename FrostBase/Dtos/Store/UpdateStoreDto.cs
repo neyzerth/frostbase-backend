@@ -6,7 +6,7 @@ public class UpdateStoreDto
 
     public string Phone { get; set; }
 
-    public Location Location { get; set; }
+    public StoreLocation Location { get; set; }
     
     public bool Active { get; set; }
 }

@@ -184,8 +184,8 @@ public class SimulationTrip
         
         //the same date but set at 7am
         DateTime newDate = date.Value.Date.AddHours(7);
-        //trip starts between 7am and 8am
-        var simulatedTime = CalculateRandomMinutes(newDate, 0, 60);
+        //trip starts between 7am and 9am
+        var simulatedTime = CalculateRandomMinutes(newDate, 0, 120);
         
         Trip trip = Trip.GenerateStartTrip(route, simulatedTime);
         var truck = Truck.Get(trip.IDTruck);

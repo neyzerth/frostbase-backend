@@ -3,7 +3,7 @@ public class StoreDto
     public string Id { get; set; }
     public string Name { get; set; }
     public string Phone { get; set; }
-    public Location Location { get; set; }
+    public StoreLocation Location { get; set; }
 
     public static StoreDto FromModel(Store s)
     {
@@ -13,7 +13,7 @@ public class StoreDto
             Id = s.Id,
             Name = s.Name,
             Phone = s.Phone,
-            Location = new Location
+            Location = new StoreLocation
             {
                 Address = s.Location,
                 Latitude = s.Latitude,
@@ -33,9 +33,18 @@ public class StoreDto
     }
 }
 
-public class Location
+public class StoreLocation
 {
     public string Address { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
+
+    public StoreLocation ()
+    { }
+
+    public StoreLocation(Location location)
+    {
+        Latitude = location.Latitude;
+        Longitude = location.Longitude;
+    }
 }

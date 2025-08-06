@@ -383,7 +383,7 @@ public class Trip
             throw new Exception("No orders in trip");
         TripOrder lastOrder = Orders.Last();
         StoreDto s = OrderDto.FromModel(Order.Get(lastOrder.IDOrder)).Store;
-        Location lastLocation = s.Location;
+        Location lastLocation = new Location(s.Location);
 
         Location lalaBase = new Location
         {
@@ -421,7 +421,7 @@ public class Trip
         //order by te secuence
         route.Stores = route.Stores.OrderBy(r => r.Sequence).ToList();
         
-        Console.WriteLine("== GENERATE TIMES ===============");
+        //Console.WriteLine("== GENERATE TIMES ===============");
     
         foreach (var store in route.Stores)
         {
@@ -450,7 +450,7 @@ public class Trip
             Orders.Add(orderModel);
             TripLog.Insert(this, times.EndTime.Value);
             //the next startTime and store is the previous endTime trip
-            startLocation = order.Store.Location;
+            startLocation = new Location(order.Store.Location);
             orderStartTime = times.EndTime.Value;
             
         }
@@ -458,7 +458,7 @@ public class Trip
         if (Orders.Count <= 0)
             throw new NoOrdersForRouteException(route.Id);
         
-        Console.WriteLine("== END GENERATE TIMES ===============");
+        //Console.WriteLine("== END GENERATE TIMES ===============");
         
     }
 
