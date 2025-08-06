@@ -146,7 +146,11 @@ public class SimulationTrip
             }
             catch (StoresWithNoOrdersNotFoundException e)
             {
-                Console.WriteLine($"No stores with orders for {date} found");
+                Console.WriteLine("All stores ordered yet");
+            }
+            catch (NoOrdersForRouteException e)
+            {
+                Console.WriteLine(e.Message);
             }
             catch (FrostbaseException e)
             {
@@ -186,13 +190,16 @@ public class SimulationTrip
         Trip trip = Trip.GenerateStartTrip(route, simulatedTime);
         var truck = Truck.Get(trip.IDTruck);
         truck.IDStateTruck = "IR";
-        Truck.Update(truck,trip.StartTime);
+        if(trip.StartTime <= DateTime.Now)
+            Truck.Update(truck,trip.StartTime);
         
         trip.GenerateOrders();
         
         trip.GenerateEndTimeTrip();
         truck.IDStateTruck = "AV";
-        Truck.Update(truck, trip.EndTime.Value);
+        
+        if(trip.EndTime.Value <= DateTime.Now)
+            Truck.Update(truck, trip.EndTime.Value);
 
         return trip;
     }
@@ -265,7 +272,7 @@ public class SimulationTrip
             var trip = sim.SimulatedTrip;
             var newOrders = new List<TripOrder>();
 
-            bool inserted = true;
+            bool inserted = false;
             bool ordersInserted = true;
 
             string stateTrip = trip.EndTime > date ? "IP" : "CP";

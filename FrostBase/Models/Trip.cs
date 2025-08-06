@@ -456,7 +456,7 @@ public class Trip
         }
 
         if (Orders.Count <= 0)
-            throw new FrostbaseException("No orders for stores founded");
+            throw new NoOrdersForRouteException(route.Id);
         
         Console.WriteLine("== END GENERATE TIMES ===============");
         
