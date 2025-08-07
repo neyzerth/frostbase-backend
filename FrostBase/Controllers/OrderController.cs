@@ -57,5 +57,5 @@ public class OrderController : ControllerBase
         List<OrderDto> orders = OrderDto.FromModel(Order.GetPending());
         return Ok(ListResponse<OrderDto>.GetResponse(orders));
     }
-    
+ 
 }
