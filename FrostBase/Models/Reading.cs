@@ -426,11 +426,7 @@ public class Reading
 
     public static Reading LastReading(Reading lastReading, DateTime end, string truckId)
     {
-        var location = new Location
-        {
-            Latitude = 32.45900929216648,
-            Longitude = -116.97966765227373
-        };
+        var location = Location.LalaBase();
         
         var reading = new Reading
         {

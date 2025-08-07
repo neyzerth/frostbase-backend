@@ -4,3 +4,4 @@ bin/
 .*-data/
 images/
 mongo_scripts/backup*/
+backup*/

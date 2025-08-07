@@ -385,11 +385,7 @@ public class Trip
         StoreDto s = OrderDto.FromModel(Order.Get(lastOrder.IDOrder)).Store;
         Location lastLocation = new Location(s.Location);
 
-        Location lalaBase = new Location
-        {
-            Latitude = 32.45900929216648,
-            Longitude = -116.97966765227373
-        };
+        Location lalaBase = Location.LalaBase();
 
         var returnRoute = Osrm.Get(lastLocation, lalaBase);
         
@@ -400,11 +396,18 @@ public class Trip
         this.IDStateTrip = "CP";
 
         var baseReading = Reading.BaseReading(lastLocation, lastOrderTime, IDTruck);
+        Console.WriteLine("== LALA BASE READINGS");
         var readings = Reading.GenerateTripReadings(baseReading, lastOrderTime, EndTime.Value, lalaBase, 10 );
         TripLog.Insert(this, this.EndTime);
-        //Reading.Insert(baseReading);
+        // //Reading.Insert(baseReading);
         Reading.Insert(readings);
-        Reading.Insert(Reading.LastReading(readings.Last(), this.EndTime.Value, IDTruck));;
+        var lastInsert = Reading.Insert(
+                Reading.LastReading(
+                    readings.Last(), 
+                    readings.Last().Date.AddSeconds(10), 
+                    IDTruck)
+            );
+        Console.WriteLine($"-- LALA BASE READING: {lastInsert.Latitude},{lastInsert.Longitude} | {lastInsert.Date}");
     }
     
     public void CompleteOrders()
@@ -412,8 +415,7 @@ public class Trip
         Orders = new List<TripOrder>();
         
         //starter location (Grupo Lala / 32.45900929216648, -116.97966765227373 )
-        var startLocation = new Location
-            { Latitude = 32.45900929216648, Longitude = -116.97966765227373 };
+        var startLocation = Location.LalaBase();
         
         //the first order startTime is the same as the trip startTime
         var orderStartTime =  StartTime;

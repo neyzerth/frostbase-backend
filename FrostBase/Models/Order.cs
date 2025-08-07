@@ -78,7 +78,8 @@ public class Order
 
     public static List<Order> Get() 
     {
-        return _orderColl.Find(r => r.Date <= DateTime.Now).ToList();
+        return _orderColl.Find(r => r.Date <= DateTime.Now)
+            .SortByDescending(r => r.Date).ToList();
     }
     
     public static Order Get(string id)
