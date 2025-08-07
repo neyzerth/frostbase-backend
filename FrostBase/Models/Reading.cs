@@ -109,7 +109,7 @@ public class Reading
         return _readingColl.Find(r => r.IDTruck == truckId && r.Date <= DateTime.Now).ToList();
     }
     
-    public static TruckReading GetLatestByTruck()
+    public static List<TruckReading> GetLatestByTruck()
     {
         var pipeline = new BsonDocument[]
         {
@@ -154,7 +154,7 @@ public class Reading
                 })
         };
         
-        return _truckColl.Aggregate<TruckReading>(pipeline).FirstOrDefault();
+        return _truckColl.Aggregate<TruckReading>(pipeline).ToList();
     }
     public static Reading GetLatestByTruck(string truckId)
     {

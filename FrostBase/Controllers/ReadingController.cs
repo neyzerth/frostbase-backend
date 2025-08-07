@@ -30,6 +30,14 @@ public class ReadingController : ControllerBase
         return Ok(ListResponse<ReadingDto>.GetResponse(reading));
     }
     
+    [HttpGet("Truck/Latest")]
+    public ActionResult GetLatestByTrcuk()
+    {
+        var reading = Reading.GetLatestByTruck();
+
+        var dto = ReadingByTruckDto.FromModel(reading);
+        return Ok(Response<ReadingByTruckDto>.GetResponse(dto));
+    }
     [HttpGet("Truck/Latest/{idTruck}")]
     public ActionResult GetLatestByTrcuk(string idTruck)
     {
@@ -39,15 +47,7 @@ public class ReadingController : ControllerBase
             return NotFound($"No reading found for truck with ID {idTruck}");
 
         var dto = ReadingDto.FromModel(reading);
-        return Ok(dto);
-    }
-    [HttpGet("Truck/Latest")]
-    public ActionResult GetLatestByTrcuk()
-    {
-        var reading = Reading.GetLatestByTruck();
-
-        var dto = ReadingByTruckDto.FromModel(reading);
-        return Ok(dto);
+        return Ok(Response<ReadingDto>.GetResponse(dto));
     }
 
     [HttpPost("Truck/{idTruck}")]
