@@ -7,20 +7,20 @@ public class RouteController : ControllerBase
     [HttpGet]
     public ActionResult Get()
     {
-        List<RouteDto> routes = RouteDto.FromModel(Route.Get());
-        return Ok(ListResponse<RouteDto>.GetResponse(routes));
+        var routes = RouteMapDto.FromModel(Route.Get());
+        return Ok(ListResponse<RouteMapDto>.GetResponse(routes));
     }
     [HttpGet("{id}")]
     public ActionResult Get(string id)
     {
-        RouteDto route = RouteDto.FromModel(Route.Get(id));
-        return Ok(Response<RouteDto>.GetResponse(route));
+        var route = RouteMapDto.FromModel(Route.Get(id));
+        return Ok(Response<RouteMapDto>.GetResponse(route));
     }
     [HttpGet("driver/{driverId}")]
     public ActionResult GetByDriver(string driverId)
     {
-        RouteDto route = RouteDto.FromModel(Route.GetByDriver(driverId));
-        return Ok(Response<RouteDto>.GetResponse(route));
+        var route = RouteMapDto.FromModel(Route.GetByDriver(driverId));
+        return Ok(Response<RouteMapDto>.GetResponse(route));
     }
     [HttpPost]
     public ActionResult Post([FromBody] CreateRouteDto r)
@@ -46,14 +46,14 @@ public class RouteController : ControllerBase
     public ActionResult GetTodayRoutes()
     {
         
-        List<RouteDto> route = RouteDto.FromModel(Route.GetByDate(DateTime.Now));
-        return Ok(ListResponse<RouteDto>.GetResponse(route));
+        var route = RouteMapDto.FromModel(Route.GetByDate(DateTime.Now));
+        return Ok(ListResponse<RouteMapDto>.GetResponse(route));
     }
     [HttpGet("days/{day}")]
     public ActionResult GetTodayRoutes(int day)
     {
-        List<RouteDto> route = RouteDto.FromModel(Route.GetByDay(day));
-        return Ok(ListResponse<RouteDto>.GetResponse(route));
+        var route = RouteMapDto.FromModel(Route.GetByDay(day));
+        return Ok(ListResponse<RouteMapDto>.GetResponse(route));
     }
     
     [HttpGet("pending/{routeId}&{date}")]

@@ -282,4 +282,9 @@ public class Location
         Latitude = location.Latitude;
         Longitude = location.Longitude;
     }
+
+    public static Location LalaBase()
+    {
+        return new Location(32.45900929216648, -116.97966765227373);
+    }
 }
