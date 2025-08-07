@@ -137,6 +137,7 @@ public class SimulationTrip
                 Console.WriteLine($">>>>>>> SIMULATING {simulation.Date}");
 
                 simulation.Orders = Order.GenerateOrders(date);
+                Console.WriteLine($"Orders: {simulation.Orders.Count}");
                 simulation.Trips = SimulationTrip.SimulateByDate(date);
                 simulations.Add(simulation);
             }
@@ -193,7 +194,7 @@ public class SimulationTrip
         if(trip.StartTime <= DateTime.Now)
             Truck.Update(truck,trip.StartTime);
         
-        trip.GenerateOrders();
+        trip.CompleteOrders();
         
         trip.GenerateEndTimeTrip();
         truck.IDStateTruck = "AV";

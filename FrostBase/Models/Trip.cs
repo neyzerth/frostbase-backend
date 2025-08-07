@@ -400,12 +400,14 @@ public class Trip
         this.IDStateTrip = "CP";
 
         var baseReading = Reading.BaseReading(lastLocation, lastOrderTime, IDTruck);
-        Reading.GenerateTripReadings(baseReading, lastOrderTime, EndTime.Value, lalaBase, 10 );
+        var readings = Reading.GenerateTripReadings(baseReading, lastOrderTime, EndTime.Value, lalaBase, 10 );
         TripLog.Insert(this, this.EndTime);
-        
+        //Reading.Insert(baseReading);
+        Reading.Insert(readings);
+        Reading.Insert(Reading.LastReading(readings.Last(), this.EndTime.Value, IDTruck));;
     }
     
-    public void GenerateOrders()
+    public void CompleteOrders()
     {
         Orders = new List<TripOrder>();
         
@@ -445,7 +447,9 @@ public class Trip
             OrderLog.Insert(new Order(order), times.StartTime);
             order.State.Id = "DO";
             OrderLog.Insert(new Order(order), times.EndTime.Value);
-            Order.Update(new Order(order));
+            var update = Order.Update(new Order(order));
+            if(update.IDStateOrder == "PO")
+                Console.WriteLine("NO UPDATED ORDER: "+order.Id + "|"+ order.DeliverDate);
             
             Orders.Add(orderModel);
             TripLog.Insert(this, times.EndTime.Value);

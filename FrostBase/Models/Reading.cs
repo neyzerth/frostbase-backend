@@ -327,11 +327,33 @@ public class Reading
                 DoorState = false
             };
             
-            Console.WriteLine($"-- Stayed Reading: Location({reading.Latitude},{reading.Longitude}) | Date({reading.Date}),)");
+            //Console.WriteLine($"-- Stayed Reading: Location({reading.Latitude},{reading.Longitude}) | Date({reading.Date}),)");
             readings.Add(reading);
         }
 
         return readings;
+    }
+
+    public static Reading LastReading(Reading lastReading, DateTime end, string truckId)
+    {
+        var location = new Location
+        {
+            Latitude = 32.45900929216648,
+            Longitude = -116.97966765227373
+        };
+        
+        var reading = new Reading
+        {
+            DoorState = false,
+            Temperature = lastReading.Temperature,
+            PercHumidity = lastReading.PercHumidity,
+            Longitude = location.Longitude,
+            Latitude = location.Latitude,
+            Date = end,
+            IDTruck =  truckId
+        };
+        
+        return reading;
     }
 
 

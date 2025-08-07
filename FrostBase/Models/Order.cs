@@ -87,7 +87,7 @@ public class Order
     }
     public static List<Order> GetPending()
     {
-        return _orderColl.Find(o => o.IDStateOrder == "PO" || o.IDStateOrder == "LO").ToList();;
+        return _orderColl.Find(o => (o.IDStateOrder == "PO" || o.IDStateOrder == "LO") && o.Date <= DateTime.Now).ToList();;
     }
 
     public static List<Order> GetByRoute(string routeId, DateTime date)

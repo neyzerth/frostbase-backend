@@ -17,7 +17,7 @@ public class ReadingController : ControllerBase
         ReadingDto reading = ReadingDto.FromModel(Reading.Get(id));
         return Ok(Response<ReadingDto>.GetResponse(reading));
     }
-    [HttpGet("Truck/{id}")]
+    [HttpGet("Truck/{truckId}")]
     public ActionResult GetByTruck(string truckId)
     {
         List<ReadingDto> reading = ReadingDto.FromModel(Reading.GetByTruck(truckId));
