@@ -17,14 +17,20 @@ public class ReadingController : ControllerBase
         ReadingDto reading = ReadingDto.FromModel(Reading.Get(id));
         return Ok(Response<ReadingDto>.GetResponse(reading));
     }
+    [HttpGet("Truck")]
+    public ActionResult GetByTruck()
+    {
+        var readings = ReadingsByTruckDto.FromModel(Reading.GetByTruck());
+        return Ok(ListResponse<ReadingsByTruckDto>.GetResponse(readings));
+    }
     [HttpGet("Truck/{truckId}")]
     public ActionResult GetByTruck(string truckId)
     {
-        List<ReadingDto> reading = ReadingDto.FromModel(Reading.GetByTruck(truckId));
+        var reading = ReadingDto.FromModel(Reading.GetByTruck(truckId));
         return Ok(ListResponse<ReadingDto>.GetResponse(reading));
     }
     
-    [HttpGet("Latest/Truck/{idTruck}")]
+    [HttpGet("Truck/Latest/{idTruck}")]
     public ActionResult GetLatestByTrcuk(string idTruck)
     {
         var reading = Reading.GetLatestByTruck(idTruck);
@@ -33,6 +39,14 @@ public class ReadingController : ControllerBase
             return NotFound($"No reading found for truck with ID {idTruck}");
 
         var dto = ReadingDto.FromModel(reading);
+        return Ok(dto);
+    }
+    [HttpGet("Truck/Latest")]
+    public ActionResult GetLatestByTrcuk()
+    {
+        var reading = Reading.GetLatestByTruck();
+
+        var dto = ReadingByTruckDto.FromModel(reading);
         return Ok(dto);
     }
 
