@@ -59,7 +59,7 @@ public class Osrm
             var dbRoute = route.FirstOrDefault();
             if (dbRoute.Geometry.Count > 0)
             {
-                Console.WriteLine("||| Ruta encontrada en la base de datos |||");
+                //Console.WriteLine("||| Ruta encontrada en la base de datos |||");
                 return dbRoute;
             }
         }
@@ -264,4 +264,27 @@ public class Geometry
 
     [JsonPropertyName("type")]
     public string Type { get; set; }
+}
+public class Location
+{
+    public double Latitude { get; set; }
+    
+    public double Longitude { get; set; }
+    public Location() { }
+    
+    public Location(double latitude, double longitude)
+    {
+        Latitude = latitude;
+        Longitude = longitude;
+    }
+    public Location(StoreLocation location)
+    {
+        Latitude = location.Latitude;
+        Longitude = location.Longitude;
+    }
+
+    public static Location LalaBase()
+    {
+        return new Location(32.45900929216648, -116.97966765227373);
+    }
 }

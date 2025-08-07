@@ -137,6 +137,7 @@ public class SimulationTrip
                 Console.WriteLine($">>>>>>> SIMULATING {simulation.Date}");
 
                 simulation.Orders = Order.GenerateOrders(date);
+                Console.WriteLine($"Orders: {simulation.Orders.Count}");
                 simulation.Trips = SimulationTrip.SimulateByDate(date);
                 simulations.Add(simulation);
             }
@@ -146,7 +147,11 @@ public class SimulationTrip
             }
             catch (StoresWithNoOrdersNotFoundException e)
             {
-                Console.WriteLine($"No stores with orders for {date} found");
+                Console.WriteLine("All stores ordered yet");
+            }
+            catch (NoOrdersForRouteException e)
+            {
+                Console.WriteLine(e.Message);
             }
             catch (FrostbaseException e)
             {
@@ -180,19 +185,22 @@ public class SimulationTrip
         
         //the same date but set at 7am
         DateTime newDate = date.Value.Date.AddHours(7);
-        //trip starts between 7am and 8am
-        var simulatedTime = CalculateRandomMinutes(newDate, 0, 60);
+        //trip starts between 7am and 9am
+        var simulatedTime = CalculateRandomMinutes(newDate, 0, 120);
         
         Trip trip = Trip.GenerateStartTrip(route, simulatedTime);
         var truck = Truck.Get(trip.IDTruck);
         truck.IDStateTruck = "IR";
-        Truck.Update(truck,trip.StartTime);
+        if(trip.StartTime <= DateTime.Now)
+            Truck.Update(truck,trip.StartTime);
         
-        trip.GenerateOrders();
+        trip.CompleteOrders();
         
         trip.GenerateEndTimeTrip();
         truck.IDStateTruck = "AV";
-        Truck.Update(truck, trip.EndTime.Value);
+        
+        if(trip.EndTime.Value <= DateTime.Now)
+            Truck.Update(truck, trip.EndTime.Value);
 
         return trip;
     }
@@ -265,7 +273,7 @@ public class SimulationTrip
             var trip = sim.SimulatedTrip;
             var newOrders = new List<TripOrder>();
 
-            bool inserted = true;
+            bool inserted = false;
             bool ordersInserted = true;
 
             string stateTrip = trip.EndTime > date ? "IP" : "CP";

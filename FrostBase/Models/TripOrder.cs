@@ -18,8 +18,8 @@ public class TripOrder
         DateTime endTime;
         try
         {
-            Console.WriteLine("== Store "+ order.Store.Name +"==");
-            var nextStore = order.Store.Location;
+            //Console.WriteLine("== Store "+ order.Store.Name +"==");
+            var nextStore = new Location(order.Store.Location);
             var routeApi = Osrm.Get(startLocation, nextStore);
             double traveledTime = GenerateRandomTime(routeApi.Duration, .10, .20);
             double stayedTime = GenerateRandomTime(40 * 60, .30, 1.00);
@@ -36,10 +36,10 @@ public class TripOrder
             
             endTime = startTime.AddSeconds(traveledTime + stayedTime);
             
-            Console.WriteLine("Traveled time:\t" + TimeSpan.FromSeconds(traveledTime));
-            Console.WriteLine("Stayed time:\t" + TimeSpan.FromSeconds(stayedTime));
-            Console.WriteLine("Start:  \t" + startTime.TimeOfDay);
-            Console.WriteLine("End time:\t" + endTime.TimeOfDay);
+            // Console.WriteLine("Traveled time:\t" + TimeSpan.FromSeconds(traveledTime));
+            // Console.WriteLine("Stayed time:\t" + TimeSpan.FromSeconds(stayedTime));
+            // Console.WriteLine("Start:  \t" + startTime.TimeOfDay);
+            // Console.WriteLine("End time:\t" + endTime.TimeOfDay);
             
             Reading.Insert(travelReadings);
             Reading.Insert(stayedReadings);

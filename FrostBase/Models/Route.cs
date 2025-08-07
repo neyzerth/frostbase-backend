@@ -12,7 +12,10 @@ public class Route
     
     #endregion
     
+    
     #region properties
+    
+    private List<RouteStore> _stores = new List<RouteStore>();
 
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
@@ -32,7 +35,11 @@ public class Route
     public bool Active { get; set; }
     
     [BsonElement("stores")]
-    public List<RouteStore> Stores { get; set; }
+    public List<RouteStore> Stores
+    {
+        get => _stores;
+        set => _stores = value?.OrderBy(s => s.Sequence).ToList() ?? new List<RouteStore>();
+    }
 
     #endregion
     
@@ -299,6 +306,26 @@ public class Route
         };
         
         return _routeColl.Aggregate<Order>(pipeline).ToList();
+    }
+
+    public List<Location> GetMapRoute()
+    {
+        var locations = new List<Location>();
+        var start = Location.LalaBase();
+        foreach (var store in Stores)
+        {
+            var storeInfo = Store.Get(store.IDStore);
+            var end = new Location(storeInfo.Latitude, storeInfo.Longitude);
+            
+            var route = Osrm.Get(start, end).Geometry;
+            
+            locations.AddRange(route);
+            start = end;
+        }
+        var returnLocation = Location.LalaBase();
+        locations.AddRange(Osrm.Get(start, returnLocation).Geometry);
+        
+        return locations;
     }
     
     #endregion

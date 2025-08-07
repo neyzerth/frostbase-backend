@@ -4,6 +4,6 @@ public class CreateStoreDto
 
     public string Phone { get; set; }
     
-    public Location Location { get; set; }
+    public StoreLocation Location { get; set; }
     
 }

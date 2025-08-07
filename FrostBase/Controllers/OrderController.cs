@@ -51,12 +51,11 @@ public class OrderController : ControllerBase
         List<OrderDto> orders = OrderDto.FromModel(Order.GetByRoute(idRoute));
         return Ok(ListResponse<OrderDto>.GetResponse(orders));
     }
-
     [HttpGet("pending/")]
     public ActionResult GetPending()
     {
         List<OrderDto> orders = OrderDto.FromModel(Order.GetPending());
         return Ok(ListResponse<OrderDto>.GetResponse(orders));
     }
-    
+ 
 }

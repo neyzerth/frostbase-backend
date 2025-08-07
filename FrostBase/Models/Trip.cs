@@ -383,7 +383,7 @@ public class Trip
             throw new Exception("No orders in trip");
         TripOrder lastOrder = Orders.Last();
         StoreDto s = OrderDto.FromModel(Order.Get(lastOrder.IDOrder)).Store;
-        Location lastLocation = s.Location;
+        Location lastLocation = new Location(s.Location);
 
         Location lalaBase = new Location
         {
@@ -400,12 +400,14 @@ public class Trip
         this.IDStateTrip = "CP";
 
         var baseReading = Reading.BaseReading(lastLocation, lastOrderTime, IDTruck);
-        Reading.GenerateTripReadings(baseReading, lastOrderTime, EndTime.Value, lalaBase, 10 );
+        var readings = Reading.GenerateTripReadings(baseReading, lastOrderTime, EndTime.Value, lalaBase, 10 );
         TripLog.Insert(this, this.EndTime);
-        
+        //Reading.Insert(baseReading);
+        Reading.Insert(readings);
+        Reading.Insert(Reading.LastReading(readings.Last(), this.EndTime.Value, IDTruck));;
     }
     
-    public void GenerateOrders()
+    public void CompleteOrders()
     {
         Orders = new List<TripOrder>();
         
@@ -421,7 +423,7 @@ public class Trip
         //order by te secuence
         route.Stores = route.Stores.OrderBy(r => r.Sequence).ToList();
         
-        Console.WriteLine("== GENERATE TIMES ===============");
+        //Console.WriteLine("== GENERATE TIMES ===============");
     
         foreach (var store in route.Stores)
         {
@@ -445,20 +447,22 @@ public class Trip
             OrderLog.Insert(new Order(order), times.StartTime);
             order.State.Id = "DO";
             OrderLog.Insert(new Order(order), times.EndTime.Value);
-            Order.Update(new Order(order));
+            var update = Order.Update(new Order(order));
+            if(update.IDStateOrder == "PO")
+                Console.WriteLine("NO UPDATED ORDER: "+order.Id + "|"+ order.DeliverDate);
             
             Orders.Add(orderModel);
             TripLog.Insert(this, times.EndTime.Value);
             //the next startTime and store is the previous endTime trip
-            startLocation = order.Store.Location;
+            startLocation = new Location(order.Store.Location);
             orderStartTime = times.EndTime.Value;
             
         }
 
         if (Orders.Count <= 0)
-            throw new FrostbaseException("No orders for stores founded");
+            throw new NoOrdersForRouteException(route.Id);
         
-        Console.WriteLine("== END GENERATE TIMES ===============");
+        //Console.WriteLine("== END GENERATE TIMES ===============");
         
     }
 
