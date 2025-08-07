@@ -1,6 +1,6 @@
 public class RouteMapDto : RouteDto
 {
-    List<Location> Waypoints { get; set; }
+    public List<Location> Waypoints { get; set; }
 
     public RouteMapDto(RouteDto routeDto, List<Location> waypoints)
     {
@@ -12,14 +12,14 @@ public class RouteMapDto : RouteDto
         Stores = routeDto.Stores;
         Waypoints = waypoints;
     }
-    public static RouteMapDto FromModel(Route route)
+    public new static RouteMapDto FromModel(Route route)
     {
-        RouteDto routeDto = FromModel(route);;
+        var routeDto = RouteDto.FromModel(route);;
         
         return new RouteMapDto(routeDto, route.GetMapRoute());
     }
     
-    public static List<RouteMapDto> FromModel(List<Route> route)
+    public new static List<RouteMapDto> FromModel(List<Route> route)
     {
         var routes = new List<RouteMapDto>();
         foreach (var r in route)
