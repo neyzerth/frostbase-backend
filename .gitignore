@@ -3,3 +3,5 @@ bin/
 .idea/
 .*-data/
 images/
+mongo_scripts/backup*/
+backup*/
