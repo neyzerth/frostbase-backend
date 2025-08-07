@@ -391,7 +391,7 @@ public class Reading
                 IDTruck = baseReading.IDTruck,
                 DoorState = false
             };
-            Console.WriteLine($"-- Trip Reading: Location({reading.Latitude},{reading.Longitude}) | Date({reading.Date}),)");
+            //Console.WriteLine($"-- Trip Reading: Location({reading.Latitude},{reading.Longitude}) | Date({reading.Date}),)");
 
             readings.Add(reading);
         }

@@ -141,6 +141,9 @@ public class SimulationTrip
                 simulation.Trips = SimulationTrip.SimulateByDate(date);
                 simulations.Add(simulation);
             }
+            catch (DuplicateOrderDeliverDateException e)
+            {
+            }
             catch (RouteWithOrdersNotFoundException e)
             {
                 Console.WriteLine($"No orders for {date} found");
@@ -165,19 +168,19 @@ public class SimulationTrip
     }
     
     
-    public static Trip Simulate(DateTime? date = null)
-    {
-        Random random = new Random();
-        
-        //get random route (that its valid for today)
-        List<Route> routes = Route.GetByDate(date.Value);
-        
-        if (routes.Count == 0) throw new RouteWithOrdersNotFoundException(date.Value);
-        
-        Route route = routes[random.Next(0, routes.Count-1)];
-        
-        return Simulate(route, date);
-    }
+    // public static Trip Simulate(DateTime? date = null)
+    // {
+    //     Random random = new Random();
+    //     
+    //     //get random route (that its valid for today)
+    //     List<Route> routes = Route.GetByDate(date.Value);
+    //     
+    //     if (routes.Count == 0) throw new RouteWithOrdersNotFoundException(date.Value);
+    //     
+    //     Route route = routes[random.Next(0, routes.Count-1)];
+    //     
+    //     return Simulate(route, date);
+    // }
 
     private static Trip Simulate(Route route, DateTime? date = null)
     {
@@ -290,6 +293,7 @@ public class SimulationTrip
                 Orders = newOrders,
             };
             
+            //int orderCount = 0;
             //check each order
             foreach (var order in sim.SimulatedTrip.Orders)
             {
@@ -306,9 +310,22 @@ public class SimulationTrip
                     StartTime = order.StartTime,
                     EndTime = order.EndTime < date ? order.EndTime : null,
                 };
-                ordersInserted = newOrd.EndTime != null; 
+                if (newOrd.EndTime == null)
+                {
+                    ordersInserted = false;
+                    //orderCount++;
+                    //Console.WriteLine($"Order not delivered: Date({newOrd.StartTime}) ");
+
+                }
+                else
+                {
+                    var o = Order.CompleteOrder(newOrd.IDOrder, newOrd.EndTime.Value);
+                    //Console.WriteLine($"Complete Order store {o.IDStore}: Delivered at {o.DeliverDate} | Date({newOrd.EndTime}) ");
+                }
                 newOrders.Add(newOrd);
             }
+
+            //Console.WriteLine($"Order count: {orderCount} | Date({trip.EndTime})");
             inserted = newTrip.EndTime != null;
             
             sim.Inserted = inserted;

@@ -396,7 +396,7 @@ public class Trip
         this.IDStateTrip = "CP";
 
         var baseReading = Reading.BaseReading(lastLocation, lastOrderTime, IDTruck);
-        Console.WriteLine("== LALA BASE READINGS");
+        //Console.WriteLine("== LALA BASE READINGS");
         var readings = Reading.GenerateTripReadings(baseReading, lastOrderTime, EndTime.Value, lalaBase, 10 );
         TripLog.Insert(this, this.EndTime);
         // //Reading.Insert(baseReading);
@@ -407,7 +407,7 @@ public class Trip
                     readings.Last().Date.AddSeconds(10), 
                     IDTruck)
             );
-        Console.WriteLine($"-- LALA BASE READING: {lastInsert.Latitude},{lastInsert.Longitude} | {lastInsert.Date}");
+        //Console.WriteLine($"-- LALA BASE READING: {lastInsert.Latitude},{lastInsert.Longitude} | {lastInsert.Date}");
     }
     
     public void CompleteOrders()
@@ -449,9 +449,9 @@ public class Trip
             OrderLog.Insert(new Order(order), times.StartTime);
             order.State.Id = "DO";
             OrderLog.Insert(new Order(order), times.EndTime.Value);
-            var update = Order.Update(new Order(order));
-            if(update.IDStateOrder == "PO")
-                Console.WriteLine("NO UPDATED ORDER: "+order.Id + "|"+ order.DeliverDate);
+            // var update = Order.Update(new Order(order));
+            // if(update.IDStateOrder == "PO")
+            //     Console.WriteLine("NO UPDATED ORDER: "+order.Id + "|"+ order.DeliverDate);
             
             Orders.Add(orderModel);
             TripLog.Insert(this, times.EndTime.Value);

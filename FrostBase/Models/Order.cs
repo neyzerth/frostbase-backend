@@ -79,7 +79,10 @@ public class Order
     public static List<Order> Get() 
     {
         return _orderColl.Find(r => r.Date <= DateTime.Now)
-            .SortByDescending(r => r.Date).ToList();
+            .SortByDescending(r => r.IDStore)
+            .SortByDescending(r => r.Date)
+            .SortByDescending(r => r.DeliverDate)
+            .ToList();
     }
     
     public static Order Get(string id)
@@ -130,12 +133,24 @@ public class Order
     {
         try
         {
-            if(string.IsNullOrEmpty(order.Id))
+            var docs = _orderColl.Find(
+                o => o.IDStore == order.IDStore &&
+                     o.DeliverDate.Date == order.DeliverDate.Date
+            ).CountDocuments();
+            if (docs > 0)
+                throw new DuplicateOrderDeliverDateException(order);
+
+            if (string.IsNullOrEmpty(order.Id))
                 order.Id = ObjectId.GenerateNewId().ToString();
-            
+
             order.DeliverDate = order.DeliverDate.Date;
             _orderColl.InsertOne(order);
             return order;
+        }
+        catch (DuplicateOrderDeliverDateException e)
+        {
+            Console.WriteLine("Error inserting order: duplicate date");
+            throw e;
         }
         catch (Exception e)
         {
@@ -150,6 +165,14 @@ public class Order
         {
             foreach (var order in orders)
             {
+                var docs = _orderColl.Find(
+                    o => (o.IDStore == order.IDStore &&
+                         o.DeliverDate == order.DeliverDate) ||
+                         (o.IDStore == order.IDStore &&
+                          o.Date.Date == order.Date.Date)
+                ).CountDocuments();
+                if (docs > 0)
+                    continue;
                 if(string.IsNullOrEmpty(order.Id))
                     order.Id = ObjectId.GenerateNewId().ToString();
             }
@@ -189,6 +212,58 @@ public class Order
         {
             Console.WriteLine(e);
             throw new Exception("Error updating order: " + e.Message);
+        }
+    }
+    public static Order CompleteOrder(string orderId, DateTime date)
+    {
+        if (string.IsNullOrEmpty(orderId))
+            throw new ArgumentException("El ID no puede ser null o vacío");
+
+        try
+        {
+            var filter = Builders<Order>.Filter.Eq(o => o.Id, orderId);
+            var update = Builders<Order>.Update
+                .Set(o => o.IDStateOrder, "DO");
+
+            var options = new FindOneAndUpdateOptions<Order>
+            {
+                ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
+            };
+
+            var order =  _orderColl.FindOneAndUpdate(filter, update, options);
+            OrderLog.Insert(order, date);
+            return order;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Error completing order: " + e.Message);
+        }
+    }
+    public static Order LateOrder(string orderId, DateTime date)
+    {
+        if (string.IsNullOrEmpty(orderId))
+            throw new ArgumentException("El ID no puede ser null o vacío");
+
+        try
+        {
+            var filter = Builders<Order>.Filter.Eq(o => o.Id, orderId);
+            var update = Builders<Order>.Update
+                .Set(o => o.IDStateOrder, "Late");
+
+            var options = new FindOneAndUpdateOptions<Order>
+            {
+                ReturnDocument = ReturnDocument.After // Retorna el documento ya actualizado
+            };
+
+            var order =  _orderColl.FindOneAndUpdate(filter, update, options);
+            OrderLog.Insert(order, date);
+            return order;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new Exception("Error marking late order: " + e.Message);
         }
     }
 
