@@ -9,6 +9,7 @@ public class Reading
     
     //Sql or mongo statements
     private static IMongoCollection<Reading> _readingColl = MongoDbConnection.GetCollection<Reading>("Readings");
+    private static IMongoCollection<Reading> _truckColl = MongoDbConnection.GetCollection<Reading>("Trucks");
     
     #endregion
     
@@ -61,11 +62,100 @@ public class Reading
     {
         return _readingColl.Find(r => r.Id == id).FirstOrDefault();
     }
+    public static List<TruckReadings> GetByTruck()
+    {
+        var pipeline = new BsonDocument[]
+        {
+            new BsonDocument("$lookup",
+                new BsonDocument
+                {
+                    { "from", "Readings" },
+                    { "localField", "_id" },
+                    { "foreignField", "IDTruck" },
+                    { "as", "readings" },
+                    {
+                        "pipeline",
+                        new BsonArray
+                        {
+                            new BsonDocument("$sort",
+                                new BsonDocument("date", -1))
+                        }
+                    }
+                }),
+            new BsonDocument("$project",
+                new BsonDocument
+                {
+                    { "_id", 0 },
+                    {
+                        "truck",
+                        new BsonDocument
+                        {
+                            { "_id", "$_id" },
+                            { "plate", "$plate" },
+                            { "model", "$model" },
+                            { "brand", "$brand" },
+                            { "license_plate", "$license_plate" },
+                            { "IDStateTruck", "$IDStateTruck" }
+                        }
+                    },
+                    { "readings", 1 }
+                })
+        };
+        
+        return _truckColl.Aggregate<TruckReadings>(pipeline).ToList();
+    }
     public static List<Reading> GetByTruck(string truckId)
     {
         return _readingColl.Find(r => r.IDTruck == truckId && r.Date <= DateTime.Now).ToList();
     }
     
+    public static List<TruckReading> GetLatestByTruck()
+    {
+        var pipeline = new BsonDocument[]
+        {
+            new BsonDocument("$lookup",
+                new BsonDocument
+                {
+                    { "from", "Readings" },
+                    { "localField", "_id" },
+                    { "foreignField", "IDTruck" },
+                    { "as", "reading" },
+                    {
+                        "pipeline",
+                        new BsonArray
+                        {
+                            new BsonDocument("$match",
+                                new BsonDocument("date",
+                                    new BsonDocument("$lte", DateTime.Now))),
+                            new BsonDocument("$sort",
+                                new BsonDocument("date", -1)),
+                            new BsonDocument("$limit", 1)
+                        }
+                    }
+                }),
+            new BsonDocument("$unwind", "$reading"),
+            new BsonDocument("$project",
+                new BsonDocument
+                {
+                    { "_id", 0 },
+                    {
+                        "truck",
+                        new BsonDocument
+                        {
+                            { "_id", "$_id" },
+                            { "plate", "$plate" },
+                            { "model", "$model" },
+                            { "brand", "$brand" },
+                            { "license_plate", "$license_plate" },
+                            { "IDStateTruck", "$IDStateTruck" }
+                        }
+                    },
+                    { "reading", 1 }
+                })
+        };
+        
+        return _truckColl.Aggregate<TruckReading>(pipeline).ToList();
+    }
     public static Reading GetLatestByTruck(string truckId)
     {
         return _readingColl
@@ -301,7 +391,7 @@ public class Reading
                 IDTruck = baseReading.IDTruck,
                 DoorState = false
             };
-            Console.WriteLine($"-- Trip Reading: Location({reading.Latitude},{reading.Longitude}) | Date({reading.Date}),)");
+            //Console.WriteLine($"-- Trip Reading: Location({reading.Latitude},{reading.Longitude}) | Date({reading.Date}),)");
 
             readings.Add(reading);
         }
@@ -336,11 +426,7 @@ public class Reading
 
     public static Reading LastReading(Reading lastReading, DateTime end, string truckId)
     {
-        var location = new Location
-        {
-            Latitude = 32.45900929216648,
-            Longitude = -116.97966765227373
-        };
+        var location = Location.LalaBase();
         
         var reading = new Reading
         {
@@ -358,4 +444,19 @@ public class Reading
 
 
     #endregion
+}
+
+public class TruckReadings
+{
+    [BsonElement("truck")]
+    public Truck Truck { get; set; }
+    [BsonElement("readings")]
+    public List<Reading> Readings { get; set; }
+}
+public class TruckReading
+{
+    [BsonElement("truck")]
+    public Truck Truck { get; set; }
+    [BsonElement("reading")]
+    public Reading Reading { get; set; }
 }
